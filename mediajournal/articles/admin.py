@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import Article, Category
+from .models import Article, Category, Comment
 
 
 @admin.register(Article)
@@ -29,3 +29,18 @@ class CategoryAdmin(admin.ModelAdmin):
     list_filter = [('parent', admin.RelatedOnlyFieldListFilter)]
     search_fields = ['name']
     ordering = ['parent', 'name']
+
+
+@admin.register(Comment)
+class CommentAdmin(admin.ModelAdmin):
+    list_display = ['comment_name', 'created_admin']
+    list_filter = ['author', 'article']
+    search_fields = ['author__username', 'author__email', 'body', 'article__title']
+
+    @admin.display(description='Комментарий')
+    def comment_name(self, obj):
+        return f'{obj.author.username} - {obj.article.title}'
+    
+    @admin.display(description='created')
+    def created_admin(self, obj):
+        return obj.created.strftime('%d.%m.%y')
