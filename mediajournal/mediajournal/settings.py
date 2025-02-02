@@ -39,9 +39,16 @@ ALLOWED_HOSTS = []
 
 AUTH_USER_MODEL = 'accounts.Staff'
 
+AUTHENTICATION_BACKENDS = [ 
+    'accounts.auth.EmailAuthBackend',
+    'django.contrib.auth.backends.ModelBackend', 
+    
+]
+
 # Application definition
 
 INSTALLED_APPS = [
+    'web.apps.WebConfig',
     'accounts.apps.AccountsConfig',
     'django.contrib.admin',
     'django.contrib.auth',
@@ -158,19 +165,22 @@ MEDIA_URL = '/media/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # Login settings
-LOGIN_REDIRECT_URL = 'common:main_page' 
+LOGIN_REDIRECT_URL = 'main_page' 
 LOGIN_URL = 'login'
-LOGOUT_URL = 'logout'
-LOGOUT_REDIRECT_URL = 'login'
+# LOGOUT_URL = 'logout'
+# LOGOUT_REDIRECT_URL = 'login'
 
 
 
 # Email backend settings
-# EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'    # uncomment to use terminal
-EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = os.environ.get('EMAIL_HOST')                    
-EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER')          
-EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD')  
-EMAIL_PORT = os.environ.get('EMAIL_PORT')                   
-EMAIL_USE_TLS = str(os.environ.get('EMAIL_USE_TLS')).lower() == 'true'
-EMAIL_USE_SSL = str(os.environ.get('EMAIL_USE_SSL')).lower() == 'true'
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'    # uncomment to use terminal
+# EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+# EMAIL_HOST = os.environ.get('EMAIL_HOST')                    
+# EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER')          
+# EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD')  
+# EMAIL_PORT = os.environ.get('EMAIL_PORT')                   
+# EMAIL_USE_TLS = str(os.environ.get('EMAIL_USE_TLS')).lower() == 'true'
+# EMAIL_USE_SSL = str(os.environ.get('EMAIL_USE_SSL')).lower() == 'true'
+
+# Email subjects etc.
+CONFIRM_EMAIL_SUBJECT = 'Подтвердите ваш емейл'

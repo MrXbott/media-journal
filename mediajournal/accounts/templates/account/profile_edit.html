@@ -1,0 +1,39 @@
+{% extends "common/base.html" %}
+{% load static %}
+
+{% block title %}Редактировать профиль{% endblock %}
+
+{% block breadcrumbs %}
+    <!-- ======= Breadcrumbs ======= -->
+    <div class="breadcrumbs d-flex align-items-center" style="background-image: url({% static 'img/breadcrumbs-bg.jpg'%});">
+        <div class="container position-relative d-flex flex-column align-items-center" data-aos="fade">  
+          <ol>
+            <li><a href="#">Аккаунт</a></li>
+            <li><a href="{% url 'profile' %}">Профайл</a></li>
+            <li class="current">Редактировать</li>
+          </ol>
+  
+        </div>
+    </div><!-- End Breadcrumbs -->
+{% endblock %}
+
+{% block content %}
+    <section id="edit-profile" class="section-bg">
+        <div class="container edit-profile">
+            <div class="row justify-content-center">
+                <div class="col-sm-12 col-md-8 col-lg-5 ">
+                    <form action="." method="post" enctype="multipart/form-data" id="profile-form" class="form">
+                        <h2>Редактировать данные</h2>
+                        {{ profile_form }}
+                        {% csrf_token %}
+                        <p class="btn-center"><input type="submit" class="button" value="Сохранить"></p>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+{% endblock %}
+
+{% block scripts %}
+    <script src="{% static 'js/masks.js' %}"></script>
+{% endblock %}

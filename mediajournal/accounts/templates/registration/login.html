@@ -1,0 +1,33 @@
+{% comment %} {% extends "common/base.html" %} {% endcomment %}
+{% load static %}
+
+{% block title %} Вход {% endblock %}
+
+{% block content %} 
+    <!-- ======= Breadcrumbs ======= -->
+    <div class="breadcrumbs d-flex align-items-center" style="background-image: url({% static 'img/breadcrumbs-bg.jpg'%});">
+    </div><!-- End Breadcrumbs -->
+
+    <section id="login" class="section-bg">
+        <div class="container login">
+            <div class="row justify-content-center">
+                <div class="col-sm-12 col-md-8 col-lg-5 ">
+                    <form action="{% url 'login' %}" method="post" id="login-form" class="form">
+                        <h2>Вход</h2>
+                        {{ form }}
+                        <div class="link-text">
+                            <a href="{% url "password_reset" %}">Забыли пароль?</a>
+                        </div>
+                        {% csrf_token %}
+                        <input type="hidden" name="next" value="{{ next }}" /> 
+                        <p class="btn-center"><input type="submit" value="Вход"></p>
+                        <div class="link-text" id="register">
+                            <a href="{% url "registration" %}">Регистрация</a>
+                        </div>
+                    </form> 
+                </div>
+            </div>
+        </div>
+    </section>
+
+{% endblock %}

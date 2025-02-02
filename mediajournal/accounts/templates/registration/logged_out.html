@@ -1,0 +1,10 @@
+{% comment %} {% extends "common/base.html" %} {% endcomment %}
+
+{% block title %}Logged out{% endblock %}
+
+{% block content %}
+    <h1>Logged out</h1>
+    <p>
+        Вы можете снова <a href="{% url "login" %}">войти</a> или <a href="{% url "registration" %}">зарегистрироваться</a>
+    </p>
+{% endblock %}

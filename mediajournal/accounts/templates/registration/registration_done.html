@@ -1,0 +1,19 @@
+{% comment %} {% extends "common/base.html" %} {% endcomment %}
+{% load static %}
+
+{% block title %}Welcome{% endblock %}
+
+{% block content %}
+    <!-- ======= Breadcrumbs ======= -->
+    <div class="breadcrumbs d-flex align-items-center" style="background-image: url({% static 'img/breadcrumbs-bg.jpg'%});">
+    </div><!-- End Breadcrumbs -->
+    
+    <section id="reset" class="section-bg">
+        <div class="container form">
+            <h2>Welcome {{ new_user.username }}!</h2>
+            <p>Your email was confirmed and account was successfully created.</p> 
+            <p>Now you can <a href="{% url "login" %}">login</a>.</p>
+        </div>
+    </section>
+
+{% endblock %}

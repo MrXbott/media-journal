@@ -1,0 +1,5 @@
+{% autoescape off %} 
+Привет {{ customer.first_name }} {{ customer.last_name }}, 
+Нажмите на ссылку ниже чтобы подтвердить вашу регистрацию
+{{ protocol }}//{{ domain }}{% url 'confirm_email' uidb64=uid token=token %} 
+{% endautoescape %}
