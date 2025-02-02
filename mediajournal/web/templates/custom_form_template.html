@@ -1,0 +1,20 @@
+{% if form.non_field_errors %}
+    {{ form.non_field_errors }}
+{% endif %}
+
+
+{% for field in form.visible_fields  %}
+    <p class="{% if field.errors %}error {% endif %} {% if field.field.required %}required{% endif %}" >
+        {{ field.label_tag }} 
+        {{ field }}
+        {{ field.errors }}
+        {{ field.help_text }}
+    </p>
+{% endfor %}
+
+
+{% for field in form.hidden_fields  %}
+    <p>
+        {{ field }}
+    </p>
+{% endfor %}

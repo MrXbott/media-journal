@@ -1,0 +1,28 @@
+
+<div class="pagination justify-content-center">
+    <ul>
+        {% if page.has_previous %}
+            <li>
+                <a href="?page=1&sort={{ sort_value}}">&laquo; First</a>
+            </li>
+            <li>
+                <a href="?page={{page.previous_page_number}}&sort={{ sort_value}}">Previous</a>
+            </li>
+        {% endif %}
+
+        {% for i in page.paginator.page_range %}
+            <li {% if i == page.number %}class="active"{% endif %}>
+                <a href="?page={{ i }}&sort={{ sort_value}}">{{ i }}</a>
+            </li>
+        {% endfor %}
+
+        {% if page.has_next %}
+            <li>
+                <a href="?page={{ page.next_page_number }}&sort={{ sort_value}}">Next</a>
+            </li>
+            <li>
+                <a href="?page={{ page.paginator.num_pages }}&sort={{ sort_value}}">Last &raquo;</a>
+            </li>
+        {% endif %} 
+    </ul>
+</div>
