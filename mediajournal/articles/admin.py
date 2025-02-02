@@ -11,6 +11,7 @@ class ArticleAdmin(admin.ModelAdmin):
     list_filter = ['status', 'author', 'created', 'published', 'category']
     search_fields = ['title', 'body', 'author']
     ordering = ['status', 'published']
+    save_on_top = True
 
     @admin.display(description='created')
     def created_admin(self, obj):
@@ -39,7 +40,7 @@ class CommentAdmin(admin.ModelAdmin):
 
     @admin.display(description='Комментарий')
     def comment_name(self, obj):
-        return f'{obj.author.username} - {obj.article.title}'
+        return f'{obj.author.username if obj.author else "User deleted"} - {obj.article.title}'
     
     @admin.display(description='created')
     def created_admin(self, obj):

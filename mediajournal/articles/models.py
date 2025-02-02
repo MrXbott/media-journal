@@ -14,7 +14,7 @@ class Article(models.Model):
         ('published', 'Опубликована')
     ]
     title = models.CharField(max_length=300, blank=False, null=False, unique=False)
-    author = models.ForeignKey(User, on_delete=models.DO_NOTHING, related_name='articles')
+    author = models.ForeignKey(User, null=True, on_delete=models.SET_NULL, related_name='articles')
     body = models.TextField()
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='draft')
     created = models.DateTimeField(auto_now_add=True)
@@ -73,7 +73,7 @@ class Category(models.Model):
         super(Category, self).save(*args, **kwargs)
 
 class Comment(models.Model):
-    author = models.ForeignKey(User, related_name='comments', on_delete=models.DO_NOTHING)
+    author = models.ForeignKey(User, related_name='comments', null=True, on_delete=models.SET_NULL)
     article = models.ForeignKey(Article, related_name='article_comments', on_delete=models.CASCADE)
     body = models.TextField()
     created = models.DateTimeField(auto_now_add=True)
@@ -83,4 +83,4 @@ class Comment(models.Model):
         ordering = ['created']
 
     def __str__(self) -> str:
-        return f'Comment by {self.author.username} on {self.article.title}'
+        return f'Comment by {self.author.username if self.author else "User deleted"} on {self.article.title}'
