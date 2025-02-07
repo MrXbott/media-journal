@@ -23,6 +23,7 @@ class User(AbstractBaseUser):
     password = models.CharField(max_length=128, blank=False, unique=False, null=False, verbose_name='Пароль')
     date_joined = models.DateTimeField(default=timezone.now, verbose_name='Дата регистрации')
     is_active = models.BooleanField(default=False)
+    photo = models.ImageField(upload_to='photo/', blank=True, null=True)
 
     USERNAME_FIELD = 'username'
     EMAIL_FIELD = 'email'

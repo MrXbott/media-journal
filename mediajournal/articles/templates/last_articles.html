@@ -1,0 +1,33 @@
+{% load tags %}
+
+<section id="articles" class="articles section-bg">
+    <div class="container" data-aos="fade-up">
+      {% for article in articles.all|slice:'4' %}
+        <div class="row gy-4" data-aos="fade-up" data-aos-delay="200">
+            <div class="col" data-aos="fade-up" data-aos-delay="100">
+                <div class="article-item position-relative h-100">
+                  <div class="article-content d-flex flex-column">
+                    <div class="row align-items-start">
+                      <div>
+                        <span><img class="photo" src={% if article.author and article.author.photo %}{{ article.author.photo.url}}{% else %}{{ default_user_photo.image.url }}{% endif %}></span>
+                        <span class="author">{% if article.author %}{{ article.author.username }}{% else %}User deleted{% endif %}</span>
+                        <span class="published">{{ article.published|date:"d.m.y H:i" }}</span>
+                      </div>
+                    </div>
+                    <div class="row"> 
+                      <div>{{ total_views|item:article.id}} view{{total_views|item:article.id|pluralize}}</div>
+                      <span><a href="{{ article.category.get_absolute_url }}">{{ article.category.name }}</a></span>
+                      
+                      <a href="{{ article.get_absolute_url }}" class="readmore"><p class="title">{{ article.title }}</p></a>
+                    </div>
+                  </div>     
+                  {% if article.image %}
+                      <img src={{ article.image.url }} class="img-fluid" alt="">
+                    {% endif %}
+                     
+                </div>
+            </div>
+        </div>
+      {% endfor %}
+    </div>
+  </section>

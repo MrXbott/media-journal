@@ -29,6 +29,11 @@ class Article(models.Model):
     def __str__(self) -> str:
         return self.title
     
+    def get_absolute_url(self):
+        return reverse('get_article', kwargs={'slug': self.slug, 'category': self.category.full_slug})
+        # return reverse('get_article', args=[self.category.full_slug, self.slug, ])
+    
+    
     def preview(self):
         return mark_safe(f'<img src="{self.image.url}" width="100"/>')
     
@@ -52,6 +57,10 @@ class Category(models.Model):
     @property
     def full_slug(self):
         return self._get_parent_slugs()
+    
+    @property
+    def children(self):
+        return Category.objects.filter(parent=self)
 
     def __str__(self) -> str:
         if self.parent:
@@ -65,7 +74,7 @@ class Category(models.Model):
             return f'{self.parent._get_parent_slugs()}/{self.slug}'
     
     def get_absolute_url(self):
-        return reverse("articles:category", args=[self._get_parent_slugs()])
+        return reverse("get_category", kwargs={'slug': self.full_slug})
     
     def save(self, *args, **kwargs):
         if not self.slug:

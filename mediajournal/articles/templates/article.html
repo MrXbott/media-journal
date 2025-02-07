@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+{% load static %}
+{% comment %} {% block title %}Media Journal{% endblock %} {% endcomment %}
+
+{% block content %}
+    <p>{{ total_views }} view{{ total_views|pluralize }}</p>
+    <p>{{ article.title }}</p>
+    <div>{{ article.body }}</div>
+{% endblock %}

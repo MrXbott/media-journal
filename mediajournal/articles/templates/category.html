@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% load tags %}
+{% load static %}
+
+{% comment %} {% block title %}Media Journal{% endblock %} {% endcomment %}
+
+{% block content %}
+    
+    <div><h1>{{ category.name }}</h1></div>
+    
+    {% for child in category.children %}
+        <p><a href="{{child.get_absolute_url}}">{{child.name}}</a></p>
+        <br>
+        
+    {% endfor %}
+
+    {% for article in articles %}
+        <p>
+            {{ total_views|item:article.id}} view{{total_views|item:article.id|pluralize}}
+        <a href="{{ article.get_absolute_url }}" class="readmore">{{article.title}}</a>
+        </p>
+        <br>
+    {% endfor %}
+
+
+{% endblock %}

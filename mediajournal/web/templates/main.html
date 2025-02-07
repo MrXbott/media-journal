@@ -1,73 +1,27 @@
 {% extends "base.html" %}
 {% load static %}
-{% block title %}LightShop{% endblock %}
+{% block title %}Media Journal{% endblock %}
 
 {% block content %}
-    <!-- ======= Hero Section ======= -->
-    <section id="hero" class="hero">
-
-        <div class="info d-flex align-items-center">
-        <div class="container">
-            <div class="row justify-content-center">
-            <div class="col-lg-6 text-center">
-                <h2 data-aos="fade-down"><span><br>LightShop</span></h2>
-                <p data-aos="fade-up">В нашем магазине представлены самые передовые разработки в области автомобильных Bi-Led модулей..</p>
-                {% comment %} <a data-aos="fade-up" data-aos-delay="200" href="{% url "catalog:catalog" %}" class="btn-get-started">Начать покупки</a> {% endcomment %}
-            </div>
-            </div>
-        </div>
-        </div>
-
-        <div id="hero-carousel" class="carousel slide" data-bs-ride="carousel" data-bs-interval="5000">
-
-        <div class="carousel-item active" style="background-image: url({% static 'img/hero-carousel/car-1.jpg' %})"></div>
-        <div class="carousel-item" style="background-image: url({% static 'img/hero-carousel/car-2.jpg' %})"></div>
-        <div class="carousel-item" style="background-image: url({% static 'img/hero-carousel/car-3.jpg' %})"></div>
-        <div class="carousel-item" style="background-image: url({% static 'img/hero-carousel/car-4.jpg' %})"></div>
-        <div class="carousel-item" style="background-image: url({% static 'img/hero-carousel/car-5.jpg' %})"></div>
-
-        <a class="carousel-control-prev" href="#hero-carousel" role="button" data-bs-slide="prev">
-            <span class="carousel-control-prev-icon bi bi-chevron-left" aria-hidden="true"></span>
-        </a>
-
-        <a class="carousel-control-next" href="#hero-carousel" role="button" data-bs-slide="next">
-            <span class="carousel-control-next-icon bi bi-chevron-right" aria-hidden="true"></span>
-        </a>
-
-        </div>
-
-    </section><!-- End Hero Section -->
-
-    
-  
-      <!-- ======= Services Section ======= -->
-      <section id="services" class="services section-bg">
+      <!-- ======= Categories Section ======= -->  
+      <section id="categories" class=" section-bg">
         <div class="container" data-aos="fade-up">
-  
-          <div class="section-header">
-            <h2>Услуги</h2>
-            <p>Все наши специалисты имеют специальное образование и явряются профессионалами своего дела!</p>
-          </div>
-  
-          <div class="row gy-4" data-aos="fade-up" data-aos-delay="200">
-            {% for service in services.all|slice:'4' %}
-                <div class="col-xl-3 col-md-6" data-aos="fade-up" data-aos-delay="100">
-                    <div class="service-item position-relative h-100">
-                        <img src={{ service.photo.url }} class="img-fluid" alt="">
-                        <div class="service-content d-flex flex-column">
-                            <p class="title">{{ service.name }}</p>
-                            <a href="{{ service.get_absolute_url }}" class="readmore stretched-link"></a>
-                        </div>    
-                    </div>
-                </div>
-            {% endfor %}
-          </div>
-
-          <div class="row mt-5 justify-content-center">
-            {% comment %} <a href="{% url 'services:services' %}" data-aos="fade-up" data-aos-delay="200" class="btn-get-started aos-init aos-animate">Смотреть все <i class="bi bi-arrow-right"></i></a> {% endcomment %}
-          </div>
+          {% for category in categories.all|slice:'4' %}
+            <div class="row" data-aos="fade-up" data-aos-delay="200">
+                <div class="col" data-aos="fade-up" data-aos-delay="100">
+                  <div>
+                    <a href="{{ category.get_absolute_url }}">{{ category.name }}</a>
+                  </div>
+              </div>
+            </div>
+          {% endfor %}
         </div>
-      </section><!-- End Services Section -->
+      </section>
+      <!-- End Categories Section -->
+
+      <!-- ======= Articles Section ======= -->
+      {% include "last_articles.html" %}
+      <!-- End Services Section -->
 
       {% if works %}
       <!-- ======= Our works Section ======= -->
