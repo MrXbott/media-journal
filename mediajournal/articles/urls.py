@@ -7,7 +7,7 @@ register_converter(CustomSlugConverter, 'cstmslug')
 
 urlpatterns = [
     path('<cstmslug:category>/article/<slug:slug>/', views.get_article, name='get_article'),
-    path('categories/', views.get_all_categories, name='get_all_categories'),
+    path('categories/', views.get_all_categories, name='all_categories'),
     path('<cstmslug:slug>/', views.get_category, name='get_category'),
     
     

@@ -26,5 +26,6 @@ def get_last_articles(request):
 def get_article(request, category, slug):
     article = Article.objects.get(slug=slug)
     total_views = r.incr(f'article:{article.id}:views')
+    print('---------', article.category.parents)
     
     return render(request, 'article.html', {'article': article, 'total_views': total_views})

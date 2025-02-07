@@ -61,6 +61,14 @@ class Category(models.Model):
     @property
     def children(self):
         return Category.objects.filter(parent=self)
+    
+    @property
+    def parents(self):
+        if self.parent:
+            parents = self.parent.parents + [self.parent]
+            return parents
+        else:
+            return []
 
     def __str__(self) -> str:
         if self.parent:

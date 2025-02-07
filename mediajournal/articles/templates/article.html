@@ -2,8 +2,23 @@
 {% load static %}
 {% comment %} {% block title %}Media Journal{% endblock %} {% endcomment %}
 
+{% block breadcrumbs %}
+    <!-- ======= Breadcrumbs ======= -->
+    <div class="breadcrumbs d-flex align-items-center" style="background-image: url({% static 'img/breadcrumbs-bg.jpg'%});">
+        <div class="container position-relative align-items-center" data-aos="fade">  
+            <ol>
+            <li><a href="{% url 'all_categories' %}">Все категории</a></li>
+            {% for parent in article.category.parents %}
+                    <li><a href="{{ parent.get_absolute_url }}">{{ parent.name }}</a></li>
+            {% endfor %}
+            <li class="current">{{ article.category.name }}</li>
+          </ol>
+        </div>
+    </div><!-- End Breadcrumbs -->
+{% endblock %}
+
 {% block content %}
     <p>{{ total_views }} view{{ total_views|pluralize }}</p>
-    <p>{{ article.title }}</p>
+    <p><h2>{{ article.title }}</h2></p>
     <div>{{ article.body }}</div>
 {% endblock %}
