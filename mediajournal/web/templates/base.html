@@ -57,19 +57,19 @@
             <i class="mobile-nav-toggle mobile-nav-hide d-none bi bi-x"></i>
             <nav id="navbar" class="navbar">
                 <ul>
-                <li><a href="{% url "main_page" %}" {% if section == "main" %}class="active"{% endif %}>Главная</a></li>
-                {% comment %} <li><a href="{% url "catalog:catalog" %}" {% if section == "catalog" %}class="active"{% endif %}>Каталог</a></li>
-                <li><a href="{% url "services:services" %}" {% if section == "services" %}class="active"{% endif %}>Услуги</a></li>
-                <li><a href="{% url "works:works" %}" {% if section == "works" %}class="active"{% endif %}>Наши работы</a></li>
-                <li><a href="{% url "promotions:promotions" %}" {% if section == "promo" %}class="active"{% endif %}>Акции</a></li>
-                <li><a href="{% url "news:news" %}" {% if section == "news" %}class="active"{% endif %}>Новости</a></li>
-                <li><a href="{% url "shops:contacts" %}" {% if section == "contacts" %}class="active"{% endif %}>Контакты</a></li>
-                <li><a href="{% url "cart:cart" %}" {% if section == "cart" %}class="active"{% endif %}>Корзина (<span id="items-amount">{{ cart|length }}</span>)</a></li> {% endcomment %}
+                {% comment %} <li><a href="{% url "main_page" %}" {% if section == "main" %}class="active"{% endif %}>Главная</a></li> {% endcomment %}
+                <li><a href="{% url "categories" %}" {% if section == "categories" %}class="active"{% endif %}>Категории</a></li>
+                {% comment %} <li><a href="{% url "services:services" %}" {% if section == "services" %}class="active"{% endif %}>Услуги</a></li> {% endcomment %}
+                {% comment %} <li><a href="{% url "works:works" %}" {% if section == "works" %}class="active"{% endif %}>Наши работы</a></li> {% endcomment %}
+                {% comment %} <li><a href="{% url "promotions:promotions" %}" {% if section == "promo" %}class="active"{% endif %}>Акции</a></li> {% endcomment %}
+                {% comment %} <li><a href="{% url "news:news" %}" {% if section == "news" %}class="active"{% endif %}>Новости</a></li> {% endcomment %}
+                {% comment %} <li><a href="{% url "shops:contacts" %}" {% if section == "contacts" %}class="active"{% endif %}>Контакты</a></li> {% endcomment %}
+                {% comment %} <li><a href="{% url "cart:cart" %}" {% if section == "cart" %}class="active"{% endif %}>Корзина (<span id="items-amount">{{ cart|length }}</span>)</a></li> {% endcomment %}
                 {% if request.user.is_authenticated %}
                     <li class="dropdown"><a href="#" {% if section == "account" %}class="active"{% endif %}><span>Аккаунт</span> <i class="bi bi-chevron-down dropdown-indicator"></i></a>
                         <ul>
-                            <li><span>Hi {{ request.user.first_name}}</span></li>
-                            {% comment %} <li><a href="{% url "profile" %}">Профайл</a></li> {% endcomment %}
+                            <li><span>Hi {{ request.user.username}}</span></li>
+                            <li><a href="{% url "profile" %}">Профайл</a></li>
                             {% comment %} <li><a href="{% url "orders" %}">Заказы</a></li> {% endcomment %}
                             <li>
                                 {% comment %} <a href="{% url "logout" %}">Выйти</a> {% endcomment %}

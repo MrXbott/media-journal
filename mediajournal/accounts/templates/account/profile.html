@@ -1,31 +1,18 @@
-{% extends "common/base.html" %}
+{% extends "base.html" %}
 {% load static %}
 
 {% block title %}Profile{% endblock %}
 
-{% block breadcrumbs %}
-    <!-- ======= Breadcrumbs ======= -->
-    <div class="breadcrumbs d-flex align-items-center" style="background-image: url({% static 'img/breadcrumbs-bg.jpg'%});">
-        <div class="container position-relative d-flex flex-column align-items-center" data-aos="fade">
-            {% comment %} <h2>Профайл</h2> {% endcomment %}
-            <ol>
-                <li><a href="#">Аккаунт</a></li>
-                <li>Профайл</li>
-            </ol>
-  
-        </div>
-    </div><!-- End Breadcrumbs -->
-{% endblock %}
+
 
 {% block content%}
     <section id="profile" class="section-bg">
         <div class="container profile">
             <div>
                 <br>
-                ФИО: <b>{{ request.user.first_name }} {% if request.user.second_name %}{{ request.user.second_name }} {% endif %}{{ request.user.last_name }}</b>
+                Имя: <b>{{ request.user.username }} </b>
                 <br>
-                Дата рождения: <b>{% if request.user.date_of_birth %}{{ request.user.date_of_birth }}{% endif %}</b>
-                <br>
+                
                 Емейл: <b>{{ request.user.email }}</b>
                 <br>
                 Телефон: <b>{{ request.user.phone }}</b>
@@ -35,9 +22,9 @@
             </div>
             <br>
             <div>
-                <a class="button" href="{% url "edit_profile" %}">
+                {% comment %} <a class="button" href="{% url "edit_profile" %}">
                     Редактировать
-                </a>
+                </a> {% endcomment %}
             </div>
             <br>
             <div>
@@ -46,65 +33,11 @@
                 </a>
             </div>
             <br>
-
-            <!-- ======= User adresses ======= -->
-            <section id="addresses" class="addresses section-bg">
-                <div class="container" data-aos="fade-up">
-                    <div class="section-title">
-                        <h2>Адреса доставки</h2>
-                    </div>
-
-                    <p>
-                        <input type="button" class="button" value="Добавить адрес" data-bs-toggle="modal" data-bs-target="#addAddressModal">
-                    </p>
-
-                    <div class="adr-list">
-                        <ul>
-                            {% for adr in request.user.addresses.all %}
-                                <li data-aos="fade-up" data-aos-delay="200" id="{{ adr.id }}">
-                                    <i class="bx bx-home icon-home"></i> <a data-bs-toggle="collapse" data-bs-target="#adr-list-{{ forloop.counter }}" class="collapsed">{{ adr.city }}, {{ adr.address }}<i class="bx bx-chevron-down icon-show"></i><i class="bx bx-chevron-up icon-close"></i></a>
-                                    <div id="adr-list-{{ forloop.counter }}" class="collapse" data-bs-parent=".adr-list">
-                                        <div class="row">
-                                            <div class="col">
-                                                {{  adr.postcode }} {{ adr.city }}, {{ adr.address }}, {{ adr.comment }}
-                                            </div>
-                                            <div id="btn-rm-adr" class="col-2">
-                                                <input type="button" value="Удалить" id="{{ adr.id }}">
-                                            </div>
-                                        </div>
-                                    </div>
-                                </li>
-                            {% empty %}
-                                Адреса не указаны
-                            {% endfor %}
-                            
-                        </ul>
-                    </div>
-                </div>
-            </section><!-- End User Addresses Section -->
         </div>
     </section>
-
-    <div class="modal" tabindex="-1" id="addAddressModal">
-        <div class="modal-dialog">
-          <div class="modal-content">
-            <div class="modal-header">
-              <h5 class="modal-title">Добавить адрес доставки</h5>
-              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <form action="/accounts/profile/" method="post" enctype="multipart/form-data" id="adr-form" class="form">
-                    {{ adr_form }}
-                    {% csrf_token %}
-                    <input type="submit" class="btn btn-primary" value="Добавить"/>
-                </form>
-            </div>
-          </div>
-        </div>
-    </div>
 
 {% endblock %}
 
 {% block scripts %}
-    <script src="{% static 'js/remove_address.js' %}"></script>
+    {% comment %} <script src="{% static 'js/remove_address.js' %}"></script> {% endcomment %}
 {% endblock %}

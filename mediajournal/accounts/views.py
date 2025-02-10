@@ -58,11 +58,15 @@ def confirm_email(request: HttpRequest, uidb64: str, token: str) -> HttpResponse
         return render(request, 'registration/registration_done.html')
     return HttpResponse('Activation link is invalid!')
 
+# @login_required
+# def log_out(request):
+#     url = reverse('login') if isinstance(request.user, User) else reverse('admin:index')
+#     logout(request)
+#     return redirect(url)
+
 @login_required
-def log_out(request):
-    url = reverse('login') if isinstance(request.user, User) else reverse('admin:index')
-    logout(request)
-    return redirect(url)
+def profile(request):
+    return render(request, 'account/profile.html', {})
 
 
 class CustomPasswordResetConfirmView(PasswordResetConfirmView):
@@ -74,6 +78,7 @@ class CustomPasswordResetConfirmView(PasswordResetConfirmView):
             user = None
         return user
     
+
 
 
 
