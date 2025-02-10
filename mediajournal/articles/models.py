@@ -7,16 +7,17 @@ from accounts.models import User
 from .ru_slugify import slugify
 
 class Article(models.Model):
-    STATUS_CHOICES = [
-        ('draft', 'Черновик'),
-        ('moderation', 'На модерации'),
-        ('rejected', 'Отклонена'),
-        ('published', 'Опубликована')
-    ]
+
+    class Status(models.TextChoices):
+        DRAFT = 'Draft'
+        MODERATION = 'Moderation'
+        REJECTED = 'Rejected'
+        PUBLISHED = 'Published'
+
     title = models.CharField(max_length=300, blank=False, null=False, unique=False)
     author = models.ForeignKey(User, null=True, on_delete=models.SET_NULL, related_name='articles')
     body = models.TextField()
-    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='draft')
+    status = models.CharField(max_length=20, choices=Status.choices, default=Status.DRAFT)
     created = models.DateTimeField(auto_now_add=True)
     published = models.DateTimeField(blank=True, null=True)
     slug = models.SlugField(max_length=250, unique_for_date='published', blank=True, null=False, unique=True)
@@ -31,7 +32,6 @@ class Article(models.Model):
     
     def get_absolute_url(self):
         return reverse('get_article', kwargs={'slug': self.slug, 'category': self.category.full_slug})
-        # return reverse('get_article', args=[self.category.full_slug, self.slug, ])
     
     
     def preview(self):

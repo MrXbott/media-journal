@@ -1,8 +1,12 @@
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404, redirect
+from django.http import JsonResponse
 from django.conf import settings
+from django.contrib.auth.decorators import login_required
+from django.views.decorators.http import require_POST
 import redis
 
-from .models import Article, Category
+from .models import Article, Category, Comment
+from .forms import CommentForm
 from web.models import Image
 
 
@@ -25,7 +29,23 @@ def get_last_articles(request):
 
 def get_article(request, category, slug):
     article = Article.objects.get(slug=slug)
-    total_views = r.incr(f'article:{article.id}:views')
-    print('---------', article.category.parents)
-    
-    return render(request, 'article.html', {'article': article, 'total_views': total_views})
+    total_views = r.incr(f'article:{article.id}:views')    
+    form = CommentForm()
+    return render(request, 'article.html', {'article': article, 'total_views': total_views, 'form': form})
+
+
+@login_required
+@require_POST
+def post_comment(request):
+    text = request.POST.get('text')
+    try:
+        article_id = int(request.POST.get('article_id'))
+    except ValueError:
+        return JsonResponse({'status': 'error'})
+    form = CommentForm(data=request.POST)
+    if form.is_valid():
+        article = get_object_or_404(Article, id=article_id, status=Article.Status.PUBLISHED)
+        comment = Comment(body=text, author=request.user, article=article)
+        comment.save()
+        return JsonResponse({'status': 'ok', 'username': comment.author.username, 'body': comment.body, 'created': comment.created})
+    return JsonResponse({'status': 'error'})

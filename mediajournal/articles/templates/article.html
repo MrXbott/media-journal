@@ -21,4 +21,29 @@
     <p>{{ total_views }} view{{ total_views|pluralize }}</p>
     <p><h2>{{ article.title }}</h2></p>
     <div>{{ article.body }}</div>
+
+    <h2>Add a new comment</h2>
+    {% comment %} <form action="{% url "post_comment" article.id %}" method="post" id="comment"> {% endcomment %}
+    <form method="post" id="comment">
+        {{ form.as_p }}
+        {% csrf_token %}
+        <input type="hidden" value="{{ article.id }}" id="article_id">
+        <p><input type="submit" value="Add comment" id="submit_comment"></p>
+        
+    </form>
+
+    <div class="raw" id="comments">
+        {% for comment in article.article_comments.all %}
+            <div class="col comment">
+                <b>{{ comment.created|date:"d.m.y H:i" }} {% if comment.author %}{{ comment.author.username }}{% else %}User deleted{% endif %}</b> {{ comment.body }}
+            </div>
+        {% endfor %}
+    </div>
 {% endblock %}
+
+{% block scripts %}
+  <script src="{% static "js/comment.js" %}"></script>
+{% endblock %}
+
+
+     

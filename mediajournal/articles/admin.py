@@ -35,6 +35,7 @@ class CategoryAdmin(admin.ModelAdmin):
 @admin.register(Comment)
 class CommentAdmin(admin.ModelAdmin):
     list_display = ['comment_name', 'created_admin']
+    readonly_fields = ['created']
     list_filter = ['author', 'article']
     search_fields = ['author__username', 'author__email', 'body', 'article__title']
 
