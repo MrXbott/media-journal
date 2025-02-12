@@ -21,8 +21,8 @@
                       <a href="{{ article.get_absolute_url }}" class="readmore"><p class="title">{{ article.title }}</p></a>
                     </div>
                   </div>     
-                  {% if article.image %}
-                      <img src={{ article.image.url }} class="img-fluid" alt="">
+                  {% if article.cover_image %}
+                      <img src={{ article.cover_image.url }} class="img-fluid" alt="">
                     {% endif %}
                      
                 </div>

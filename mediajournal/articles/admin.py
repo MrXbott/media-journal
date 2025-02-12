@@ -5,12 +5,12 @@ from .models import Article, Category, Comment
 
 @admin.register(Article)
 class ArticleAdmin(admin.ModelAdmin):
-    fields = ['author', 'status', 'created', 'published', 'title', 'category', 'body', 'slug', 'image', 'preview']
+    fields = ['author', 'status', 'created', 'published', 'title', 'category', 'body', 'slug', 'cover_image', 'preview']
     readonly_fields = ['created', 'published', 'preview']
     list_display = ['title', 'author', 'category', 'status', 'created_admin', 'published_admin']
     list_filter = ['status', 'author', 'created', 'published', 'category']
     search_fields = ['title', 'body', 'author']
-    ordering = ['status', 'published']
+    ordering = ['status', '-published']
     save_on_top = True
 
     @admin.display(description='created')

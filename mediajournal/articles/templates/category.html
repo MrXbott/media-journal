@@ -8,7 +8,7 @@
     <div class="breadcrumbs d-flex align-items-center" style="background-image: url({% static 'img/breadcrumbs-bg.jpg'%});">
         <div class="container position-relative align-items-center" data-aos="fade">  
             <ol>
-            <li><a href="{% url 'all_categories' %}">Все категории</a></li>
+            <li><a href="{% url 'categories' %}">Все категории</a></li>
             {% for parent in category.parents %}
                     <li><a href="{{ parent.get_absolute_url }}">{{ parent.name }}</a></li>
             {% endfor %}

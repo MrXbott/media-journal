@@ -9,7 +9,7 @@ from .ru_slugify import slugify
 class Article(models.Model):
 
     class Status(models.TextChoices):
-        DRAFT = 'Draft'
+        # DRAFT = 'Draft'
         MODERATION = 'Moderation'
         REJECTED = 'Rejected'
         PUBLISHED = 'Published'
@@ -17,15 +17,15 @@ class Article(models.Model):
     title = models.CharField(max_length=300, blank=False, null=False, unique=False)
     author = models.ForeignKey(User, null=True, on_delete=models.SET_NULL, related_name='articles')
     body = models.TextField()
-    status = models.CharField(max_length=20, choices=Status.choices, default=Status.DRAFT)
+    status = models.CharField(max_length=20, choices=Status.choices, default=Status.MODERATION)
     created = models.DateTimeField(auto_now_add=True)
     published = models.DateTimeField(blank=True, null=True)
     slug = models.SlugField(max_length=250, unique_for_date='published', blank=True, null=False, unique=True)
     category = models.ForeignKey('Category', blank=False, null=True, on_delete=models.SET_NULL)
-    image = models.ImageField(upload_to='images/', blank=True, null=True)
+    cover_image = models.ImageField(upload_to='images/', blank=True, null=True)
 
     class Meta:
-        ordering = ['category', 'published']
+        ordering = ['published']
 
     def __str__(self) -> str:
         return self.title
@@ -40,7 +40,7 @@ class Article(models.Model):
     def save(self, *args, **kwargs):
         if not self.slug:
             self.slug = slugify(self.title)
-        if self.status == 'published':
+        if self.status == self.Status.PUBLISHED and not self.published:
             self.published = datetime.now()
         super(Article, self).save(*args, **kwargs)
     

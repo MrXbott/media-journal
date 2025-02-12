@@ -1,6 +1,6 @@
 from django import forms
 
-from .models import Comment
+from .models import Comment, Article
 
 
 # class CommentForm(forms.ModelForm):
@@ -10,4 +10,9 @@ from .models import Comment
 
 class CommentForm(forms.Form):
     text = forms.CharField(widget=forms.Textarea, required=True, label='comment')
-    # article_id = forms.IntegerField(widget=forms.HiddenInput)
+    
+
+class ArticleForm(forms.ModelForm):
+    class Meta:
+        model = Article
+        fields = ['title', 'body', 'category']

@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+    <div>написать статью</div>
+    <div>
+        <form method="post" id="comment">
+            {{ form.as_p }}
+            {% csrf_token %}
+            <p><input type="submit" value="Send article" id="send_article"></p>
+        </form>
+    </div>
+{% endblock %}

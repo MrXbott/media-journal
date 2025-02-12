@@ -8,10 +8,10 @@ from web.models import Image
 r = redis.Redis(host=settings.REDIS_HOST, port=settings.REDIS_PORT, db=settings.REDIS_DB)
 
 def main_page(request):
-    articles = Article.objects.all().order_by('published')
+    articles = Article.objects.filter(status=Article.Status.PUBLISHED).order_by('-published')
     categories = Category.objects.filter(parent=None)
     default_user_photo = Image.objects.get(type='default_user_photo')
-    total_views = {article.id: int(r.get(f'article:{article.id}:views')) for article in articles}
+    total_views = {article.id: int(r.get(f'article:{article.id}:views')) if r.get(f'article:{article.id}:views') else 0 for article in articles}
     
     return render(request, 'main.html', {
         'articles': articles, 
