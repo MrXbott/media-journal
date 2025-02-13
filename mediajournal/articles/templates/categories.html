@@ -1,18 +1,15 @@
 {% extends "base.html" %}
 {% load static %}
-{% comment %} {% block title %}Media Journal{% endblock %} {% endcomment %}
 
 {% block content %}
-    {% comment %} <p>{{ article.title }}</p>
-    <div>{{ article.body }}</div> {% endcomment %}
     {% for category in categories %}
         <div>
             <p>
-                <a href="{{ category.get_absolute_url }}" class="readmore"> {{ category.name }} </a>
+                <h3><a href="{{ category.get_absolute_url }}" class="readmore"> {{ category.name }} </a></h3>
             </p>
             {% for child in category.children %}
-                <p>{{child.name}}</p>
-                {% comment %} {{child.get_absolute_url}} {% endcomment %}
+                <a href="{{ child.get_absolute_url }}" class="readmore"> {{ child.name }} </a>
+                <br>
             {% endfor %}
         </div>
     {% endfor %}
