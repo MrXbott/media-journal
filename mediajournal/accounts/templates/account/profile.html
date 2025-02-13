@@ -33,6 +33,13 @@
                 </a>
             </div>
             <br>
+            <div>
+                <h3>Ваши статьи</h3>
+                {% for article in request.user.articles.all %}
+                    {{ article.status }} <a href={{ article.get_absolute_url}}>{{ article.title }}</a>
+                    <br>
+                {% endfor %}
+            </div>
         </div>
     </section>
 
