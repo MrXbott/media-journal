@@ -16,7 +16,7 @@ class Staff(AbstractUser):
 
 
 class User(AbstractBaseUser):
-    username = models.CharField(max_length=100, blank=True, null=True, unique=False, verbose_name='Имя пользователя')
+    username = models.CharField(max_length=100, blank=True, null=True, unique=True, verbose_name='Имя пользователя')
     email = models.EmailField(blank=False, unique=True, null=False, verbose_name='Эл. адрес')
     phone_validator = RegexValidator(regex=r'^[+][7][(]\d{3}[)]\d{3}-\d{2}-\d{2}$', message="Введите номер телефона в формате: '+7(999)999-99-99'. ")
     phone = models.CharField(max_length=18, validators=[phone_validator], blank=True, unique=True, null=True, verbose_name='Моб. тел.')

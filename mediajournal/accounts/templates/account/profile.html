@@ -10,8 +10,13 @@
         <div class="container profile">
             <div>
                 <br>
-                Имя: <b>{{ request.user.username }} </b>
-                <br>
+                Ваше имя:
+                <input type="text" id="username" value="{{ request.user.username }}">
+                <button type="button" class="button" id="save_username">Сохранить</button>
+                <div id="message_username">
+
+                </div>
+                <br><br>
                 
                 Емейл: <b>{{ request.user.email }}</b>
                 <br>
@@ -46,5 +51,5 @@
 {% endblock %}
 
 {% block scripts %}
-    {% comment %} <script src="{% static 'js/remove_address.js' %}"></script> {% endcomment %}
+    <script src="{% static 'js/edit_username.js' %}"></script>
 {% endblock %}

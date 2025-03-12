@@ -68,6 +68,21 @@ def confirm_email(request: HttpRequest, uidb64: str, token: str) -> HttpResponse
 def profile(request):
     return render(request, 'account/profile.html', {})
 
+@login_required
+def edit_username(request):
+    new_username = request.POST.dict()['username']
+    user = User.objects.get(id=request.user.id)
+    
+    if User.objects.filter(username=new_username) and User.objects.filter(username=new_username).first() != user:
+        return JsonResponse({'message': 'This username already taken'})
+    
+    if new_username and new_username != user.username:
+        user.username = new_username
+        user.save()
+        return JsonResponse({'message': 'Your username updated successfully'})
+    return JsonResponse({'message': 'You already have this username'})
+
+
 
 class CustomPasswordResetConfirmView(PasswordResetConfirmView):
     def get_user(self, uidb64):
