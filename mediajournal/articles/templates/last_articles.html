@@ -9,7 +9,7 @@
                   <div class="article-content d-flex flex-column">
                     <div class="row align-items-start">
                       <div>
-                        <span><img class="photo" src={% if article.author and article.author.photo %}{{ article.author.photo.url}}{% else %}{{ default_user_photo.image.url }}{% endif %}></span>
+                        <span><img class="user_photo" src={% if article.author and article.author.photo %}{{ article.author.photo.url}}{% else %}{{ default_user_photo.image.url }}{% endif %}></span>
                         <span class="author">{% if article.author %}{{ article.author.username }}{% else %}User deleted{% endif %}</span>
                         <span class="published">{{ article.published|date:"d.m.y H:i" }}</span>
                       </div>
@@ -23,7 +23,7 @@
                   </div>     
                   {% if article.cover_image %}
                       <img src={{ article.cover_image.url }} class="img-fluid" alt="">
-                    {% endif %}
+                  {% endif %}
                      
                 </div>
             </div>

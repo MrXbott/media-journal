@@ -18,7 +18,15 @@
 {% endblock %}
 
 {% block content %}
-    <p>{{ total_views }} view{{ total_views|pluralize }}</p>
+    <div class="row align-items-start">
+        <div class="article-item">
+            <span><img class="user_photo" src={% if article.author and article.author.photo %}{{ article.author.photo.url}}{% else %}{{ default_user_photo.image.url }}{% endif %}></span>
+            <span class="author">{% if article.author %}{{ article.author.username }}{% else %}User deleted{% endif %}</span>
+            <span class="published">{{ article.published|date:"d.m.y H:i" }}</span>
+            <span>{{ total_views }} view{{ total_views|pluralize }}</span>
+        </div>
+    </div>
+
     <p><h2>{{ article.title }}</h2></p>
     <div>{{ article.body }}</div>
 
