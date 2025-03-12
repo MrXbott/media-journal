@@ -9,6 +9,9 @@
     <section id="profile" class="section-bg">
         <div class="container profile">
             <div>
+                <img class="user_photo" src="{{ request.user.photo.url}}">
+            </div>
+            <div>
                 <br>
                 Ваше имя:
                 <input type="text" id="username" value="{{ request.user.username }}">
@@ -22,15 +25,11 @@
                 <br>
                 Телефон: <b>{{ request.user.phone }}</b>
                 <br>
-                Статус профиля: <b>{% if not request.user.is_active %}не {% endif%}активирован</b>
+                Статус профиля: <b>{% if not request.user.is_active %}не {% endif%}активен</b>
                 <br>
             </div>
             <br>
-            <div>
-                {% comment %} <a class="button" href="{% url "edit_profile" %}">
-                    Редактировать
-                </a> {% endcomment %}
-            </div>
+
             <br>
             <div>
                 <a class="button" href="{% url "password_change" %}">
