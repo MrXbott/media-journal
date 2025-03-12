@@ -105,3 +105,12 @@ class CustomAuthenticationForm(AuthenticationForm):
         super(CustomAuthenticationForm, self).__init__(*args, **kwargs)
         self.fields['username'].label = 'Эл. адрес'
         self.fields['password'].label = 'Пароль'
+
+
+class UserPhotoEditForm(forms.ModelForm):
+    class Meta:
+        model = User
+        fields = ['photo']
+        widgets = {
+            'photo': forms.FileInput(),
+        }

@@ -12,7 +12,7 @@ from django.contrib.auth.decorators import login_required
 from django.core.exceptions import ValidationError
 from django.http import HttpRequest, HttpResponse, HttpResponseRedirect, JsonResponse
 
-from .forms import RegistrationForm
+from .forms import RegistrationForm, UserPhotoEditForm
 from .token import email_verification_token
 from .tasks import send_confirm_email
 from .models import User
@@ -66,7 +66,13 @@ def confirm_email(request: HttpRequest, uidb64: str, token: str) -> HttpResponse
 
 @login_required
 def profile(request):
-    return render(request, 'account/profile.html', {})
+    if request.method == 'POST':
+        form = UserPhotoEditForm(data=request.POST, files=request.FILES, instance=request.user)
+        if form.is_valid():
+            form.save()
+    else:
+        form = UserPhotoEditForm()
+    return render(request, 'account/profile.html', {'form': form})
 
 @login_required
 def edit_username(request):
