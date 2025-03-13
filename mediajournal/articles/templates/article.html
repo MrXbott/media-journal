@@ -24,6 +24,9 @@
             <span class="author">{% if article.author %}{{ article.author.username }}{% else %}User deleted{% endif %}</span>
             <span class="published">{{ article.published|date:"d.m.y H:i" }}</span>
             <span>{{ total_views }} view{{ total_views|pluralize }}</span>
+
+            {% include "bookmarks.html" with article=article user=request.user %}
+            
         </div>
     </div>
 
@@ -51,6 +54,7 @@
 
 {% block scripts %}
   <script src="{% static "js/comment.js" %}"></script>
+  <script src="{% static "js/bookmarks.js" %}"></script>
 {% endblock %}
 
 

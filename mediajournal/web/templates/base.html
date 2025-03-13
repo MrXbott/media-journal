@@ -253,6 +253,8 @@
             }); 
         </script>
 
+        {{ request.user.is_authenticated|json_script:"user_auth" }}
+        
         {% block scripts %} 
         
         {% endblock %}

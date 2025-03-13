@@ -1,0 +1,13 @@
+{% load static %}
+
+{% if user in article.bookmarked_by.all %} 
+    <div class="bookmark-icon" data-id="{{ article.id }}" data-action="unlike">
+        <img src="{% static "icons/heart_black.svg" %}" class="hide" id="unlk">
+        <img src="{% static "icons/heart_black_clicked.svg" %}" class="" id="lk">
+    </div>
+{% else %} 
+    <div class="bookmark-icon" data-id="{{ article.id }}" data-action="like">
+        <img src="{% static "icons/heart_black.svg" %}" class="" id="unlk">
+        <img src="{% static "icons/heart_black_clicked.svg" %}" class="hide" id="lk">
+    </div>
+{% endif %}

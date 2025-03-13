@@ -5,7 +5,7 @@ from django.contrib.auth.decorators import login_required
 from django.views.decorators.http import require_POST
 import redis
 
-from .models import Article, Category, Comment
+from .models import Article, Category, Comment, Bookmark
 from .forms import CommentForm, ArticleForm
 from web.models import Image
 
@@ -65,3 +65,20 @@ def post_comment(request):
         comment.save()
         return JsonResponse({'status': 'ok', 'username': comment.author.username, 'body': comment.body, 'created': comment.created})
     return JsonResponse({'status': 'error'})
+
+
+@login_required
+@require_POST
+def bookmark_article(request):
+    article_id = request.POST.get('article_id')
+    article = Article.objects.get(id=article_id)
+    if article in Article.objects.filter(bookmarked_by=request.user):
+        print('article already in bookmarks. deleting')
+        Bookmark.objects.filter(user=request.user, article=article).delete()
+        return JsonResponse({'bookmark': 'removed'})
+    else:
+        print('adding article to bookmarks')
+        Bookmark.objects.create(user=request.user, article=article)
+        return JsonResponse({'bookmark': 'added'})
+    
+    # return JsonResponse({})

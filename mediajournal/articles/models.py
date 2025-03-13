@@ -23,6 +23,7 @@ class Article(models.Model):
     slug = models.SlugField(max_length=250, unique_for_date='published', blank=True, null=False, unique=True)
     category = models.ForeignKey('Category', blank=False, null=True, on_delete=models.SET_NULL)
     cover_image = models.ImageField(upload_to='images/', blank=True, null=True)
+    bookmarked_by = models.ManyToManyField(User, through='Bookmark')
 
     class Meta:
         ordering = ['published']
@@ -44,6 +45,17 @@ class Article(models.Model):
             self.published = datetime.now()
         super(Article, self).save(*args, **kwargs)
     
+
+class Bookmark(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='bookmarks')
+    article = models.ForeignKey(Article, on_delete=models.CASCADE)
+
+    class Meta:
+        constraints = [
+        models.UniqueConstraint(
+            fields=['user_id', 'article_id'], 
+            name='unique bookmark')
+    ]
 
 class Category(models.Model):
     name = models.CharField(max_length=50, blank=False, null=False, unique=True)

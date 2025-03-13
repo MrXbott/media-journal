@@ -49,6 +49,14 @@
                     <br>
                 {% endfor %}
             </div>
+
+            <div>
+                <h3>Bookmarks</h3>
+                {% for bookmark in request.user.bookmarks.all %}
+                    <a href={{ bookmark.article.get_absolute_url}}>{{ bookmark.article.title }}</a>
+                    <br>
+                {% endfor %}
+            </div>
         </div>
     </section>
 
