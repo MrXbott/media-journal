@@ -3,7 +3,12 @@ from django.utils.html import format_html
 from django.urls import reverse
 from django.utils.http import urlencode
 
-from .models import Article, Category, Comment, Bookmark
+from .models import Article, Category, Comment, Bookmark, ArticleImage
+
+class ArticleImageInline(admin.TabularInline):
+    model = ArticleImage
+    extra = 0
+    readonly_fields = ['preview']
 
 
 @admin.register(Article)
@@ -15,6 +20,8 @@ class ArticleAdmin(admin.ModelAdmin):
     search_fields = ['title', 'body', 'author']
     ordering = ['status', '-published']
     save_on_top = True
+    prepopulated_fields = {"slug": ["title",]}
+    inlines = [ArticleImageInline, ]
 
     @admin.display(description='created')
     def created_admin(self, obj):

@@ -27,14 +27,23 @@
 
             {% include "bookmarks.html" with article=article user=request.user %}
             
+            <p><h2>{{ article.title }}</h2></p>
+            <div>{{ article.body }}</div>
+
+            {% if article.images.all %}
+                <div id="article-images" >
+                    {% for image in article.images.all %}
+                        <img src={{ image.image.url }}>
+                    {% endfor %}
+                </div>
+            {% endif %}
         </div>
     </div>
 
-    <p><h2>{{ article.title }}</h2></p>
-    <div>{{ article.body }}</div>
-
-    <h2>Add a new comment</h2>
-    {% comment %} <form action="{% url "post_comment" article.id %}" method="post" id="comment"> {% endcomment %}
+    
+    <br>
+    <br>
+    <h4>Add a new comment</h4>
     <form method="post" id="comment">
         {{ form.as_p }}
         {% csrf_token %}

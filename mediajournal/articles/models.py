@@ -6,6 +6,7 @@ from datetime import datetime
 from accounts.models import User
 from .ru_slugify import slugify
 
+
 class Article(models.Model):
 
     class Status(models.TextChoices):
@@ -25,6 +26,7 @@ class Article(models.Model):
     cover_image = models.ImageField(upload_to='images/', blank=True, null=True)
     bookmarked_by = models.ManyToManyField(User, through='Bookmark')
 
+
     class Meta:
         ordering = ['published']
 
@@ -36,7 +38,7 @@ class Article(models.Model):
     
     
     def preview(self):
-        return mark_safe(f'<img src="{self.image.url}" width="100"/>')
+        return mark_safe(f'<img src="{self.cover_image.url}" width="100"/>')
     
     def save(self, *args, **kwargs):
         if not self.slug:
@@ -113,3 +115,13 @@ class Comment(models.Model):
 
     def __str__(self) -> str:
         return f'Comment by {self.author.username if self.author else "User deleted"} on {self.article.title}'
+    
+class ArticleImage(models.Model):
+    image = models.ImageField(upload_to='images/', blank=False, null=False)
+    article = models.ForeignKey(Article, related_name='images', on_delete=models.CASCADE)
+
+    def __str__(self) -> str:
+        return self.image.name
+    
+    def preview(self):
+        return mark_safe(f'<img src="{self.image.url}" width="100"/>')

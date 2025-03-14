@@ -6,7 +6,7 @@ from django.views.decorators.http import require_POST
 import redis
 
 from .models import Article, Category, Comment, Bookmark
-from .forms import CommentForm, ArticleForm
+from .forms import CommentForm, ArticleForm, ArticleImageFormSet
 from web.models import Image
 
 
@@ -36,19 +36,40 @@ def get_article(request, category, slug):
     return render(request, 'article.html', {'article': article, 'total_views': total_views, 'form': form})
 
 
+# @login_required
+# def write_article(request):
+#     if request.method == 'POST':
+#         form = ArticleForm(data=request.POST)
+#         if form.is_valid():
+#             article = form.save(commit=False)
+#             article.author = request.user
+#             article.save()
+#             return render(request, 'article_send.html')
+#     else:
+#         form = ArticleForm()
+#     return render(request, 'article_write.html', {'form': form})
+
+
 @login_required
 def write_article(request):
     if request.method == 'POST':
-        form = ArticleForm(data=request.POST)
-        if form.is_valid():
+        form = ArticleForm(data=request.POST, files=request.FILES)
+        formset = ArticleImageFormSet(data=request.POST, files=request.FILES)
+        if form.is_valid() and formset.is_valid():
             article = form.save(commit=False)
             article.author = request.user
             article.save()
+            images = formset.save(commit=False)
+            for image in images:
+                image.article = article
+                image.save()
             return render(request, 'article_send.html')
     else:
         form = ArticleForm()
-    return render(request, 'article_write.html', {'form': form})
-
+        formset = ArticleImageFormSet()
+        # formset_empty = formset.empty_form
+    return render(request, 'article_write.html', {'form': form, 'formset': formset, })
+    
 
 @login_required
 @require_POST

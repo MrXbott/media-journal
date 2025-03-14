@@ -4,10 +4,35 @@
 {% block content %}
     <div>написать статью</div>
     <div>
-        <form method="post" id="comment">
-            {{ form.as_p }}
+        <form method="post" id="comment" enctype="multipart/form-data">
+            <div id="article_form">
+            {{ form }}
+            </div>
+            <div id="images_formset">
+                <div id="empty_form" class="hide">
+                    {{ formset.empty_form }}
+                </div>
+                {% for form in formset %}
+                    <div>{{ form }}</div>
+                {% endfor %}
+            </div>
+            {% comment %} <div id="images_formset">
+                {% for form in formset %}
+                    <div>{{ form.as_p }}</div>
+                {% endfor %}
+            </div> {% endcomment %}
+            <div id="management_form">
+                {{ formset.management_form }}
+            </div>
+
+            <p><input type="button" value="Add Image" id="add_image"></p>
             {% csrf_token %}
             <p><input type="submit" value="Send article" id="send_article"></p>
         </form>
+        
     </div>
+{% endblock %}
+
+{% block scripts %}
+  <script src="{% static "js/add_image_form.js" %}"></script>
 {% endblock %}
