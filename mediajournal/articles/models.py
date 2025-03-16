@@ -33,7 +33,7 @@ class Article(models.Model):
     published = models.DateTimeField(blank=True, null=True)
     slug = models.SlugField(max_length=250, unique_for_date='published', blank=True, null=True, unique=True)
     category = models.ForeignKey('Category', blank=False, null=True, on_delete=models.SET_NULL)
-    cover_image = models.ImageField(upload_to='images/', blank=True, null=True)
+    cover_image = models.ImageField(upload_to='images/', blank=True, null=True, default='default/default_article_cover.jpg')
     bookmarked_by = models.ManyToManyField(User, through='Bookmark')
 
     class Meta:
