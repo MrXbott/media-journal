@@ -70,7 +70,7 @@ def post_comment(request):
         article = get_object_or_404(Article, id=article_id, status=Article.Status.PUBLISHED)
         comment = Comment(body=text, author=request.user, article=article)
         comment.save()
-        return JsonResponse({'status': 'ok', 'username': comment.author.username, 'body': comment.body, 'created': comment.created})
+        return JsonResponse({'status': 'ok', 'username': comment.author.username, 'comment': comment.body, 'created': comment.created})
     return JsonResponse({'status': 'error'})
 
 

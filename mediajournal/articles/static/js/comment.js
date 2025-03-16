@@ -18,14 +18,9 @@ $(document).ready(function(){
                 console.log(json)
                 if (json['status'] == 'ok'){
                     console.log('comment saved');  
-                    console.log($('#comments div.comment:last'))  ;
-                    let comment = $('#comments div.comment:last').clone();
-                    comment.empty();
-                    comment.append('<b>'+ json['created'] + ' ' + json['username'] +'</b> ' + json['body']);
-                    console.log(comment);
-                    $(comment).insertAfter( $('#comments div.comment:last') );
-                    // text = $('#id_text').val();
-                    // $('<div id="NextElement">' + text + '</div>').insertAfter( $('#comments div.comment:last') );
+                    let comment_text = '<b>'+ json['created'] + ' ' + json['username'] +'</b> ' + json['comment'];
+                    $('div#comments').append($('<div>').attr({'class': 'comment'}).html(comment_text));
+                    $('textarea#id_text').val('');
                 }
                 
             },

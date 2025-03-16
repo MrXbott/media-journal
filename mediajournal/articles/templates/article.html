@@ -54,7 +54,7 @@
 
     <div class="raw" id="comments">
         {% for comment in article.article_comments.all %}
-            <div class="col comment">
+            <div class="comment">
                 <b>{{ comment.created|date:"d.m.y H:i" }} {% if comment.author %}{{ comment.author.username }}{% else %}User deleted{% endif %}</b> {{ comment.body }}
             </div>
         {% endfor %}
