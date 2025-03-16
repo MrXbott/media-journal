@@ -15,7 +15,7 @@ class ArticleImageInline(admin.TabularInline):
 class ArticleAdmin(admin.ModelAdmin):
     fields = ['author', 'status', 'created', 'published', 'title', 'slug', 'category', 'body', 'cover_image', 'preview', ]
     readonly_fields = ['created', 'published', 'preview']
-    list_display = ['title', 'author', 'category', 'status', 'created_admin', 'published_admin', 'bookmarks']
+    list_display = ['title', 'author', 'category', 'status', 'created_admin', 'published_admin', 'comments', 'bookmarks']
     list_filter = ['status', 'author', 'created', 'published', 'category']
     search_fields = ['title', 'body', 'author']
     ordering = ['status', '-published']
@@ -42,6 +42,15 @@ class ArticleAdmin(admin.ModelAdmin):
         )
         return format_html(f'<a href="{url}">{count}</a>')
     
+    @admin.display(description='comments')
+    def comments(self, obj):
+        count = obj.article_comments.all().count()
+        url = (
+            reverse('admin:articles_comment_changelist')
+            + '?'
+            + urlencode({'article__id': obj.id})
+        )
+        return format_html(f'<a href="{url}">{count}</a>')
 
 @admin.register(Category)
 class CategoryAdmin(admin.ModelAdmin):
