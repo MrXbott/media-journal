@@ -12,4 +12,10 @@ class ArticleForm(forms.ModelForm):
         model = Article
         fields = ['title', 'body', 'category']
 
+class ArticleImageForm(forms.ModelForm):
+    class Meta:
+        model = ArticleImage
+        fields = ['image']
+
 ArticleImageFormSet = inlineformset_factory(Article, ArticleImage, fields=['image'], extra=2, can_delete=True, max_num=10,)
+# inlineformset_factory()

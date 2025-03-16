@@ -964,6 +964,11 @@ ul.messages li a.close {
   text-align: left;
 }
 
+.uploading-image {
+  width: 100px;
+  height: 100px;
+  object-fit: cover;
+}
 .works-main .btn-get-started,
 .articles .btn-get-started {
   font-family: var(--font-primary);

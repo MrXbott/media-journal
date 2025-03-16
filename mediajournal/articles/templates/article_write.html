@@ -11,9 +11,13 @@
             <div id="images_formset">
                 <div id="empty_form" class="hide">
                     {{ formset.empty_form }}
+                    <div class='image-message'></div>
                 </div>
                 {% for form in formset %}
-                    <div>{{ form }}</div>
+                    <div id="image-{{ forloop.counter0 }}">
+                        {{ form }}
+                        <div class='image-message'></div>
+                    </div>
                 {% endfor %}
             </div>
             {% comment %} <div id="images_formset">
@@ -35,4 +39,5 @@
 
 {% block scripts %}
   <script src="{% static "js/add_image_form.js" %}"></script>
+  <script src="{% static "js/validate_image.js" %}"></script>
 {% endblock %}
