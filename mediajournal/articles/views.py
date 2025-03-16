@@ -36,20 +36,6 @@ def get_article(request, category, slug):
     return render(request, 'article.html', {'article': article, 'total_views': total_views, 'form': form})
 
 
-# @login_required
-# def write_article(request):
-#     if request.method == 'POST':
-#         form = ArticleForm(data=request.POST)
-#         if form.is_valid():
-#             article = form.save(commit=False)
-#             article.author = request.user
-#             article.save()
-#             return render(request, 'article_send.html')
-#     else:
-#         form = ArticleForm()
-#     return render(request, 'article_write.html', {'form': form})
-
-
 @login_required
 def write_article(request):
     if request.method == 'POST':

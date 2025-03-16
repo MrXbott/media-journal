@@ -1,13 +1,23 @@
 from django.db import models
 from django.urls import reverse
 from django.utils.safestring import mark_safe
+from django.core.exceptions import ValidationError
 from datetime import datetime
 
 from accounts.models import User
 from .ru_slugify import slugify
 
+class SafeGetManager(models.Manager):
+    def safe_get(self, **kwargs):
+        try:
+            return self.get(**kwargs)
+        except self.model.DoesNotExist:
+            return None
+        # except self.model.MultipleObjectsReturned:
+        #     return None
 
 class Article(models.Model):
+    objects = SafeGetManager()
 
     class Status(models.TextChoices):
         # DRAFT = 'Draft'
@@ -21,11 +31,10 @@ class Article(models.Model):
     status = models.CharField(max_length=20, choices=Status.choices, default=Status.MODERATION)
     created = models.DateTimeField(auto_now_add=True)
     published = models.DateTimeField(blank=True, null=True)
-    slug = models.SlugField(max_length=250, unique_for_date='published', blank=True, null=False, unique=True)
+    slug = models.SlugField(max_length=250, unique_for_date='published', blank=True, null=True, unique=True)
     category = models.ForeignKey('Category', blank=False, null=True, on_delete=models.SET_NULL)
     cover_image = models.ImageField(upload_to='images/', blank=True, null=True)
     bookmarked_by = models.ManyToManyField(User, through='Bookmark')
-
 
     class Meta:
         ordering = ['published']
@@ -36,16 +45,17 @@ class Article(models.Model):
     def get_absolute_url(self):
         return reverse('get_article', kwargs={'slug': self.slug, 'category': self.category.full_slug})
     
-    
     def preview(self):
         return mark_safe(f'<img src="{self.cover_image.url}" width="100"/>')
     
     def save(self, *args, **kwargs):
-        if not self.slug:
-            self.slug = slugify(self.title)
         if self.status == self.Status.PUBLISHED and not self.published:
             self.published = datetime.now()
         super(Article, self).save(*args, **kwargs)
+
+    def clean(self):
+        if self.status == self.Status.PUBLISHED and not self.slug:
+            raise ValidationError({'slug': 'Enter a slug because you want to publish the article'})
     
 
 class Bookmark(models.Model):

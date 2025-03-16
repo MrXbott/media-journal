@@ -5,15 +5,15 @@ from django.utils.http import urlencode
 
 from .models import Article, Category, Comment, Bookmark, ArticleImage
 
+
 class ArticleImageInline(admin.TabularInline):
     model = ArticleImage
     extra = 0
     readonly_fields = ['preview']
 
-
 @admin.register(Article)
 class ArticleAdmin(admin.ModelAdmin):
-    fields = ['author', 'status', 'created', 'published', 'title', 'category', 'body', 'slug', 'cover_image', 'preview', ]
+    fields = ['author', 'status', 'created', 'published', 'title', 'slug', 'category', 'body', 'cover_image', 'preview', ]
     readonly_fields = ['created', 'published', 'preview']
     list_display = ['title', 'author', 'category', 'status', 'created_admin', 'published_admin', 'bookmarks']
     list_filter = ['status', 'author', 'created', 'published', 'category']
