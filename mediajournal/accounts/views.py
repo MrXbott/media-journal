@@ -72,7 +72,7 @@ def profile(request):
             form.save()
     else:
         form = UserPhotoEditForm()
-    return render(request, 'account/profile.html', {'form': form})
+    return render(request, 'account/profile.html', {'photo_form': form})
 
 @login_required
 def edit_username(request):

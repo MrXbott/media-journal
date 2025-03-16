@@ -12,7 +12,7 @@
                 <img class="user_photo" src="{{ request.user.photo.url}}">
             </div>
             <form method="post" enctype="multipart/form-data">
-                {{ form.as_p }}
+                {{ photo_form }}
                 {% csrf_token %}
                 <p><input type="submit" class="button" value="Сохранить"></p>
             </form>
