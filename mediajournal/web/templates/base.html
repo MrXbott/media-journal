@@ -103,9 +103,14 @@
         </div>
 
         <div class="row">
-            <div class="col-3" id="categories">
-                <!-- filled by ajax: comments.js -->
+            {% comment %} <div id="sidebar" class="container">
+                
+            </div> {% endcomment %}
+
+            <div class="col-2 sidebar" id="categories">
+                <!-- filled by ajax: categories.js -->
             </div>
+            
             <div class="col">
                 <div id="content">
                     {% block content %}{% endblock %} 
@@ -222,7 +227,7 @@
         <!-- Template Main JS File -->
         <script src="{% static 'js/main.js' %}"></script>
         <script src="{% static "js/categories.js" %}"></script>
-        <script src="{% static 'js/search.js' %}"></script>
+        {% comment %} <script src="{% static 'js/search.js' %}"></script> {% endcomment %}
         <script src="https://api-maps.yandex.ru/2.1/?apikey=169e2583-564e-431d-b642-9dbdc3ef6a6f&lang=ru_RU" type="text/javascript">
 
         

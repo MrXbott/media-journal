@@ -15,13 +15,13 @@ r = redis.Redis(host=settings.REDIS_HOST, port=settings.REDIS_PORT, db=settings.
 def get_all_categories(request):
     categories = Category.objects.filter(parent=None)
     if request.headers.get('x-requested-with') == 'XMLHttpRequest':
-        return JsonResponse({category.name : category.get_absolute_url() for category in categories})
+        return JsonResponse([{'name' : category.name, 'url': category.get_absolute_url(), 'image': category.image.url} for category in categories[:10]], safe=False)
     return render(request, 'categories.html', {'categories': categories})
 
 def get_category(request, slug):
     category = Category.objects.get(slug=slug[-1])
     articles = (Article.objects.filter(category__in=category.children) | Article.objects.filter(category=category)).distinct()
-    total_views = {article.id: int(r.get(f'article:{article.id}:views')) for article in articles}
+    total_views = {article.id: int(r.get(f'article:{article.id}:views') if r.get(f'article:{article.id}:views') else 0) for article in articles}
     return render(request, 'category.html', {'category': category, 'articles': articles, 'total_views': total_views})
 
 def get_last_articles(request):
