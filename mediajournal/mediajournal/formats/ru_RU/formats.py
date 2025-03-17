@@ -1,0 +1,2 @@
+DATETIME_FORMAT = 'd.m.y H:i'
+SHORT_DATE_FORMAT = 'd.m.y'

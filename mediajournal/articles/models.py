@@ -118,6 +118,7 @@ class Comment(models.Model):
     article = models.ForeignKey(Article, related_name='article_comments', on_delete=models.CASCADE)
     body = models.TextField()
     created = models.DateTimeField(auto_now_add=True)
+    parent = models.ForeignKey('Comment', blank=True, null=True, unique=False, on_delete=models.SET_NULL, related_name='answers')
     is_active = models.BooleanField(default=True)
 
     class Meta:

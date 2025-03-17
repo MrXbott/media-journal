@@ -45,11 +45,13 @@
     <br>
     <h4>Add a new comment</h4>
     <form method="post" id="comment">
-        {{ form.as_p }}
+        {% for field in form %}
+            <div>{{ field }}</div>
+        {% endfor %}
         {% csrf_token %}
-        <input type="hidden" value="{{ article.id }}" id="article_id">
-        <p><input type="submit" value="Add comment" id="submit_comment"></p>
-        
+        <div>
+            <input type="submit" value="Add comment" id="submit_comment">
+        </div>
     </form>
 
     <div id="comments">
@@ -71,9 +73,6 @@
                         {{ comment.body }}
                     </div>
                 </div> 
-                {% comment %} <div class="col">
-                    {{ comment.body }}
-                </div> {% endcomment %}
             </div>
         {% endfor %}
     </div>

@@ -15,22 +15,13 @@ class ArticleImageInline(admin.TabularInline):
 class ArticleAdmin(admin.ModelAdmin):
     fields = ['author', 'status', 'created', 'published', 'title', 'slug', 'category', 'body', 'cover_image', 'preview', ]
     readonly_fields = ['created', 'published', 'preview']
-    list_display = ['title', 'author', 'category', 'status', 'created_admin', 'published_admin', 'comments', 'bookmarks']
+    list_display = ['title', 'author', 'category', 'status', 'created', 'published', 'comments', 'bookmarks']
     list_filter = ['status', 'author', 'created', 'published', 'category']
     search_fields = ['title', 'body', 'author']
     ordering = ['status', '-published']
     save_on_top = True
     prepopulated_fields = {"slug": ["title",]}
     inlines = [ArticleImageInline, ]
-
-    @admin.display(description='created')
-    def created_admin(self, obj):
-        return obj.created.strftime('%d.%m.%y')
-    
-    @admin.display(description='published')
-    def published_admin(self, obj):
-        if obj.published:
-            return obj.published.strftime('%d.%m.%y')
         
     @admin.display(description='bookmarks')
     def bookmarks(self, obj):
@@ -63,18 +54,18 @@ class CategoryAdmin(admin.ModelAdmin):
 
 @admin.register(Comment)
 class CommentAdmin(admin.ModelAdmin):
-    list_display = ['comment_name', 'created_admin']
+    list_display = ['short_body', 'author', 'short_title', 'created', ]
+    list_display_links = ['short_body', 'author', 'short_title', 'created', ]
     readonly_fields = ['created']
     list_filter = ['author', 'article']
     search_fields = ['author__username', 'author__email', 'body', 'article__title']
 
-    @admin.display(description='Комментарий')
-    def comment_name(self, obj):
-        return f'{obj.author.username if obj.author else "User deleted"} - {obj.article.title}'
+    def short_title(self, obj):
+        return obj.article.title[:15] + ('...' if len(obj.article.title) > 15 else '')
     
-    @admin.display(description='created')
-    def created_admin(self, obj):
-        return obj.created.strftime('%d.%m.%y')
+    def short_body(self, obj):
+        return obj.body[:15] + ('...' if len(obj.body) > 15 else '')
+
 
 @admin.register(Bookmark)
 class BookmarkAdmin(admin.ModelAdmin):

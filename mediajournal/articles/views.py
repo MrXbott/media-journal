@@ -19,7 +19,7 @@ def get_all_categories(request):
     return render(request, 'categories.html', {'categories': categories})
 
 def get_category(request, slug):
-    category = Category.objects.get(slug=slug[-1])
+    category = get_object_or_404(Category, slug=slug[-1])
     articles = (Article.objects.filter(category__in=category.children) | Article.objects.filter(category=category)).distinct()
     total_views = {article.id: int(r.get(f'article:{article.id}:views') if r.get(f'article:{article.id}:views') else 0) for article in articles}
     return render(request, 'category.html', {'category': category, 'articles': articles, 'total_views': total_views})
@@ -30,10 +30,12 @@ def get_last_articles(request):
     return render(request, 'last_articles.html', {'articles': articles, 'default_user_photo': default_user_photo})
 
 def get_article(request, category, slug):
-    article = Article.objects.get(slug=slug)
+    article = get_object_or_404(Article, slug=slug)
     total_views = r.incr(f'article:{article.id}:views')    
-    form = CommentForm()
-    return render(request, 'article.html', {'article': article, 'total_views': total_views, 'form': form})
+    data = {'article': article.id}
+    comment_form = CommentForm(data=data)
+    print('------ comment form data', comment_form.data)
+    return render(request, 'article.html', {'article': article, 'total_views': total_views, 'form': comment_form})
 
 
 @login_required
@@ -60,18 +62,13 @@ def write_article(request):
 @login_required
 @require_POST
 def post_comment(request):
-    text = request.POST.get('text')
-    try:
-        article_id = int(request.POST.get('article_id'))
-    except ValueError:
-        return JsonResponse({'status': 'error'})
     form = CommentForm(data=request.POST)
     if form.is_valid():
-        article = get_object_or_404(Article, id=article_id, status=Article.Status.PUBLISHED)
-        comment = Comment(body=text, author=request.user, article=article)
+        cd = form.cleaned_data
+        comment = Comment(body=cd['body'], author=request.user, article=cd['article'])
         comment.save()
         return JsonResponse({'status': 'ok', 'username': comment.author.username, 'comment': comment.body, 'created': comment.created})
-    return JsonResponse({'status': 'error'})
+    return JsonResponse({'status': 'error', 'message': 'wrong data in the form'})
 
 
 @login_required

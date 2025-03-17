@@ -4,8 +4,16 @@ from django.forms.models import inlineformset_factory
 from .models import Comment, Article, ArticleImage
 
 
-class CommentForm(forms.Form):
-    text = forms.CharField(widget=forms.Textarea, required=True, label='comment')
+# class CommentForm(forms.Form):
+#     text = forms.CharField(widget=forms.Textarea, required=True, label='comment')
+
+class CommentForm(forms.ModelForm):
+    class Meta:
+        model = Comment
+        fields = ['body', 'article', ]
+        widgets = {
+            'article': forms.HiddenInput(),
+        }
 
 class ArticleForm(forms.ModelForm):
     class Meta:
