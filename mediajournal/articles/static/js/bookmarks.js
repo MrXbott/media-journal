@@ -1,4 +1,15 @@
-
+var csrftoken = Cookies.get('csrftoken'); 
+function csrfSafeMethod(method) {
+    // Для этих методов токен не будет подставляться в заголовок.
+    return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method)); 
+}
+$.ajaxSetup({
+    beforeSend: function(xhr, settings) {
+        if (!csrfSafeMethod(settings.type) && !this.crossDomain) { 
+            xhr.setRequestHeader("X-CSRFToken", csrftoken);
+        } 
+    }
+});
 
 $(document).ready(function(){
     const user_auth = JSON.parse(document.getElementById('user_auth').textContent);
@@ -7,7 +18,7 @@ $(document).ready(function(){
         $('.popup').remove();
     });
 
-    $(document).on('click', 'div.bookmark-icon', function(e){
+    $(document).on('click', '.bookmark-icon', function(e){
 
         console.log('bookmark clicked', user_auth);
         // e.stopPropagation();
@@ -28,7 +39,6 @@ $(document).ready(function(){
                 url: '/bookmark/', 
                 data: {
                     'article_id': article_id, 
-                    csrfmiddlewaretoken:$('input[name=csrfmiddlewaretoken]').val(),
                 }, 
                 success: function(data){
                     if (data['bookmark'] == 'added'){
