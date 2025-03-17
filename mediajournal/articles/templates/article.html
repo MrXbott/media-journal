@@ -52,10 +52,28 @@
         
     </form>
 
-    <div class="raw" id="comments">
+    <div id="comments">
         {% for comment in article.article_comments.all %}
             <div class="comment">
-                <b>{{ comment.created|date:"d.m.y H:i" }} {% if comment.author %}{{ comment.author.username }}{% else %}User deleted{% endif %}</b> {{ comment.body }}
+                <div class="row comment-header">
+                    <div class="col-md-auto">
+                        <img class="user_photo" src="{{ comment.author.photo.url}}">
+                    </div>
+                    <div class="col">
+                        <div class="row">
+                            <div class="username">{% if comment.author %}{{ comment.author.username }}{% else %}User deleted{% endif %}</div> 
+                            <div class="created">{{ comment.created|date:"d.m.y H:i" }}</div> 
+                        </div>                     
+                    </div> 
+                </div>
+                <div class="row comment-body">
+                    <div class="col">
+                        {{ comment.body }}
+                    </div>
+                </div> 
+                {% comment %} <div class="col">
+                    {{ comment.body }}
+                </div> {% endcomment %}
             </div>
         {% endfor %}
     </div>

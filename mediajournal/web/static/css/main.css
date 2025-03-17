@@ -1024,7 +1024,7 @@ ul.messages li a.close {
   height: 150px;
 }
 
-.article-item img.user_photo {
+.article-item img.user_photo, #comments img.user_photo {
   width: 50px;
   height: 50px;
   border-radius: 50%;
@@ -1163,6 +1163,27 @@ ul.messages li a.close {
 
 .articles .article-item:hover h3 {
   border-color: var(--color-primary);
+}
+
+#comments .comment {
+  padding-bottom: 30px;
+}
+
+#comments .comment-header {
+  padding-bottom: 10px;
+  align-items: center;
+}
+#comments .comment-header .col {
+  padding: 0;
+}
+#comments .username {
+  font-weight: 800;
+}
+
+#comments .created {
+  font-size: 10pt;
+    font-weight: 500;
+    color: var(--color-pale);
 }
 
 /*--------------------------------------------------------------
