@@ -10,9 +10,10 @@ from .models import Comment, Article, ArticleImage
 class CommentForm(forms.ModelForm):
     class Meta:
         model = Comment
-        fields = ['body', 'article', ]
+        fields = ['body', 'article', 'parent']
         widgets = {
             'article': forms.HiddenInput(),
+            'parent': forms.HiddenInput(),
         }
 
 class ArticleForm(forms.ModelForm):

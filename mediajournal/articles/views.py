@@ -31,9 +31,12 @@ def get_last_articles(request):
     return render(request, 'last_articles.html', {'articles': articles, 'default_user_photo': default_user_photo})
 
 def get_article(request, category, slug):
+    # print('body: ', request.body)
+    # print('path: ', request.path)
+    # print('resolver_match: ', request.resolver_match)
     article = get_object_or_404(Article, slug=slug)
     total_views = r.incr(f'article:{article.id}:views')    
-    data = {'article': article.id}
+    data = {'article': article.id, 'parent': ''}
     comment_form = CommentForm(data=data)
     return render(request, 'article.html', {'article': article, 'total_views': total_views, 'form': comment_form})
 
@@ -61,7 +64,7 @@ def write_article(request):
 def comments_list(request):
     page = request.GET.get('page')
     article_id = request.GET.get('article_id')
-    comments = Comment.objects.filter(is_active=True, article__id=article_id) 
+    comments = Comment.objects.filter(is_active=True, article__id=article_id, parent=None) 
     paginator = Paginator(comments, 2) 
     try:
         comments = paginator.page(page)
@@ -74,15 +77,42 @@ def comments_list(request):
         return render(request, 'comments_list.html', {'comments': comments})
 
 @login_required
-@require_POST
 def post_comment(request):
-    form = CommentForm(data=request.POST)
-    if form.is_valid():
-        cd = form.cleaned_data
-        comment = Comment(body=cd['body'], author=request.user, article=cd['article'])
-        comment.save()
-        return JsonResponse({'status': 'ok', 'username': comment.author.username, 'comment': comment.body, 'created': comment.created})
-    return JsonResponse({'status': 'error', 'message': 'wrong data in the form'})
+    print('----rm', request.method)
+    
+    if request.headers.get('x-requested-with') == 'XMLHttpRequest':
+        if request.method == 'POST':
+            print(request.POST)
+            form = CommentForm(data=request.POST)
+            if form.is_valid():
+                cd = form.cleaned_data
+                comment = Comment(body=cd['body'], author=request.user, article=cd['article'], parent=cd['parent'])
+                comment.save()
+                return JsonResponse({'status': 'ok', 'username': comment.author.username, 'comment': comment.body, 'created': comment.created})
+            return JsonResponse({'status': 'error', 'message': 'wrong data in the form'})
+        elif request.method =='GET':
+            print(request.GET)
+            parent_id = request.GET.get('parent_id')
+            article_id = request.GET.get('article_id')
+            data = {'parent': parent_id, 'article': article_id}
+            form = CommentForm(data=data)
+            return render(request, 'comment_answer_form.html', {'form': form})
+        
+
+# @login_required
+# def answer_comment(request):
+#     print('----rm', request.method)
+#     if request.headers.get('x-requested-with') == 'XMLHttpRequest':
+#         if request.method == 'POST':
+#             form = CommentForm(data=request.POST)
+#             if form.is_valid():
+#                 cd = form.cleaned_data
+#                 print('----- cd ', cd)
+#                 return JsonResponse({})
+#         elif request.method =='GET':
+#             # data = {'article': article.id}
+#             form = CommentForm()
+#             return render(request, 'comment_answer_form.html', {'form': form})
 
 
 @login_required

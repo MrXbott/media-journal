@@ -17,11 +17,17 @@
                 {{ comment.body }}
             </div>
         </div> 
-        <div class="row">
-            <div class="col-1 answer">
+            <div class="col-1 answer" data-id={{ comment.id }}>
                 Ответить
             </div>
-        </div>
     </div>
+    
+    {% if comment.children %}
+        <div class="answers">
+            {% include "comments_list.html" with comments=comment.children.all %}
+        </div>
+    {% endif %}
+    
+    
 
 {% endfor %}

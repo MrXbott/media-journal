@@ -1,0 +1,12 @@
+<div class="row comment-form" id="comment-form" >
+    <h4>Answer the comment</h4>
+    <form method="post" id="comment-answer">
+        {% for field in form %}
+            <div>{{ field }}</div>
+        {% endfor %}
+        {% csrf_token %}
+        <div>
+            <input type="submit" class="button" value="Add comment" id="answer-comment">
+        </div>
+    </form>
+</div>

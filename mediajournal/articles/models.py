@@ -128,6 +128,10 @@ class Comment(models.Model):
     class Meta:
         ordering = ['created']
 
+    @property
+    def children(self):
+        return Comment.objects.filter(parent=self, is_active=True, article=self.article)
+
     def __str__(self) -> str:
         return f'Comment by {self.author.username if self.author else "User deleted"} on {self.article.title}'
     
