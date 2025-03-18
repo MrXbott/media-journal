@@ -29,7 +29,7 @@
                     <span class="author">{% if article.author %}{{ article.author.username }}{% else %}User deleted{% endif %}</span>
                     {% comment %} <span class="published">{{ article.published|date:"d.m.y H:i" }}</span> {% endcomment %}
                     <span>{{ total_views|item:article.id}} view{{total_views|item:article.id|pluralize}}</span>
-                    <span>{{ article.article_comments.count}} com{{article.article_comments.count|pluralize}}</span>
+                    <span>{{ article.comments.count}} com{{article.article_comments.count|pluralize}}</span>
                       {% include "bookmarks.html" with article=article user=request.user %}
                   </div>
                   

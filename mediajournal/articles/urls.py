@@ -12,6 +12,7 @@ urlpatterns = [
     path('categories/<cstmslug:slug>/', views.get_category, name='get_category'),
     path('write/', views.write_article, name='write_article'),
     path('bookmark/', views.bookmark_article, name='bookmark_article'),
+    path('comments/', views.comments_list, name='comments_list'),
     
     
     # path('categories/f"[-a-zA-Z0-9_/]+"/<slug:slug>/', views.get_article, name='get_article'),

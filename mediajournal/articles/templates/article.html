@@ -18,7 +18,7 @@
 {% endblock %}
 
 {% block content %}
-    <div class="row align-items-start">
+    <div class="row" id="article">
         <div class="article-item">
             <span><img class="user_photo" src={% if article.author and article.author.photo %}{{ article.author.photo.url}}{% else %}{{ default_user_photo.image.url }}{% endif %}></span>
             <span class="author">{% if article.author %}{{ article.author.username }}{% else %}User deleted{% endif %}</span>
@@ -40,47 +40,46 @@
         </div>
     </div>
 
-    
-    <br>
-    <br>
-    <h4>Add a new comment</h4>
-    <form method="post" id="comment">
-        {% for field in form %}
-            <div>{{ field }}</div>
-        {% endfor %}
-        {% csrf_token %}
-        <div>
-            <input type="submit" value="Add comment" id="submit_comment">
-        </div>
-    </form>
-
-    <div id="comments">
-        {% for comment in article.article_comments.all %}
-            <div class="comment">
-                <div class="row comment-header">
-                    <div class="col-md-auto">
-                        <img class="user_photo" src="{{ comment.author.photo.url}}">
-                    </div>
-                    <div class="col">
-                        <div class="row">
-                            <div class="username">{% if comment.author %}{{ comment.author.username }}{% else %}User deleted{% endif %}</div> 
-                            <div class="created">{{ comment.created|date:"d.m.y H:i" }}</div> 
-                        </div>                     
-                    </div> 
-                </div>
-                <div class="row comment-body">
-                    <div class="col">
-                        {{ comment.body }}
-                    </div>
-                </div> 
+    <div class="row comment-form" id="comment-form" >
+        <h4>Add a new comment</h4>
+        <form method="post" id="comment">
+            {% for field in form %}
+                <div>{{ field }}</div>
+            {% endfor %}
+            {% csrf_token %}
+            <div>
+                <input type="submit" class="button" value="Add comment" id="submit-comment">
             </div>
-        {% endfor %}
+            <div id="submit-message">
+            </div>
+        </form>
     </div>
+
+    
+    <div id="comments" class="row">
+        {% if article.comments %}
+            <div>
+                Комментарии: {{ article.comments.count }}
+            </div>
+            <div id="comments-list">
+            </div>
+
+            <div id="more"> 
+                Показать еще
+            </div>
+        {% else %}
+            <div>
+                Комментариев нет
+            </div>
+        {% endif %}
+    </div>
+
 {% endblock %}
 
 {% block scripts %}
-  <script src="{% static "js/comment.js" %}"></script>
-  <script src="{% static "js/bookmarks.js" %}"></script>
+    <script src="{% static "js/load_comments.js" %}"></script>
+    <script src="{% static "js/send_comment.js" %}"></script>
+    <script src="{% static "js/bookmarks.js" %}"></script>
 {% endblock %}
 
 

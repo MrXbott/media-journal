@@ -1,6 +1,7 @@
 from django.shortcuts import render, get_object_or_404, redirect
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponse
 from django.conf import settings
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.http import require_POST
 import redis
@@ -34,7 +35,6 @@ def get_article(request, category, slug):
     total_views = r.incr(f'article:{article.id}:views')    
     data = {'article': article.id}
     comment_form = CommentForm(data=data)
-    print('------ comment form data', comment_form.data)
     return render(request, 'article.html', {'article': article, 'total_views': total_views, 'form': comment_form})
 
 
@@ -55,9 +55,23 @@ def write_article(request):
     else:
         form = ArticleForm()
         formset = ArticleImageFormSet()
-        # formset_empty = formset.empty_form
     return render(request, 'article_write.html', {'form': form, 'formset': formset, })
     
+
+def comments_list(request):
+    page = request.GET.get('page')
+    article_id = request.GET.get('article_id')
+    comments = Comment.objects.filter(is_active=True, article__id=article_id) 
+    paginator = Paginator(comments, 2) 
+    try:
+        comments = paginator.page(page)
+    except PageNotAnInteger:
+        comments = paginator.page(1)
+    except EmptyPage:
+        if request.headers.get('x-requested-with') == 'XMLHttpRequest':
+            return HttpResponse('')
+    if request.headers.get('x-requested-with') == 'XMLHttpRequest':
+        return render(request, 'comments_list.html', {'comments': comments})
 
 @login_required
 @require_POST
@@ -85,4 +99,3 @@ def bookmark_article(request):
         Bookmark.objects.create(user=request.user, article=article)
         return JsonResponse({'bookmark': 'added'})
     
-    # return JsonResponse({})

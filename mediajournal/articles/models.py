@@ -20,7 +20,6 @@ class Article(models.Model):
     objects = SafeGetManager()
 
     class Status(models.TextChoices):
-        # DRAFT = 'Draft'
         MODERATION = 'Moderation'
         REJECTED = 'Rejected'
         PUBLISHED = 'Published'
@@ -38,6 +37,10 @@ class Article(models.Model):
 
     class Meta:
         ordering = ['published']
+
+    @property
+    def comments(self):
+        return self.article_comments.filter(is_active=True)
 
     def __str__(self) -> str:
         return self.title
@@ -119,7 +122,7 @@ class Comment(models.Model):
     body = models.TextField()
     created = models.DateTimeField(auto_now_add=True)
     parent = models.ForeignKey('Comment', blank=True, null=True, unique=False, on_delete=models.SET_NULL, related_name='answers')
-    is_active = models.BooleanField(default=True)
+    is_active = models.BooleanField(default=False)
 
     class Meta:
         ordering = ['created']
