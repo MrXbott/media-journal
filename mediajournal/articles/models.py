@@ -34,6 +34,7 @@ class Article(models.Model):
     category = models.ForeignKey('Category', blank=False, null=True, on_delete=models.SET_NULL)
     cover_image = models.ImageField(upload_to='images/', blank=True, null=True, default='default/default_article_cover.jpg')
     bookmarked_by = models.ManyToManyField(User, through='Bookmark')
+    enable_comments = models.BooleanField(default=True)
 
     class Meta:
         ordering = ['published']

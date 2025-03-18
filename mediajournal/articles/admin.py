@@ -13,7 +13,7 @@ class ArticleImageInline(admin.TabularInline):
 
 @admin.register(Article)
 class ArticleAdmin(admin.ModelAdmin):
-    fields = ['author', 'status', 'created', 'published', 'title', 'slug', 'category', 'body', 'cover_image', 'preview', ]
+    fields = ['author', 'status', 'created', 'published', 'title', 'slug', 'category', 'body', 'cover_image', 'preview', 'enable_comments']
     readonly_fields = ['created', 'published', 'preview']
     list_display = ['title', 'author', 'category', 'status', 'created', 'published', 'comments', 'bookmarks']
     list_filter = ['status', 'author', 'created', 'published', 'category']

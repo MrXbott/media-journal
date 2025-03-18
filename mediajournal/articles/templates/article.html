@@ -40,39 +40,40 @@
         </div>
     </div>
 
-    <div class="row comment-form" id="comment-form" >
-        <h4>Add a new comment</h4>
-        <form method="post" id="comment">
-            {% for field in form %}
-                <div>{{ field }}</div>
-            {% endfor %}
-            {% csrf_token %}
-            <div>
-                <input type="submit" class="button" value="Add comment" id="submit-comment">
-            </div>
-            <div id="submit-message">
-            </div>
-        </form>
-    </div>
+    {% if article.enable_comments %}
+        <div class="row comment-form" id="comment-form" >
+            <h4>Add a new comment</h4>
+            <form method="post" id="comment">
+                {% for field in form %}
+                    <div>{{ field }}</div>
+                {% endfor %}
+                {% csrf_token %}
+                <div>
+                    <input type="submit" class="button" value="Add comment" id="submit-comment">
+                </div>
+                <div id="submit-message">
+                </div>
+            </form>
+        </div>
 
-    
-    <div id="comments" class="row">
-        {% if article.comments %}
-            <div>
-                Комментарии: {{ article.comments.count }}
-            </div>
-            <div id="comments-list">
-            </div>
+        <div id="comments" class="row">
+            {% if article.comments %}
+                <div>
+                    Комментарии: {{ article.comments.count }}
+                </div>
+                <div id="comments-list">
+                </div>
 
-            <div id="more"> 
-                Показать еще
-            </div>
-        {% else %}
-            <div>
-                Комментариев нет
-            </div>
-        {% endif %}
-    </div>
+                <div id="more"> 
+                    Показать еще
+                </div>
+            {% else %}
+                <div>
+                    Комментариев нет
+                </div>
+            {% endif %}
+        </div>
+    {% endif %}
 
 {% endblock %}
 
