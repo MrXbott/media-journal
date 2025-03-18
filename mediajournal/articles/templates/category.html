@@ -2,30 +2,28 @@
 {% load tags %}
 {% load static %}
 
-{% comment %} {% block title %}Media Journal{% endblock %} {% endcomment %}
-{% block breadcrumbs %}
-    <!-- ======= Breadcrumbs ======= -->
-    <div class="breadcrumbs d-flex align-items-center" style="background-image: url({% static 'img/breadcrumbs-bg.jpg'%});">
-        <div class="container position-relative align-items-center" data-aos="fade">  
-            <ol>
-            <li><a href="{% url 'categories' %}">Все категории</a></li>
-            {% for parent in category.parents %}
-                    <li><a href="{{ parent.get_absolute_url }}">{{ parent.name }}</a></li>
-            {% endfor %}
-            <li class="current">{{ category.name }}</li>
-          </ol>
-        </div>
-    </div><!-- End Breadcrumbs -->
-{% endblock %}
-
 {% block content %}
     <section id="category" class="categories">
         <div class="container" data-aos="fade-up">
             <div class="row category-content">
                 <div class="category-header">
-                    <img src="{{ category.image.url }}">
+                    <img src={% if category.image %}"{{ category.image.url }}" {% else %} "/media/default/default_category_image.jpg"{% endif %}>
                     <h1>{{ category.name }}</h1>
                 </div>
+                
+                {% if category.parents %}
+                <div class="breadcrumbs position-relative align-items-center" >  
+                  <ol>
+                  {% comment %} <li><a href="{% url 'categories' %}">Все категории</a></li> {% endcomment %}
+                    {% for parent in category.parents %}
+                            <li><a href="{{ parent.get_absolute_url }}">{{ parent.name }}</a></li>
+                    {% endfor %}
+                    <li class="current">{{ category.name }}</li>
+                  </ol>
+                </div>
+                {% endif %}
+              
+
                 <div class="row subcategories">
                     <div class="col">
                         {% for child in category.children %}
