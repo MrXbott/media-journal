@@ -37,6 +37,19 @@
                     {% endfor %}
                 </div>
             {% endif %}
+
+            {% for section in article.sections.all %}
+                <div class="section">
+                    {% if section.title %}
+                        <div class="title">
+                            {{ section.title }}
+                        </div>
+                    {% endif%}
+                    <div class="text">
+                        {{ section.text|linebreaks  }}
+                    </div>
+                </div>
+            {% endfor %}
         </div>
     </div>
 

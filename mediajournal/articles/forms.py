@@ -1,7 +1,7 @@
 from django import forms
 from django.forms.models import inlineformset_factory
 
-from .models import Comment, Article, ArticleImage
+from .models import Comment, Article, ArticleImage, ArticleSection
 
 
 # class CommentForm(forms.Form):
@@ -21,10 +21,11 @@ class ArticleForm(forms.ModelForm):
         model = Article
         fields = ['title', 'body', 'category']
 
-class ArticleImageForm(forms.ModelForm):
-    class Meta:
-        model = ArticleImage
-        fields = ['image']
+# class ArticleImageForm(forms.ModelForm):
+#     class Meta:
+#         model = ArticleImage
+#         fields = ['image']
+
+ArticleSectionFormSet = inlineformset_factory(Article, ArticleSection, fields=['text'], extra=2, can_delete=True, max_num=10)
 
 ArticleImageFormSet = inlineformset_factory(Article, ArticleImage, fields=['image'], extra=2, can_delete=True, max_num=10,)
-# inlineformset_factory()

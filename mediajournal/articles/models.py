@@ -144,3 +144,11 @@ class ArticleImage(models.Model):
     
     def preview(self):
         return mark_safe(f'<img src="{self.image.url}" width="100"/>')
+    
+class ArticleSection(models.Model):
+    article = models.ForeignKey(Article, related_name='sections', on_delete=models.CASCADE, blank=False, null=False)
+    text = models.TextField()
+    title = models.CharField(max_length=300, blank=True, null=True, unique=False)
+
+    def __str__(self):
+        return self.title[:15] + ('...') if len(self.title) > 15 else ''

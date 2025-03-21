@@ -6,8 +6,9 @@
     <div>
         <form method="post" id="comment" enctype="multipart/form-data">
             <div id="article_form">
-            {{ form }}
+            {{ section_formset }}
             </div>
+            <p><input type="button" value="Add Section" id="add_section"></p>
             <div id="images_formset">
                 <div id="empty_form" class="hide">
                     {{ formset.empty_form }}

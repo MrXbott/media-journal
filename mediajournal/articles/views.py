@@ -7,7 +7,7 @@ from django.views.decorators.http import require_POST
 import redis
 
 from .models import Article, Category, Comment, Bookmark
-from .forms import CommentForm, ArticleForm, ArticleImageFormSet
+from .forms import CommentForm, ArticleForm, ArticleImageFormSet, ArticleSectionFormSet
 from web.models import Image
 
 
@@ -56,9 +56,10 @@ def write_article(request):
                 image.save()
             return render(request, 'article_send.html')
     else:
-        form = ArticleForm()
-        formset = ArticleImageFormSet()
-    return render(request, 'article_write.html', {'form': form, 'formset': formset, })
+        # form = ArticleForm()
+        section_formset = ArticleSectionFormSet()
+        image_formset = ArticleImageFormSet()
+    return render(request, 'article_write.html', {'section_formset': section_formset, 'formset': image_formset, })
     
 
 def comments_list(request):
