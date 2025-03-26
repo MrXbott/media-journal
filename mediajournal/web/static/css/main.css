@@ -2886,14 +2886,14 @@ section,
   height: 100%;
 }
 
-.author-profile .author-card .author-image {
+.author-profile .author-image {
   text-align: center;
   margin-bottom: 1.5rem;
 }
 
-.author-profile .author-card .author-image img {
-  width: 180px;
-  height: 180px;
+.author-profile .author-image img {
+  width: 200px;
+  height: 200px;
   border-radius: 50%;
   object-fit: cover;
 }
@@ -2902,36 +2902,53 @@ section,
   text-align: center;
 }
 
-.author-profile .author-card .author-info h2 {
-  font-size: 1.5rem;
-  margin-bottom: 0.5rem;
+.author-profile .author-info h2 {
+  font-size: 2.5rem;
+  /* margin-bottom: 0.5rem; */
 }
 
-.author-profile .author-card .author-info .designation {
+.author-profile .author-info .designation {
   color: color-mix(in srgb, var(--default-color), transparent 40%);
   font-size: 0.95rem;
   margin-bottom: 1rem;
 }
 
-.author-profile .author-card .author-info .author-bio {
+.author-profile .author-info button {
+  background-color: var(--accent-color);
+  border: 0;
+  padding: 8px 20px;
+  color: var(--contrast-color);
+  border-radius: 50px;
+  transition: 0.3s;
+  font-size: 15px;
+  font-weight: 500;
+  letter-spacing: 0.5px;
+}
+
+.author-profile .author-info button a {
+  color: var(--contrast-color);
+}
+
+.author-profile .author-info .author-bio {
   font-size: 0.95rem;
   line-height: 1.6;
   margin-bottom: 1.5rem;
+  color: var(--heading-color);
 }
 
-.author-profile .author-card .author-stats {
+.author-profile  .author-stats {
   border-top: 1px solid color-mix(in srgb, var(--default-color), transparent 90%);
   border-bottom: 1px solid color-mix(in srgb, var(--default-color), transparent 90%);
   padding: 1rem 0;
 }
 
-.author-profile .author-card .author-stats .stat-item h4 {
+.author-profile .author-stats .stat-item h4 {
   font-size: 1.75rem;
   margin-bottom: 0.25rem;
   color: var(--accent-color);
 }
 
-.author-profile .author-card .author-stats .stat-item p {
+.author-profile .author-stats .stat-item p {
   font-size: 0.85rem;
   margin: 0;
   color: color-mix(in srgb, var(--default-color), transparent 40%);

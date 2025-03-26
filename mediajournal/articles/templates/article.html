@@ -4,24 +4,6 @@
 {% block content %}
 <main class="main">
 
-    <!-- Page Title -->
-    {% comment %} <div class="page-title">
-      <div class="breadcrumbs">
-        <nav aria-label="breadcrumb">
-          <ol class="breadcrumb">
-            <li class="breadcrumb-item"><a href="#"><i class="bi bi-house"></i> Home</a></li>
-            <li class="breadcrumb-item"><a href="#">Category</a></li>
-            <li class="breadcrumb-item active current">Blog Details</li>
-          </ol>
-        </nav>
-      </div>
-
-      <div class="title-wrapper">
-        <h1>Blog Details</h1>
-        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut elit tellus, luctus nec ullamcorper mattis, pulvinar dapibus leo.</p>
-      </div>
-    </div><!-- End Page Title --> {% endcomment %}
-
     <div class="container">
       <div class="row">
 
@@ -33,17 +15,13 @@
 
               <article class="article">
 
-                {% comment %} <div class="hero-img" data-aos="zoom-in">
-                  <img src="{{ article.cover_image.url }}" alt="Featured blog image" class="img-fluid" loading="lazy">
-                </div> {% endcomment %}
-
                 <div class="article-content" data-aos="fade-up" data-aos-delay="100">
                     <div class="content-header">
                         <div class="author-info">
                             <div class="author-details">
                                 <img src={% if article.author.photo %}"{{ article.author.photo.url }}"{% else %}"media/default/default_user_photo.jpg"{% endif%} alt="Author" class="author-img">
                                 <div class="info">
-                                <h4>{{ article.author.username }}</h4>
+                                <h4><a href="{{ article.author.get_absolute_url }}">{{ article.author.username }}</a></h4>
                                 {% if article.author.designation %}
                                   <span class="role">{{ article.author.designation }}</span>
                                 {% endif %}
@@ -426,52 +404,7 @@
         </div>
 
         <div class="col-lg-3 sidebar">
-
-          <div class="widgets-container" data-aos="fade-up" data-aos-delay="200">
-
-            <!-- Search Widget -->
-            {% comment %} <div class="search-widget widget-item">
-
-              <h3 class="widget-title">Search</h3>
-              <form action="">
-                <input type="text">
-                <button type="submit" title="Search"><i class="bi bi-search"></i></button>
-              </form>
-
-            </div><!--/Search Widget --> {% endcomment %}
-
-            <!-- Categories Widget -->
-            {% include "category_list.html" %}
-            <!--/Categories Widget -->
-
-            
-
-            <!-- Recent Articles Widget -->
-            {% include 'recent_articles.html'%}
-            <!--/Recent Articles Widget -->
-
-            <!-- Tags Widget -->
-            <div class="tags-widget widget-item">
-
-              <h3 class="widget-title">Tags</h3>
-              <ul>
-                <li><a href="#">App</a></li>
-                <li><a href="#">IT</a></li>
-                <li><a href="#">Business</a></li>
-                <li><a href="#">Mac</a></li>
-                <li><a href="#">Design</a></li>
-                <li><a href="#">Office</a></li>
-                <li><a href="#">Creative</a></li>
-                <li><a href="#">Studio</a></li>
-                <li><a href="#">Smart</a></li>
-                <li><a href="#">Tips</a></li>
-                <li><a href="#">Marketing</a></li>
-              </ul>
-
-            </div><!--/Tags Widget -->
-
-          </div>
-
+          {% include "sidebar.html" %}
         </div>
 
       </div>

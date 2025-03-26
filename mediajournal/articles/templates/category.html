@@ -43,7 +43,7 @@
 
                       <div class="d-flex align-items-center article-header">
                         <img src={% if article.author.photo %}"{{ article.author.photo.url }}"{% else %}"/media/default/default_user_photo.jpg"{% endif %} alt="" class="img-fluid post-author-img flex-shrink-0">
-                          <p class="post-author">{{ article.author.username }}</p>
+                          <p class="post-author"><a href="{{ article.author.get_absolute_url }}">{{ article.author.username }}</a></p>
                           <p class="post-date">
                             <time datetime="">{{ article.published|date:"d M Y"}}</time>
                           </p>

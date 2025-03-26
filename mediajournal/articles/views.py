@@ -71,7 +71,7 @@ def write_article(request):
             for image in images:
                 image.article = article
                 image.save()
-            return render(request, 'article_send.html')
+            return render(request, 'article_sent.html')
     else:
         article_form = ArticleForm()
         section_formset = ArticleSectionFormSet()
