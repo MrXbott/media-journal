@@ -9,11 +9,12 @@ r = redis.Redis(host=settings.REDIS_HOST, port=settings.REDIS_PORT, db=settings.
 
 def main_page(request):
     articles = Article.objects.filter(status=Article.Status.PUBLISHED).order_by('-published')
-    default_user_photo = Image.objects.get(type='default_user_photo')
+    featured_categories = Category.objects.filter(is_featured=True)
+
     total_views = {article.id: int(r.get(f'article:{article.id}:views')) if r.get(f'article:{article.id}:views') else 0 for article in articles}
     
-    return render(request, 'main.html', {
+    return render(request, 'index.html', {
         'articles': articles, 
-        'default_user_photo': default_user_photo, 
+        'featured_categories': featured_categories,
         'total_views': total_views
         })

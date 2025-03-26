@@ -1,259 +1,283 @@
 {% load static %} 
+
+
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="utf-8">
-        <meta content="width=device-width, initial-scale=1.0" name="viewport">
+  <head>
+    <meta charset="utf-8">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <title>Media Journal</title>
+    <meta name="description" content="">
+    <meta name="keywords" content="">
 
-        <title>Media Journal</title>
-        <meta content="" name="description">
-        <meta content="" name="keywords">
+    <!-- Favicons -->
+    <link href="{% static 'icons/favicon.png' %}" rel="icon">
+    <link href="{% static 'icons/apple-touch-icon.png' %}" rel="apple-touch-icon">
 
-        <!-- Favicons -->
-        <link href="{% static 'icons/favicon/favicon.png' %}" rel="icon">
-        <link href="{% static 'icons/favicon/apple-touch-icon.png' %}" rel="apple-touch-icon">
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com" rel="preconnect">
+    <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Nunito:ital,wght@0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
 
-        <!-- Google Fonts -->
-        <link rel="preconnect" href="https://fonts.googleapis.com">
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-        <link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,600;1,700&family=Roboto:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&family=Work+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&display=swap" rel="stylesheet">
-        
-        <!-- Vendor CSS Files -->
-        <link href="{% static 'vendor/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">  
-        <link href="{% static 'vendor/bootstrap-icons/bootstrap-icons.css' %}" rel="stylesheet">
-        <link href="{% static 'vendor/fontawesome-free/css/all.min.css' %}" rel="stylesheet">
-        <link href="{% static 'vendor/boxicons/css/boxicons.min.css' %}" rel="stylesheet">
-        <link href="{% static 'vendor/aos/aos.css' %}" rel="stylesheet">
-        <link href="{% static 'vendor/glightbox/css/glightbox.min.css' %}" rel="stylesheet">
-        <link href="{% static 'vendor/swiper/swiper-bundle.min.css' %}" rel="stylesheet">
+    <!-- Vendor CSS Files -->
+    <link href="{% static 'vendor/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
+    <link href="{% static 'vendor/bootstrap-icons/bootstrap-icons.css' %}" rel="stylesheet">
+    <link href="{% static 'vendor/aos/aos.css' %}" rel="stylesheet">
+    <link href="{% static 'vendor/swiper/swiper-bundle.min.css' %}" rel="stylesheet">
+    <link href="{% static 'vendor/glightbox/css/glightbox.min.css' %}" rel="stylesheet">
 
-        <!-- Template Main CSS File -->
-        <link href="{% static 'css/main.css' %}" rel="stylesheet">
+    <!-- Main CSS File -->
+    <link href="{% static 'css/main.css' %}" rel="stylesheet">
 
+    <!-- =======================================================
+    * Template Name: Blogy
+    * Template URL: https://bootstrapmade.com/blogy-bootstrap-blog-template/
+    * Updated: Feb 22 2025 with Bootstrap v5.3.3
+    * Author: BootstrapMade.com
+    * License: https://bootstrapmade.com/license/
+    ======================================================== -->
+  </head>
 
-        <title>{% block title %}{% endblock %}</title>
-    
-        {% block staticlinks %}{% endblock %}
-    </head> 
-    
-    <body>
-        <!-- ======= Header ======= -->
-        <header id="header" class="header d-flex align-items-center {% if section == "main" %}main{% endif %}">
-            <div class="container-fluid container-xl d-flex align-items-center justify-content-between">
+<body class="index-page">
 
-            <a href="{% url "main_page" %}" class="logo d-flex align-items-center">
-                <!-- Uncomment the line below if you also wish to use an image logo -->
-                <!-- <img src="assets/img/logo.png" alt=""> -->
-                <h1>Media Journal<span>.</span></h1>
+  <header id="header" class="header position-relative">
+    <div class="container-fluid container-xl position-relative">
+
+      <div class="top-row d-flex align-items-center justify-content-between">
+        <div class="col-lg-3">
+          <a href="{% url "main_page" %}" class="logo d-flex align-items-end">
+            <!-- Uncomment the line below if you also wish to use an image logo -->
+            <!-- <img src="assets/img/logo.webp" alt=""> -->
+            <h1 class="sitename">Media Journal</h1><span>.</span>
+          </a>
+        </div>
+
+        <div class="col-lg-6 d-flex align-items-center justify-content-center">
+          {% comment %} <div class="social-links">
+            <a href="#" class="facebook"><i class="bi bi-facebook"></i></a>
+            <a href="#" class="twitter"><i class="bi bi-twitter"></i></a>
+            <a href="#" class="instagram"><i class="bi bi-instagram"></i></a>
+          </div> {% endcomment %}
+
+          <form class="search-form">
+            <input type="text" placeholder="Search..." class="form-control">
+            <button type="submit" class="btn"><i class="bi bi-search"></i></button>
+          </form>
+        </div>
+
+        <div class="col-lg-3 d-flex align-items-center justify-content-end">
+          {% if request.user.is_authenticated %}
+            <a href="{% url 'profile' %}" class="author">
+              <div class="author-details">
+                <img src={% if request.user.photo %}"{{ request.user.photo.url }}"{% else %}"media/default/default_user_photo.jpg"{% endif%} alt="Author" class="author-img">
+                <div class="info">
+                  <h4>{{ request.user.username }}</h4>
+                </div>
+              </div>
             </a>
+            <form action="{% url 'logout' %}" method="post" >
+              {% csrf_token %}
+              <button type="submit" class="btn"><i class="bi bi-door-open"></i></button>
+            </form>
+          {% else %}
+            <a href="{% url "login" %}">
+              <span><i class="bi bi-door-open"></i></span>
+            </a>
+          {% endif %}
+        </div>
 
-            {% if section != "search" %}
-                <div class="row search-form">
-                    {% comment %} {% include "search_form.html" %} {% endcomment %}
-                </div>
-            {% endif %}
+      </div>
 
-            <i class="mobile-nav-toggle mobile-nav-show bi bi-list"></i>
-            <i class="mobile-nav-toggle mobile-nav-hide d-none bi bi-x"></i>
-            <nav id="navbar" class="navbar">
-                <ul>
-                {% comment %} <li><a href="{% url "main_page" %}" {% if section == "main" %}class="active"{% endif %}>Главная</a></li> {% endcomment %}
-                <li><a href="{% url "categories" %}" {% if section == "categories" %}class="active"{% endif %}>Категории</a></li>
-                <li><a href="{% url "write_article" %}" {% if section == "write_article" %}class="active"{% endif %}>Написать</a></li>
-            
-                
-                {% if request.user.is_authenticated %}
+    </div>
+
+    <div class="nav-wrap">
+      <div class="container d-flex justify-content-center position-relative">
+        <nav id="navmenu" class="navmenu">
+          <ul>
+            <li {% if section == 'categories' %}class="active"{% endif %}><a href="{% url "categories" %}">Все разделы</a></li>
+            <li {% if section == 'write' %}class="active"{% endif %}><a href="{% url 'write_article' %}">Написать статью</a></li>
+            {% comment %} <li class="dropdown"><a href="#"><span>Pages</span> <i class="bi bi-chevron-down toggle-dropdown"></i></a>
+              <ul>
+                <li><a href="about.html">About</a></li>
+                <li><a href="{% url "categories" %}">Category</a></li>
+                <li><a href="blog-details.html">Blog Details</a></li>
+                <li><a href="author-profile.html">Profile</a></li>
+                <li><a href="search-results.html">Search Results</a></li>
+                <li><a href="404.html">404 Not Found Page</a></li>
+
+                <li class="dropdown"><a href="#"><span>Deep Dropdown</span> <i class="bi bi-chevron-down toggle-dropdown"></i></a>
+                  <ul>
+                    <li><a href="#">Deep Dropdown 1</a></li>
+                    <li><a href="#">Deep Dropdown 2</a></li>
+                    <li><a href="#">Deep Dropdown 3</a></li>
+                    <li><a href="#">Deep Dropdown 4</a></li>
+                    <li><a href="#">Deep Dropdown 5</a></li>
+                  </ul>
+                </li>
+              </ul>
+            </li> {% endcomment %}
+            {% comment %} <li><a href="contact.html">Contact</a></li> {% endcomment %}
+          </ul>
+          <i class="mobile-nav-toggle d-xl-none bi bi-list"></i>
+        </nav>
+      </div>
+    </div> 
+
+  </header>
+
+  <div id="messages" class="d-flex align-items-center">
+    <div class="container d-flex justify-content-center align-items-center">
+        {% if messages %}
+            <ul class="messages">
+                {% for message in messages %}
                     <li>
-                        <a href="{% url "profile" %}">
-                            <img class="user_photo" src="{{ request.user.photo.url }}">
-                            <span>Аккаунт</span>
-                        </a>
+                        {{ message|safe }} 
                     </li>
-                {% else %}
-                    <li><a href="{% url "login" %}"><span>Войти</span></a></li>
-                {% endif %}
-                
-                
-                
-                </ul>
-            </nav><!-- .navbar -->
-
-            </div>
-        </header><!-- End Header -->
-
-        {% block breadcrumbs %}{% endblock %} 
-
-        <div id="messages" class="d-flex align-items-center">
-            <div class="container">
-
-                {% if messages %}
-                    <ul class="messages">
-                        {% for message in messages %}
-                            <li class="{{ message.tags }} alert alert-dismissable" role="alert">
-                                {{ message|safe }}
-                                <button type="button" class="close" data-bs-dismiss="alert" aria-label="Close">
-                                    <span aria-hidden="true">&times;</span>
-                                </button>
-                                
-                            </li>
-                        {% endfor %} 
-                    </ul>
-                {% endif %}
-            </div>
-        </div>
-
-        <div class="row">
-            {% comment %} <div id="sidebar" class="container">
-                
+                {% endfor %} 
+            </ul>
+            {% comment %} <div>
+              <button type="button" class="close" data-bs-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
             </div> {% endcomment %}
+        {% endif %}
+    </div>
+  </div>
 
-            <div class="col-2 sidebar" id="categories">
-                <!-- filled by ajax: categories.js -->
-            </div>
-            
-            <div class="col">
-                <div id="content">
-                    {% block content %}{% endblock %} 
-                </div>
-            </div>
+  {% comment %} <div id="content"> {% endcomment %}
+    {% block content %}{% endblock %} 
+  {% comment %} </div> {% endcomment %}
+
+  {% comment %} <div class="row">
+    <div class="col-2 sidebar" id="categories">
+        <!-- filled by ajax: categories.js -->
+    </div>
+  </div> {% endcomment %}
+
+  <footer id="footer" class="footer">
+
+    <div class="container footer-top">
+      <div class="row gy-4">
+        <div class="col-lg-4 col-md-6 footer-about">
+          <a href="index.html" class="logo d-flex align-items-center">
+            <span class="sitename">Media Journal</span>
+          </a>
+          <div class="footer-contact pt-3">
+            <p>A108 Adam Street</p>
+            <p>New York, NY 535022</p>
+            <p class="mt-3"><strong>Phone:</strong> <span>+1 5589 55488 55</span></p>
+            <p><strong>Email:</strong> <span>info@example.com</span></p>
+          </div>
+          <div class="social-links d-flex mt-4">
+            <a href=""><i class="bi bi-twitter-x"></i></a>
+            <a href=""><i class="bi bi-facebook"></i></a>
+            <a href=""><i class="bi bi-instagram"></i></a>
+            <a href=""><i class="bi bi-linkedin"></i></a>
+          </div>
         </div>
-        
 
-        
-        <!-- ======= Footer ======= -->
-        <footer id="footer" class="footer">
+        <div class="col-lg-2 col-md-3 footer-links">
+          <h4>Useful Links</h4>
+          <ul>
+            <li><a href="#">Home</a></li>
+            <li><a href="#">About us</a></li>
+            <li><a href="#">Services</a></li>
+            <li><a href="#">Terms of service</a></li>
+            <li><a href="#">Privacy policy</a></li>
+          </ul>
+        </div>
 
-            <div class="footer-content position-relative">
-            <div class="container">
-                <div class="row">
+        <div class="col-lg-2 col-md-3 footer-links">
+          <h4>Our Services</h4>
+          <ul>
+            <li><a href="#">Web Design</a></li>
+            <li><a href="#">Web Development</a></li>
+            <li><a href="#">Product Management</a></li>
+            <li><a href="#">Marketing</a></li>
+            <li><a href="#">Graphic Design</a></li>
+          </ul>
+        </div>
 
-                <div class="col-lg-4 col-md-6">
-                    <div class="footer-info">
-                    <h3>Media Journal</h3>
-                    <p>
-                        A108 Adam Street <br>
-                        NY 535022, USA<br><br>
-                        <strong>Phone:</strong> +1 5589 55488 55<br>
-                        <strong>Email:</strong> info@example.com<br>
-                    </p>
-                    <div class="social-links d-flex mt-3">
-                        <a href="#" class="d-flex align-items-center justify-content-center"><i class="bi bi-twitter"></i></a>
-                        <a href="#" class="d-flex align-items-center justify-content-center"><i class="bi bi-facebook"></i></a>
-                        <a href="#" class="d-flex align-items-center justify-content-center"><i class="bi bi-instagram"></i></a>
-                        <a href="#" class="d-flex align-items-center justify-content-center"><i class="bi bi-linkedin"></i></a>
-                    </div>
-                    </div>
-                </div><!-- End footer info column-->
+        <div class="col-lg-2 col-md-3 footer-links">
+          <h4>Hic solutasetp</h4>
+          <ul>
+            <li><a href="#">Molestiae accusamus iure</a></li>
+            <li><a href="#">Excepturi dignissimos</a></li>
+            <li><a href="#">Suscipit distinctio</a></li>
+            <li><a href="#">Dilecta</a></li>
+            <li><a href="#">Sit quas consectetur</a></li>
+          </ul>
+        </div>
 
-                <div class="col-lg-2 col-md-3 footer-links">
-                    <h4>Useful Links</h4>
-                    <ul>
-                    <li><a href="#">Home</a></li>
-                    <li><a href="#">About us</a></li>
-                    <li><a href="#">Services</a></li>
-                    <li><a href="#">Terms of service</a></li>
-                    <li><a href="#">Privacy policy</a></li>
-                    </ul>
-                </div><!-- End footer links column-->
+        <div class="col-lg-2 col-md-3 footer-links">
+          <h4>Nobis illum</h4>
+          <ul>
+            <li><a href="#">Ipsam</a></li>
+            <li><a href="#">Laudantium dolorum</a></li>
+            <li><a href="#">Dinera</a></li>
+            <li><a href="#">Trodelas</a></li>
+            <li><a href="#">Flexo</a></li>
+          </ul>
+        </div>
 
-                <div class="col-lg-2 col-md-3 footer-links">
-                    <h4>Our Services</h4>
-                    <ul>
-                    <li><a href="#">Web Design</a></li>
-                    <li><a href="#">Web Development</a></li>
-                    <li><a href="#">Product Management</a></li>
-                    <li><a href="#">Marketing</a></li>
-                    <li><a href="#">Graphic Design</a></li>
-                    </ul>
-                </div><!-- End footer links column-->
+      </div>
+    </div>
 
-                <div class="col-lg-2 col-md-3 footer-links">
-                    <h4>Hic solutasetp</h4>
-                    <ul>
-                    <li><a href="#">Molestiae accusamus iure</a></li>
-                    <li><a href="#">Excepturi dignissimos</a></li>
-                    <li><a href="#">Suscipit distinctio</a></li>
-                    <li><a href="#">Dilecta</a></li>
-                    <li><a href="#">Sit quas consectetur</a></li>
-                    </ul>
-                </div><!-- End footer links column-->
+    <div class="container copyright text-center mt-4">
+      <p>© <span>Copyright</span> <strong class="px-1 sitename">Media Journal</strong> <span>All Rights Reserved</span></p>
+    </div>
 
-                <div class="col-lg-2 col-md-3 footer-links">
-                    <h4>Nobis illum</h4>
-                    <ul>
-                    <li><a href="#">Ipsam</a></li>
-                    <li><a href="#">Laudantium dolorum</a></li>
-                    <li><a href="#">Dinera</a></li>
-                    <li><a href="#">Trodelas</a></li>
-                    <li><a href="#">Flexo</a></li>
-                    </ul>
-                </div><!-- End footer links column-->
+  </footer>
 
-                </div>
-            </div>
-            </div>
+  <!-- Scroll Top -->
+  <a href="#" id="scroll-top" class="scroll-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
 
-            <div class="footer-legal text-center position-relative">
-            <div class="container">
-                <div class="copyright">
-                &copy; Copyright <strong><span>Media Journal</span></strong>. All Rights Reserved
-                </div>
-            </div>
-            </div>
+  <!-- Preloader -->
+  <div id="preloader"></div>
 
-        </footer>
-        <!-- End Footer -->
-
-        <a href="#" class="scroll-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
-
-        <div id="preloader"></div>
+  <!-- JS Files -->
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script> 
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.inputmask/3.3.4/jquery.inputmask.bundle.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/js-cookie@2/src/js.cookie.min.js"></script>
 
 
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script> 
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.inputmask/3.3.4/jquery.inputmask.bundle.min.js"></script>
-        <script src="https://cdn.jsdelivr.net/npm/js-cookie@2/src/js.cookie.min.js"></script>
-        <script src="https://static.yoomoney.ru/checkout-js/v1/checkout.js"></script>
-        
+  <!-- Vendor JS Files -->
+  <script src="{% static 'vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+  <script src="{% static 'vendor/aos/aos.js' %}"></script>
+  <script src="{% static 'vendor/swiper/swiper-bundle.min.js' %}"></script>
+  <script src="{% static 'vendor/purecounter/purecounter_vanilla.js' %}"></script>
+  <script src="{% static 'vendor/glightbox/js/glightbox.min.js' %}"></script>
+  {% comment %} <script src="{% static 'vendor/php-email-form/validate.js' %}"></script> {% endcomment %}
+  
 
-        <!-- Vendor JS Files -->
-        <script src="{% static 'vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
-        <script src="{% static 'vendor/aos/aos.js' %}"></script>
-        <script src="{% static 'vendor/glightbox/js/glightbox.min.js' %}"></script>
-        <script src="{% static 'vendor/isotope-layout/isotope.pkgd.min.js' %}"></script>
-        <script src="{% static 'vendor/purecounter/purecounter_vanilla.js' %}"></script>
-        <script src="{% static 'vendor/swiper/swiper-bundle.min.js' %}"></script>
-        {% comment %} <script src="{% static 'vendor/php-email-form/validate.js' %}"></script> {% endcomment %}
+  <!-- Main JS File -->
+  <script src="{% static 'js/main.js' %}"></script>
+  <script src="{% static "js/categories.js" %}"></script>
 
-        <!-- Template Main JS File -->
-        <script src="{% static 'js/main.js' %}"></script>
-        <script src="{% static "js/categories.js" %}"></script>
-        {% comment %} <script src="{% static 'js/search.js' %}"></script> {% endcomment %}
-        <script src="https://api-maps.yandex.ru/2.1/?apikey=169e2583-564e-431d-b642-9dbdc3ef6a6f&lang=ru_RU" type="text/javascript">
+  <script>
+    var csrftoken = Cookies.get('csrftoken'); 
+    function csrfSafeMethod(method) {
+        // Для этих методов токен не будет подставляться в заголовок.
+        return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method)); 
+    }
+    $.ajaxSetup({
+        beforeSend: function(xhr, settings) {
+            if (!csrfSafeMethod(settings.type) && !this.crossDomain) { 
+                xhr.setRequestHeader("X-CSRFToken", csrftoken);
+            } 
+        }
+    });
 
-        
-        <script>
-            var csrftoken = Cookies.get('csrftoken'); 
-            function csrfSafeMethod(method) {
-                // Для этих методов токен не будет подставляться в заголовок.
-                return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method)); 
-            }
-            $.ajaxSetup({
-                beforeSend: function(xhr, settings) {
-                    if (!csrfSafeMethod(settings.type) && !this.crossDomain) { 
-                        xhr.setRequestHeader("X-CSRFToken", csrftoken);
-                    } 
-                }
-            });
+    $(document).ready(function(){
+        {% block domready %}{% endblock %}
+    }); 
+  </script>
 
-            $(document).ready(function(){
-                {% block domready %}{% endblock %}
-            }); 
-        </script>
+  {{ request.user.is_authenticated|json_script:"user_auth" }}
 
-        {{ request.user.is_authenticated|json_script:"user_auth" }}
-        
-        {% block scripts %} 
-        
-        {% endblock %}
-    </body> 
+  {% block scripts %} 
+  {% endblock %}
+
+</body>
+
 </html>

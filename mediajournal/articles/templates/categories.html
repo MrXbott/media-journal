@@ -2,15 +2,52 @@
 {% load static %}
 
 {% block content %}
-    {% for category in categories %}
-        <div>
-            <p>
-                <h3><a href="{{ category.get_absolute_url }}" class="readmore"> {{ category.name }} </a></h3>
-            </p>
-            {% for child in category.children %}
-                <a href="{{ child.get_absolute_url }}" class="readmore"> {{ child.name }} </a>
-                <br>
-            {% endfor %}
+
+<main class="main">
+    <div class="container">
+      <div class="row">
+
+        <div class="col-lg-9">
+            <!-- Category Postst Section -->
+            <section id="category-postst" class="category-postst section">
+                <div class="container" data-aos="fade-up" data-aos-delay="100">
+                    <div class="row gy-4">
+                        {% for category in categories %}
+                            <div class="col-lg-12">
+                            <article>
+                                <h2 class="title">
+                                    <a href="{{ category.get_absolute_url }}">{{ category.name }}</a>
+                                </h2>
+
+                                <div class="row align-items-center">
+                                    {% for child in category.children %}
+                                        <div class="col-4 subcat">
+                                            
+                                            <a href="{{ child.get_absolute_url }}" class="readmore"> 
+                                                <img src={% if child.image %}"{{ child.image.url }}"{% else %}"/media/default/default_category_image.jpg"{% endif %}>
+                                                {{ child.name }} 
+
+                                            </a>
+                                        </div>
+                                    {% endfor %}
+                                </div>
+                            </article>
+                            </div><!-- End post list item -->
+                        {% endfor %}
+                    </div>
+                </div>
+            </section><!-- /Category Postst Section -->
         </div>
-    {% endfor %}
+
+        <div class="col-lg-3 sidebar">
+            {% include 'sidebar.html' %}
+        </div>
+
+      </div>
+    </div>
+  </main>
+{% endblock %}
+
+{% block scripts %}
+    <script src="{% static "js/bookmarks.js" %}"></script>
 {% endblock %}

@@ -3,6 +3,7 @@ from django.contrib.auth.models import AbstractUser, AbstractBaseUser
 from django.core.validators import RegexValidator
 from django.utils import timezone
 
+from articles.models import Article
 
 class Staff(AbstractUser):
     email = models.EmailField(blank=False, unique=True, null=False, verbose_name='Эл. адрес')
@@ -24,6 +25,8 @@ class User(AbstractBaseUser):
     date_joined = models.DateTimeField(default=timezone.now, verbose_name='Дата регистрации')
     is_active = models.BooleanField(default=False)
     photo = models.ImageField(upload_to='photo/', blank=True, null=True, default='default/default_user_photo.jpg')
+    designation = models.CharField(max_length=150, blank=True, null=True, unique=False)
+    bio = models.TextField(max_length=1000, blank=True, null=True, unique=False)
 
     USERNAME_FIELD = 'username'
     EMAIL_FIELD = 'email'
@@ -32,6 +35,10 @@ class User(AbstractBaseUser):
     class Meta:
         verbose_name = 'Пользователь'
         verbose_name_plural = 'Пользователи'
+
+    @property
+    def published_articles(self):
+        return self.articles.filter(status=Article.Status.PUBLISHED)
 
     def __str__(self):
         return self.email

@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+    {% for category in categories %}
+        <div>
+            <p>
+                <h3><a href="{{ category.get_absolute_url }}" class="readmore"> {{ category.name }} </a></h3>
+            </p>
+            {% for child in category.children %}
+                <a href="{{ child.get_absolute_url }}" class="readmore"> {{ child.name }} </a>
+                <br>
+            {% endfor %}
+        </div>
+    {% endfor %}
+{% endblock %}

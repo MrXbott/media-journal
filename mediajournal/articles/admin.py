@@ -14,7 +14,7 @@ class ArticleImageInline(admin.TabularInline):
 class ArticleSectionInline(admin.StackedInline):
     model = ArticleSection
     extra = 0
-    fields = ['title', 'text']
+    
 
 @admin.register(Article)
 class ArticleAdmin(admin.ModelAdmin):
@@ -22,7 +22,7 @@ class ArticleAdmin(admin.ModelAdmin):
     readonly_fields = ['created', 'published', 'preview']
     list_display = ['title', 'author', 'category', 'status', 'created', 'published', 'comments', 'bookmarks']
     list_filter = ['status', 'author', 'created', 'published', 'category']
-    search_fields = ['title', 'body', 'author']
+    search_fields = ['title', 'body', 'author__username', 'category__name']
     ordering = ['status', '-published']
     save_on_top = True
     prepopulated_fields = {"slug": ["title",]}
@@ -50,7 +50,7 @@ class ArticleAdmin(admin.ModelAdmin):
 
 @admin.register(Category)
 class CategoryAdmin(admin.ModelAdmin):
-    list_display = ['name', 'parent', 'slug', 'full_slug']
+    list_display = ['name', 'parent', 'slug', 'full_slug',  ]
     readonly_fields = ['full_slug']
     list_filter = [('parent', admin.RelatedOnlyFieldListFilter)]
     search_fields = ['name']

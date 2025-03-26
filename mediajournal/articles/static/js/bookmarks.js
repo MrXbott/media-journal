@@ -18,22 +18,25 @@ $(document).ready(function(){
         $('.popup').remove();
     });
 
-    $(document).on('click', '.bookmark-icon', function(e){
+    $(document).on('click', 'i[class*="bi-bookmark"]', function(e){
 
-        console.log('bookmark clicked', user_auth);
-        // e.stopPropagation();
+        console.log('bookmark clicked, user auth:', user_auth);
         e.preventDefault(); 
 
         if(!user_auth){
             $('.popup').remove();
+            console.log($(this).parent());
+            // var newdiv = $( "<div class='popup'>Please login</div>" );
             $(this).parent().append(
                 $('<div>').attr({'class': 'popup'}).append($('<span>').attr({'class': 'popuptext'}).text('please login').toggleClass('show'))
             );
         }
         else{
             let article_id = $(this).data('id');
-
+            console.log('article id: ', article_id);
             let bookmark_clicked = this;
+            let count_element = $($(bookmark_clicked).parent()).find('#bookmarks-count');
+            let count = parseInt($(count_element).text());
             $.ajax({
                 type: 'POST',
                 url: '/bookmark/', 
@@ -42,12 +45,14 @@ $(document).ready(function(){
                 }, 
                 success: function(data){
                     if (data['bookmark'] == 'added'){
-                        $(bookmark_clicked).find('img#unlk').addClass('hide');
-                        $(bookmark_clicked).find('img#lk').removeClass('hide');
+                        $(bookmark_clicked).removeClass('bi-bookmark');
+                        $(bookmark_clicked).addClass('bi-bookmark-fill');
+                        $(count_element).text(count + 1);
                     }
                     else if (data['bookmark'] == 'removed') {
-                        $(bookmark_clicked).find('img#unlk').removeClass('hide');
-                        $(bookmark_clicked).find('img#lk').addClass('hide');
+                        $(bookmark_clicked).removeClass('bi-bookmark-fill');
+                        $(bookmark_clicked).addClass('bi-bookmark');
+                        $(count_element).text(count - 1);
                     }
                 },
                 error: function(xhr, errmsg, err){

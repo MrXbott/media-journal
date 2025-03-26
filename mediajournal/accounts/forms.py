@@ -100,11 +100,13 @@ class CustomPasswordResetForm(forms.Form):
         send_password_reset_email.delay(subject, body, from_email, [to_email])
 
 
-class CustomAuthenticationForm(AuthenticationForm):
-    def __init__(self, *args, **kwargs):
-        super(CustomAuthenticationForm, self).__init__(*args, **kwargs)
-        self.fields['username'].label = 'Эл. адрес'
-        self.fields['password'].label = 'Пароль'
+# class CustomAuthenticationForm(AuthenticationForm):
+#     def __init__(self, *args, **kwargs):
+#         super(CustomAuthenticationForm, self).__init__(*args, **kwargs)
+#         self.fields['username'].widget.attrs['placeholder'] = 'Email'
+#         self.fields['username'].widget.attrs['class'] = 'form-control'
+#         self.fields['password'].widget.attrs['placeholder'] = 'Password'
+#         self.fields['password'].widget.attrs['class'] = 'form-control'
 
 
 class UserPhotoEditForm(forms.ModelForm):

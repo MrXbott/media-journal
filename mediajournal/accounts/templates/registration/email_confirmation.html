@@ -1,17 +1,25 @@
-{% comment %} {% extends "common/base.html" %} {% endcomment %}
+{% extends "base.html" %}
 {% load static %}
 
-{% block title %}Подтверждение регистрации{% endblock %}
-
 {% block content %}
-    <!-- ======= Breadcrumbs ======= -->
-    <div class="breadcrumbs d-flex align-items-center" style="background-image: url({% static 'img/breadcrumbs-bg.jpg'%});">
-    </div><!-- End Breadcrumbs -->
+<main class="main">
 
-    <section id="reset" class="section-bg">
+    <section id="contact" class="contact section">
+        <div class="page-title">
+            <div class="title-wrapper">
+                <h1>Подтвердите свой адрес электронной почты</h1>
+                <p>Мы отправили вам письмо со ссылкой для подтверждения регистрации. Пожалуйста, проверьте свой ящик.</p>
+            </div>
+        </div>
+    </section>
+</main>
+
+
+
+    {% comment %} <section id="reset" class="section-bg">
         <div class="container form">
             <h1>Подтвердите свой адрес электронной почты</h1>
             <p>Мы отправили вам письмо со ссылкой для подтверждения регистрации. Пожалуйста, проверьте свой ящик.</p> 
         </div>
-    </section>
+    </section> {% endcomment %}
 {% endblock %}

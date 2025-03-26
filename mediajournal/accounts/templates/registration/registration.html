@@ -1,14 +1,100 @@
-{% comment %} {% extends "base.html" %} {% endcomment %}
+{% extends "base.html" %}
 {% load static %}
-{% block title %}Регистрация{% endblock %}
-
-{% block breadcrumbs %}
-    {% comment %} <!-- ======= Breadcrumbs ======= -->
-    <div class="breadcrumbs d-flex align-items-center" style="background-image: url({% static 'img/breadcrumbs-bg.jpg'%});">
-    </div><!-- End Breadcrumbs --> {% endcomment %}
-{% endblock %}
+{% load tags %}
 
 {% block content %}
+<main class="main">
+
+    <section id="contact" class="contact section">
+        <div class="page-title">
+            <div class="title-wrapper">
+                <h1>Регистрация</h1>
+                {% comment %} <p>Придумайте новый пароль и введите его дважды</p> {% endcomment %}
+            </div>
+        </div>
+
+        <div class="container" data-aos="fade-up" data-aos-delay="100">
+        
+            <div class="row justify-content-center">
+                <div class="col-lg-4">
+                <div class="form-wrapper">
+
+                    <form action="." method="post" id="reset-form" class="login-form">
+                        <div class="error-message">
+                            {% if form.non_field_errors %}
+                                    {{ form.non_field_errors }}
+                            {% endif %}
+                        </div>
+
+                        <div class="row mt-3">
+                            <div class="col form-group">
+                                <div class="input-group">
+                                    <span class="input-group-text">
+                                        <i class="bi bi-envelope"></i>
+                                    </span>
+                                    {{ form.email|set_attrs:"placeholder:Email, class:form-control" }}                                   
+                                </div>
+
+                                <div class="errorlist">
+                                    {{ form.email.errors }} 
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="row mt-3">
+                            <div class="col form-group">
+                                {% comment %} <div class="help-text">
+                                    {{ form.new_password1.help_text }}
+                                </div> {% endcomment %}
+
+                                <div class="input-group">
+                                    <span class="input-group-text">
+                                        <i class="bi bi-lock"></i>
+                                    </span>
+                                    {{ form.password1|set_attrs:"placeholder:New Password, class:form-control" }}                                   
+                                </div>
+
+                                <div class="errorlist">
+                                    {{ form.password1.errors }} 
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row mt-3">
+                            <div class="col form-group">
+                                <div class="input-group">
+                                    <span class="input-group-text">
+                                        <i class="bi bi-lock"></i>
+                                    </span>
+                                    {{ form.password2|set_attrs:"placeholder:Repeat Password, class:form-control" }}                                  
+                                </div>
+
+                                <div class="errorlist">
+                                    {{ form.password2.errors }} 
+                                </div>
+                            </div>
+                        </div>
+
+                        {% csrf_token %}
+
+                        <div class="row mt-3">
+                            <div class="text-center">
+                                <input type="submit" value="Создать аккаунт">
+                            </div>
+                        </div>
+
+                    </form>
+
+                    <div id="login" class="d-flex justify-content-center mt-3">
+                        <a href="{% url "login" %}">Войти</a>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </section>
+</main>
+
     
     <section id="login" class="section-bg">
         <div class="container registration" >
@@ -30,5 +116,4 @@
 {% endblock %}
 
 {% block scripts %}
-    <script src="{% static 'js/masks.js' %}"></script>
 {% endblock %}

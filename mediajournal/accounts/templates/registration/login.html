@@ -1,34 +1,83 @@
 {% extends "base.html" %}
 {% load static %}
+{% load tags %}
 
-{% block title %} Вход {% endblock %}
 
 {% block content %} 
-    <!-- ======= Breadcrumbs ======= -->
-    {% comment %} <div class="breadcrumbs d-flex align-items-center" style="background-image: url({% static 'img/breadcrumbs-bg.jpg'%});">
-    </div> {% endcomment %}
-    <!-- End Breadcrumbs -->
+<main class="main">
 
-    <section id="login" class="section-bg">
-        <div class="container login">
-            <div class="row justify-content-center">
-                <div class="col-sm-12 col-md-8 col-lg-5 ">
-                    <form action="{% url 'login' %}" method="post" id="login-form" class="form">
-                        <h2>Вход</h2>
-                        {{ form }}
-                        <div class="link-text">
-                            <a href="{% url "password_reset" %}">Забыли пароль?</a>
-                        </div>
-                        {% csrf_token %}
-                        <input type="hidden" name="next" value="{{ next }}" /> 
-                        <p class="btn-center"><input type="submit" value="Вход"></p>
-                        <div class="link-text" id="register">
-                            <a href="{% url "registration" %}">Регистрация</a>
-                        </div>
-                    </form> 
-                </div>
+    <section id="contact" class="contact section">
+        <div class="page-title">
+            <div class="title-wrapper">
+                <h1>Вход</h1>
+                {% comment %} <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut elit tellus, luctus nec ullamcorper mattis, pulvinar dapibus leo.</p> {% endcomment %}
             </div>
         </div>
+        
+        <div class="container" data-aos="fade-up" data-aos-delay="100">
+        
+            <div class="row justify-content-center">
+                <div class="col-lg-4">
+                  <div class="form-wrapper">
+
+                    <form action="{% url 'login' %}" method="post"  class="login-form">
+                        <div class="error-message">
+                            {% if form.non_field_errors %}
+                                    {{ form.non_field_errors }}
+                            {% endif %}
+                        </div>
+
+                        <div class="row mt-3">
+                            <div class="col form-group">
+                                <div class="input-group">
+                                    <span class="input-group-text">
+                                        <i class="bi bi-envelope"></i>
+                                    </span>
+                                    {{ form.username|set_attrs:"placeholder:Email, class:form-control" }}
+                                    {{ form.username.errors }}
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row mt-3">
+                            <div class="col form-group">
+                                <div class="input-group">
+                                    <span class="input-group-text">
+                                        <i class="bi bi-lock"></i>
+                                    </span>
+                                    {{ form.password|set_attrs:"placeholder:Password, class:form-control" }}
+                                    {{ form.password.errors }}
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row mt">
+                            <div class="col form-group">
+                                <div class="link-text">
+                                    <a href="{% url "password_reset" %}">Забыли пароль?</a>
+                                </div>
+                            </div>
+                        </div>
+
+                        {% csrf_token %}
+
+                        <div class="row mt-3">
+                            <div class="text-center">
+                                <input type="submit" value="Войти">
+                            </div>
+                        </div>
+                    </form>
+
+                    <div class="d-flex justify-content-center mt-3" id="register">
+                        <a href="{% url "registration" %}">Зарегистрироваться</a>
+                    </div>
+
+                  </div>
+                </div>
+              </div>
+
+        </div>
     </section>
+</main>
 
 {% endblock %}

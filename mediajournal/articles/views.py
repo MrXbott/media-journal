@@ -15,15 +15,25 @@ r = redis.Redis(host=settings.REDIS_HOST, port=settings.REDIS_PORT, db=settings.
 
 def get_all_categories(request):
     categories = Category.objects.filter(parent=None)
+    last_articles = Article.objects.filter(status=Article.Status.PUBLISHED).order_by('-published')[:5]
     if request.headers.get('x-requested-with') == 'XMLHttpRequest':
         return JsonResponse([{'name' : category.name, 'url': category.get_absolute_url(), 'image': category.image.url} for category in categories[:10]], safe=False)
-    return render(request, 'categories.html', {'categories': categories})
+    return render(request, 'categories.html', {'categories': categories, 
+                                               'last_articles': last_articles,
+                                               'section': 'categories'
+                                               })
 
 def get_category(request, slug):
     category = get_object_or_404(Category, slug=slug[-1])
-    articles = (Article.objects.filter(category__in=category.children) | Article.objects.filter(category=category)).distinct()
+    # articles = (Article.objects.filter(category__in=category.children) | Article.objects.filter(category=category)).distinct().filter(status=Article.Status.PUBLISHED)
+    articles = category.all_children_articles
     total_views = {article.id: int(r.get(f'article:{article.id}:views') if r.get(f'article:{article.id}:views') else 0) for article in articles}
-    return render(request, 'category.html', {'category': category, 'articles': articles, 'total_views': total_views})
+    last_articles = Article.objects.filter(status=Article.Status.PUBLISHED).order_by('-published')[:5]
+    return render(request, 'category.html', {'category': category, 
+                                             'articles': articles, 
+                                             'total_views': total_views,
+                                             'last_articles': last_articles,
+                                             })
 
 def get_last_articles(request):
     articles = Article.objects.all().order_by('published')
@@ -38,16 +48,23 @@ def get_article(request, category, slug):
     total_views = r.incr(f'article:{article.id}:views')    
     data = {'article': article.id, 'parent': ''}
     comment_form = CommentForm(data=data)
-    return render(request, 'article.html', {'article': article, 'total_views': total_views, 'form': comment_form})
+    categories = Category.objects.filter(parent=None).order_by('name')
+    last_articles = Article.objects.filter(status=Article.Status.PUBLISHED).order_by('-published')[:5]
+    return render(request, 'article.html', {'article': article, 
+                                            'total_views': total_views, 
+                                            'form': comment_form, 
+                                            'categories': categories,
+                                            'last_articles': last_articles,
+                                            })
 
 
 @login_required
 def write_article(request):
     if request.method == 'POST':
-        form = ArticleForm(data=request.POST, files=request.FILES)
+        article_form = ArticleForm(data=request.POST, files=request.FILES)
         formset = ArticleImageFormSet(data=request.POST, files=request.FILES)
-        if form.is_valid() and formset.is_valid():
-            article = form.save(commit=False)
+        if article_form.is_valid() and formset.is_valid():
+            article = article_form.save(commit=False)
             article.author = request.user
             article.save()
             images = formset.save(commit=False)
@@ -56,10 +73,14 @@ def write_article(request):
                 image.save()
             return render(request, 'article_send.html')
     else:
-        # form = ArticleForm()
+        article_form = ArticleForm()
         section_formset = ArticleSectionFormSet()
         image_formset = ArticleImageFormSet()
-    return render(request, 'article_write.html', {'section_formset': section_formset, 'formset': image_formset, })
+    return render(request, 'article_write.html', {'article_form': article_form, 
+                                                  'section_formset': section_formset, 
+                                                  'image_formset': image_formset, 
+                                                  'section': 'write',
+                                                  })
     
 
 def comments_list(request):
@@ -120,6 +141,7 @@ def post_comment(request):
 @require_POST
 def bookmark_article(request):
     article_id = request.POST.get('article_id')
+    # to do: add safe get
     article = Article.objects.get(id=article_id)
     if article in Article.objects.filter(bookmarked_by=request.user):
         print('article already in bookmarks. deleting')

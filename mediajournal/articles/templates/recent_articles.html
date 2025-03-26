@@ -1,0 +1,14 @@
+<div class="recent-posts-widget widget-item">
+
+    <h3 class="widget-title">Недавние статьи</h3>
+      {% for article in last_articles %}
+          <div class="post-item">
+              <img src="{{ article.cover_image.url }}" alt="" class="flex-shrink-0">
+              <div>
+              <h4><a href="{{ article.get_absolute_url }}">{{ article.title|truncatechars:40 }}</a></h4>
+              <time datetime="">{{ article.published }}</time>
+              </div>
+          </div>
+      {% endfor %}
+    <!-- End recent post item-->
+  </div>

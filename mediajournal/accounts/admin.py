@@ -24,6 +24,7 @@ class BookmarkInline(admin.TabularInline):
 class UserAdmin(admin.ModelAdmin):
     list_display = ['email', 'phone', 'username', 'id', 'articles', 'bookmarks']
     inlines = [ArticleInline, BookmarkInline]
+    save_on_top = True
     
     @admin.display(description='articles')
     def articles(self, obj):

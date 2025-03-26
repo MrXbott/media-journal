@@ -4,7 +4,7 @@ from django.utils.safestring import mark_safe
 from django.core.exceptions import ValidationError
 from datetime import datetime
 
-from accounts.models import User
+# from accounts.models import User
 from .ru_slugify import slugify
 
 class SafeGetManager(models.Manager):
@@ -25,15 +25,15 @@ class Article(models.Model):
         PUBLISHED = 'Published'
 
     title = models.CharField(max_length=300, blank=False, null=False, unique=False)
-    author = models.ForeignKey(User, null=True, on_delete=models.SET_NULL, related_name='articles')
+    author = models.ForeignKey('accounts.User', null=True, on_delete=models.SET_NULL, related_name='articles')
     body = models.TextField()
     status = models.CharField(max_length=20, choices=Status.choices, default=Status.MODERATION)
     created = models.DateTimeField(auto_now_add=True)
     published = models.DateTimeField(blank=True, null=True)
     slug = models.SlugField(max_length=250, unique_for_date='published', blank=True, null=True, unique=True)
-    category = models.ForeignKey('Category', blank=False, null=True, on_delete=models.SET_NULL)
+    category = models.ForeignKey('Category', blank=False, null=True, on_delete=models.SET_NULL, related_name='articles')
     cover_image = models.ImageField(upload_to='images/', blank=True, null=True, default='default/default_article_cover.jpg')
-    bookmarked_by = models.ManyToManyField(User, through='Bookmark')
+    bookmarked_by = models.ManyToManyField('accounts.User', through='Bookmark')
     enable_comments = models.BooleanField(default=True)
 
     class Meta:
@@ -63,7 +63,7 @@ class Article(models.Model):
     
 
 class Bookmark(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='bookmarks')
+    user = models.ForeignKey('accounts.User', on_delete=models.CASCADE, related_name='bookmarks')
     article = models.ForeignKey(Article, on_delete=models.CASCADE)
 
     class Meta:
@@ -78,6 +78,7 @@ class Category(models.Model):
     parent = models.ForeignKey('Category', blank=True, null=True, unique=False, related_name='subcategories', on_delete=models.SET_NULL)
     slug = models.SlugField(max_length=250, blank=True, null=False, unique=True)
     image = models.ImageField(upload_to='category-images/', blank=True, null=True, unique=False)
+    is_featured = models.BooleanField(default=False)
 
     class Meta:
         ordering = ['name']
@@ -97,6 +98,10 @@ class Category(models.Model):
             return parents
         else:
             return []
+        
+    @property
+    def all_children_articles(self):
+        return self._get_children_articles()
 
     def __str__(self) -> str:
         if self.parent:
@@ -108,6 +113,17 @@ class Category(models.Model):
             return self.slug
         else:
             return f'{self.parent._get_parent_slugs()}/{self.slug}'
+        
+    def _get_children_articles(self):
+        self_articles = self.articles.filter(status=Article.Status.PUBLISHED)
+        if self.children:
+            articles = Article.objects.none()
+            for child in self.children:
+                child_articles = child._get_children_articles()
+                articles = articles.union(child_articles) 
+            return articles.union(self_articles).order_by('-published')
+        else:
+            return self_articles.order_by('-published')
     
     def get_absolute_url(self):
         return reverse("get_category", kwargs={'slug': self.full_slug})
@@ -118,7 +134,7 @@ class Category(models.Model):
         super(Category, self).save(*args, **kwargs)
 
 class Comment(models.Model):
-    author = models.ForeignKey(User, related_name='comments', null=True, on_delete=models.SET_NULL)
+    author = models.ForeignKey('accounts.User', related_name='comments', null=True, on_delete=models.SET_NULL)
     article = models.ForeignKey(Article, related_name='article_comments', on_delete=models.CASCADE)
     body = models.TextField()
     created = models.DateTimeField(auto_now_add=True)
@@ -147,8 +163,12 @@ class ArticleImage(models.Model):
     
 class ArticleSection(models.Model):
     article = models.ForeignKey(Article, related_name='sections', on_delete=models.CASCADE, blank=False, null=False)
-    text = models.TextField()
     title = models.CharField(max_length=300, blank=True, null=True, unique=False)
+    text = models.TextField()
+    quote = models.CharField(max_length=300, blank=True, null=True, unique=False)
+    quote_description = models.CharField(max_length=100, blank=True, null=True, unique=False)
+    highlight = models.CharField(max_length=300, blank=True, null=True, unique=False)
+    
 
     def __str__(self):
         return self.title[:15] + ('...') if len(self.title) > 15 else ''

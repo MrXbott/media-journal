@@ -16,6 +16,7 @@ from .forms import RegistrationForm, UserPhotoEditForm
 from .token import email_verification_token
 from .tasks import send_confirm_email
 from .models import User
+from articles.models import Article
 
 
 def registration(request: HttpRequest) -> HttpResponse:
@@ -56,7 +57,7 @@ def confirm_email(request: HttpRequest, uidb64: str, token: str) -> HttpResponse
         user.is_active = True
         user.save()
         return render(request, 'registration/registration_done.html')
-    return HttpResponse('Activation link is invalid!')
+    return render(request, 'registration/activation_error.html')
 
 # @login_required
 # def log_out(request):

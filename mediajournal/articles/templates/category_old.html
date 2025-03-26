@@ -1,0 +1,88 @@
+{% extends "base.html" %}
+{% load tags %}
+{% load static %}
+
+{% block content %}
+    <section id="category" class="categories">
+        <div class="container" data-aos="fade-up">
+            <div class="row category-content">
+                <div class="category-header">
+                    <img src={% if category.image %}"{{ category.image.url }}" {% else %} "/media/default/default_category_image.jpg"{% endif %}>
+                    <h1>{{ category.name }}</h1>
+                </div>
+                
+                {% if category.parents %}
+                <div class="breadcrumbs position-relative align-items-center" >  
+                  <ol>
+                  {% comment %} <li><a href="{% url 'categories' %}">Все категории</a></li> {% endcomment %}
+                    {% for parent in category.parents %}
+                            <li><a href="{{ parent.get_absolute_url }}">{{ parent.name }}</a></li>
+                    {% endfor %}
+                    <li class="current">{{ category.name }}</li>
+                  </ol>
+                </div>
+                {% endif %}
+              
+
+                <div class="row subcategories">
+                    <div class="col">
+                        {% for child in category.children %}
+                            <div class="category">
+                                <a href="{{child.get_absolute_url}}">
+                                    {% if child.image %}
+                                        <img src="{{ child.image.url }}">
+                                    {% else %}
+                                        <img src="/media/default/default_category_image.jpg">
+                                    {% endif %}
+                                    {{child.name}}
+                                </a>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="articles" class="articles">
+        <div class="container" >
+            {% for article in articles %}
+            <div class="row">
+              <div class="col">
+                  <div class="article-item position-relative h-100">
+                    <div class="article-content d-flex flex-column">
+                      {% if article.cover_image %}
+                        <img src={{ article.cover_image.url }} class="img-fluid" alt="">
+                      {% else %}
+                        <img src="/media/default/default_article_cover.jpg" class="img-fluid" alt="">
+                      {% endif %}
+                      <div class="row">
+                        <div class="col article-category"> 
+                          <a href="{{ article.category.get_absolute_url }}">{{ article.category.name }}</a>
+                        </div>
+                        <div class="col published-date">
+                          {{ article.published|date:"d.m.y H:i" }}
+                        </div>
+                      </div>
+                      <div class="article-title">  
+                        <a href="{{ article.get_absolute_url }}"><p class="title">{{ article.title }}</p></a>
+                      </div>
+                      <div class="article-header">
+                        <span><img class="user_photo" src={% if article.author and article.author.photo %}{{ article.author.photo.url}}{% else %}{{ default_user_photo.image.url }}{% endif %}></span>
+                        <span class="author">{% if article.author %}{{ article.author.username }}{% else %}User deleted{% endif %}</span>
+                        <span>{{ total_views|item:article.id}} view{{total_views|item:article.id|pluralize}}</span>
+                          {% include "bookmarks.html" with article=article user=request.user %}
+                      </div>
+                      
+                      
+                    </div>     
+                  </div>
+              </div>
+            </div>
+            {% endfor %}
+          
+        </div>
+      </section>
+
+
+{% endblock %}

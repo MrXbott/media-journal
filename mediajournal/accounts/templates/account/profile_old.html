@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Profile{% endblock %}
+
+
+
+{% block content%}
+    <section id="profile" class="section-bg">
+        <div class="container profile">
+            <div>
+                <img class="user_photo" src="{{ request.user.photo.url}}">
+            </div>
+            <form method="post" enctype="multipart/form-data">
+                {{ photo_form }}
+                {% csrf_token %}
+                <p><input type="submit" class="button" value="Сохранить"></p>
+            </form>
+            <div>
+                <br>
+                Ваше имя:
+                <input type="text" id="username" value="{{ request.user.username }}">
+                <button type="button" class="button" id="save_username">Сохранить</button>
+                <div id="message_username">
+
+                </div>
+                <br><br>
+                
+                Емейл: <b>{{ request.user.email }}</b>
+                <br>
+                Телефон: <b>{{ request.user.phone }}</b>
+                <br>
+                Статус профиля: <b>{% if not request.user.is_active %}не {% endif%}активен</b>
+                <br>
+            </div>
+            <br>
+
+            <br>
+            <div>
+                <a class="button" href="{% url "password_change" %}">
+                    Сменить пароль
+                </a>
+            </div>
+            <br>
+            <div>
+                <h3>Ваши статьи</h3>
+                {% for article in request.user.articles.all %}
+                    {{ article.status }} <a href={{ article.get_absolute_url}}>{{ article.title }}</a>
+                    <br>
+                {% endfor %}
+            </div>
+
+            <div>
+                <h3>Bookmarks</h3>
+                {% for bookmark in request.user.bookmarks.all %}
+                    <a href={{ bookmark.article.get_absolute_url}}>{{ bookmark.article.title }}</a>
+                    <br>
+                {% endfor %}
+            </div>
+        </div>
+    </section>
+
+{% endblock %}
+
+{% block scripts %}
+    <script src="{% static 'js/edit_username.js' %}"></script>
+{% endblock %}

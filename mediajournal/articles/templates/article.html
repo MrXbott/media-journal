@@ -1,8 +1,489 @@
 {% extends "base.html" %}
 {% load static %}
-{% comment %} {% block title %}Media Journal{% endblock %} {% endcomment %}
 
-{% block breadcrumbs %}
+{% block content %}
+<main class="main">
+
+    <!-- Page Title -->
+    {% comment %} <div class="page-title">
+      <div class="breadcrumbs">
+        <nav aria-label="breadcrumb">
+          <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="#"><i class="bi bi-house"></i> Home</a></li>
+            <li class="breadcrumb-item"><a href="#">Category</a></li>
+            <li class="breadcrumb-item active current">Blog Details</li>
+          </ol>
+        </nav>
+      </div>
+
+      <div class="title-wrapper">
+        <h1>Blog Details</h1>
+        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut elit tellus, luctus nec ullamcorper mattis, pulvinar dapibus leo.</p>
+      </div>
+    </div><!-- End Page Title --> {% endcomment %}
+
+    <div class="container">
+      <div class="row">
+
+        <div class="col-lg-9">
+
+          <!-- Blog Details Section -->
+          <section id="blog-details" class="blog-details section">
+            <div class="container" data-aos="fade-up">
+
+              <article class="article">
+
+                {% comment %} <div class="hero-img" data-aos="zoom-in">
+                  <img src="{{ article.cover_image.url }}" alt="Featured blog image" class="img-fluid" loading="lazy">
+                </div> {% endcomment %}
+
+                <div class="article-content" data-aos="fade-up" data-aos-delay="100">
+                    <div class="content-header">
+                        <div class="author-info">
+                            <div class="author-details">
+                                <img src={% if article.author.photo %}"{{ article.author.photo.url }}"{% else %}"media/default/default_user_photo.jpg"{% endif%} alt="Author" class="author-img">
+                                <div class="info">
+                                <h4>{{ article.author.username }}</h4>
+                                {% if article.author.designation %}
+                                  <span class="role">{{ article.author.designation }}</span>
+                                {% endif %}
+                                </div>
+                            </div>
+
+                            <div class="post-meta">
+                                <span class="category">
+                                    <a href="{{ article.category.get_absolute_url }}">{{ article.category.name }}</a>
+                                </span>
+                                <span class="divider">•</span>
+                                <span class="date">
+                                    {% comment %} <i class="bi bi-calendar3"></i> {% endcomment %}
+                                    {{ article.published|date:"d M Y H:i"}}
+                                </span>
+                                <span class="divider">•</span>
+                                <span class="views">
+                                    <i class="bi bi-eye"></i>
+                                    {{ total_views }}
+                                </span>
+                                <span class="comments">
+                                    <i class="bi bi-chat-text"></i>
+                                    {{ article.comments.count}}
+                                </span>
+                                <span class="bookmarks">
+                                    <i class="bi {% if user in article.bookmarked_by.all %} bi-bookmark-fill {% else %} bi-bookmark {% endif %}" data-id={{ article.id }}></i>
+                                    <span id="bookmarks-count">
+                                    {{ article.bookmarked_by.count }}
+                                    </span>
+                                </span>                            
+                            </div>
+                        </div>
+                        <h1 class="title">{{ article.title }}</h1>
+                        
+                    </div>
+
+                    <div class="hero-img" >
+                        <img src="{{ article.cover_image.url }}" alt="Featured blog image" class="img-fluid" loading="lazy">
+                      </div>
+
+                  <div class="content">
+                    <p class="lead">
+                      {{ article.body|linebreaks }}
+                    </p>
+
+                    {% comment %} <div class="content-image right-aligned">
+                      <img src="assets/img/blog/blog-hero-2.webp" class="img-fluid" alt="Modern web development tools" loading="lazy">
+                      <figcaption>Modern development environments emphasize collaboration and efficiency</figcaption>
+                    </div> {% endcomment %}
+                    {% for section in article.sections.all %}
+                        {% if section.title %}
+                            <h2>{{ section.title }}</h2>
+                        {% endif %}
+                        <p>
+                        {{ section.text|linebreaks }}
+                        </p>
+                        {% if section.quote %}
+                            <blockquote>
+                                <p>
+                                {{ section.quote }}
+                                </p>
+                                {% if section.quote_description %}
+                                <cite>{{ section.quote_description }}</cite>
+                                {% endif %}
+                            </blockquote>
+                        {% endif %}
+                        {% if section.highlight %}
+                            <div class="highlight-box">
+                                <h3>{{ section.highlight }}</h3>
+                                {% comment %} <ul class="trend-list">
+                                <li>
+                                    <i class="bi bi-lightning-charge"></i>
+                                    <span>Edge Computing and Serverless Architecture</span>
+                                </li>
+                                <li>
+                                    <i class="bi bi-shield-check"></i>
+                                    <span>Enhanced Security Measures</span>
+                                </li>
+                                <li>
+                                    <i class="bi bi-phone"></i>
+                                    <span>Progressive Web Apps (PWAs)</span>
+                                </li>
+                                </ul> {% endcomment %}
+                            </div>
+                        {% endif %}
+                    {% endfor %}
+
+                    <div class="content-grid">
+                      <div class="row g-4">
+                        <div class="col-md-6">
+                          <div class="info-card">
+                            <i class="bi bi-speedometer2"></i>
+                            <h4>Performance Metrics</h4>
+                            <p>Focus on Core Web Vitals and user-centric performance metrics for better search rankings and user experience.</p>
+                          </div>
+                        </div>
+                        <div class="col-md-6">
+                          <div class="info-card">
+                            <i class="bi bi-universal-access"></i>
+                            <h4>Accessibility</h4>
+                            <p>Implementing WCAG guidelines and ensuring web applications are accessible to all users across different devices.</p>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <h2>Looking Forward</h2>
+                    <p>
+                      As we continue through 2025, web development practices will further evolve, embracing new technologies while maintaining a strong foundation in performance, accessibility, and user experience. Staying updated with these trends and best practices is crucial for developers looking to build modern, scalable web applications.
+                    </p>
+                  </div>
+
+                  <div class="meta-bottom">
+                    <div class="tags-section">
+                      <h4>Related Topics</h4>
+                      <div class="tags">
+                        <a href="#" class="tag">Web Development</a>
+                        <a href="#" class="tag">Performance</a>
+                        <a href="#" class="tag">Best Practices</a>
+                        <a href="#" class="tag">Trends</a>
+                        <a href="#" class="tag">2025</a>
+                      </div>
+                    </div>
+
+                    <div class="share-section">
+                      <h4>Share Article</h4>
+                      <div class="social-links">
+                        <a href="#" class="twitter"><i class="bi bi-twitter-x"></i></a>
+                        <a href="#" class="facebook"><i class="bi bi-facebook"></i></a>
+                        <a href="#" class="linkedin"><i class="bi bi-linkedin"></i></a>
+                        <a href="#" class="copy-link" title="Copy Link"><i class="bi bi-link-45deg"></i></a>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+              </article>
+
+            </div>
+          </section><!-- /Blog Details Section -->
+
+          <!-- Blog Author Section -->
+          <section id="blog-author" class="blog-author section">
+
+            <div class="container" data-aos="fade-up">
+              <div class="author-box">
+                <div class="row align-items-center">
+                  <div class="col-lg-3 col-md-4 text-center">
+                    <img src="{{ article.author.photo.url }}" class="author-img rounded-circle" alt="" loading="lazy">
+
+                    {% comment %} <div class="author-social-links mt-3">
+                      <a href="https://twitter.com/#" class="twitter"><i class="bi bi-twitter-x"></i></a>
+                      <a href="https://linkedin.com/#" class="linkedin"><i class="bi bi-linkedin"></i></a>
+                      <a href="https://github.com/#" class="github"><i class="bi bi-github"></i></a>
+                      <a href="https://facebook.com/#" class="facebook"><i class="bi bi-facebook"></i></a>
+                      <a href="https://instagram.com/#" class="instagram"><i class="bi bi-instagram"></i></a>
+                    </div> {% endcomment %}
+                  </div>
+
+                  <div class="col-lg-9 col-md-8">
+                    <div class="author-content">
+                      <h3 class="author-name">{{ article.author.username }}</h3>
+                      <span class="author-title">Senior Tech Writer &amp; Developer Advocate</span>
+
+                      <div class="author-bio mt-3">
+                        Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium. Passionate about creating content that bridges the gap between developers and end-users.
+                      </div>
+
+                      <div class="author-website mt-3">
+                        {% comment %} <a href="#" class="website-link">
+                          <i class="bi bi-globe"></i>
+                          <span>sarahanderson.dev</span>
+                        </a> {% endcomment %}
+                        <a href="#" class="more-posts">
+                          Read More from {{ article.author.username }} <i class="bi bi-arrow-right"></i>
+                        </a>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          </section><!-- /Blog Author Section -->
+
+          <!-- Blog Comments Section -->
+          <section id="blog-comments" class="blog-comments section">
+
+            <div class="container" data-aos="fade-up" data-aos-delay="100">
+
+              <div class="blog-comments-3">
+                <div class="section-header">
+                  <h3>Discussion <span class="comment-count">(8)</span></h3>
+                </div>
+
+                <div class="comments-wrapper">
+                  <!-- Comment 1 -->
+                  <article class="comment-card">
+                    <div class="comment-header">
+                      <div class="user-info">
+                        <img src="assets/img/person/person-f-9.webp" alt="User avatar" loading="lazy">
+                        <div class="meta">
+                          <h4 class="name">Sarah Williams</h4>
+                          <span class="date"><i class="bi bi-calendar3"></i> February 13, 2025</span>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="comment-content">
+                      <p>Proin iaculis purus consequat sem cure digni ssim donec porttitora entum suscipit rhoncus. Accusantium quam, ultricies eget id, aliquam eget nibh et. Maecen aliquam, risus at semper.</p>
+                    </div>
+                    <div class="comment-actions">
+                      <button class="action-btn like-btn">
+                        <i class="bi bi-hand-thumbs-up"></i>
+                        <span>12</span>
+                      </button>
+                      <button class="action-btn reply-btn">
+                        <i class="bi bi-reply"></i>
+                        <span>Reply</span>
+                      </button>
+                    </div>
+                  </article>
+
+                  <!-- Comment 2 with replies -->
+                  <article class="comment-card">
+                    <div class="comment-header">
+                      <div class="user-info">
+                        <img src="assets/img/person/person-m-9.webp" alt="User avatar" loading="lazy">
+                        <div class="meta">
+                          <h4 class="name">James Cooper</h4>
+                          <span class="date"><i class="bi bi-calendar3"></i> February 13, 2025</span>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="comment-content">
+                      <p>Quisque ut nisi. Donec mi odio, faucibus at, scelerisque quis, convallis in, nisi. Suspendisse non nisl sit amet velit hendrerit rutrum. Ut leo. Ut a nisl id ante tempus hendrerit.</p>
+                    </div>
+                    <div class="comment-actions">
+                      <button class="action-btn like-btn">
+                        <i class="bi bi-hand-thumbs-up"></i>
+                        <span>8</span>
+                      </button>
+                      <button class="action-btn reply-btn">
+                        <i class="bi bi-reply"></i>
+                        <span>Reply</span>
+                      </button>
+                    </div>
+
+                    <!-- Reply Thread -->
+                    <div class="reply-thread">
+                      <!-- Reply 1 -->
+                      <article class="comment-card reply">
+                        <div class="comment-header">
+                          <div class="user-info">
+                            <img src="assets/img/person/person-f-9.webp" alt="User avatar" loading="lazy">
+                            <div class="meta">
+                              <h4 class="name">Emily Parker</h4>
+                              <span class="date"><i class="bi bi-calendar3"></i> February 13, 2025</span>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="comment-content">
+                          <p>Cras ultricies mi eu turpis hendrerit fringilla. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae.</p>
+                        </div>
+                        <div class="comment-actions">
+                          <button class="action-btn like-btn">
+                            <i class="bi bi-hand-thumbs-up"></i>
+                            <span>5</span>
+                          </button>
+                          <button class="action-btn reply-btn">
+                            <i class="bi bi-reply"></i>
+                            <span>Reply</span>
+                          </button>
+                        </div>
+                      </article>
+
+                      <!-- Reply 2 -->
+                      <article class="comment-card reply">
+                        <div class="comment-header">
+                          <div class="user-info">
+                            <img src="assets/img/person/person-f-7.webp" alt="User avatar" loading="lazy">
+                            <div class="meta">
+                              <h4 class="name">Daniel Brown</h4>
+                              <span class="date"><i class="bi bi-calendar3"></i> February 13, 2025</span>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="comment-content">
+                          <p>Nam commodo suscipit quam. Vestibulum ullamcorper mauris at ligula. Fusce fermentum odio nec arcu.</p>
+                        </div>
+                        <div class="comment-actions">
+                          <button class="action-btn like-btn">
+                            <i class="bi bi-hand-thumbs-up"></i>
+                            <span>3</span>
+                          </button>
+                          <button class="action-btn reply-btn">
+                            <i class="bi bi-reply"></i>
+                            <span>Reply</span>
+                          </button>
+                        </div>
+                      </article>
+                    </div>
+                  </article>
+
+                  <!-- Comment 3 -->
+                  <article class="comment-card">
+                    <div class="comment-header">
+                      <div class="user-info">
+                        <img src="assets/img/person/person-m-6.webp" alt="User avatar" loading="lazy">
+                        <div class="meta">
+                          <h4 class="name">Rachel Adams</h4>
+                          <span class="date"><i class="bi bi-calendar3"></i> February 13, 2025</span>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="comment-content">
+                      <p>Vivamus elementum semper nisi. Aenean vulputate eleifend tellus. Aenean leo ligula, porttitor eu, consequat vitae, eleifend ac, enim.</p>
+                    </div>
+                    <div class="comment-actions">
+                      <button class="action-btn like-btn">
+                        <i class="bi bi-hand-thumbs-up"></i>
+                        <span>6</span>
+                      </button>
+                      <button class="action-btn reply-btn">
+                        <i class="bi bi-reply"></i>
+                        <span>Reply</span>
+                      </button>
+                    </div>
+                  </article>
+                </div>
+              </div>
+
+            </div>
+
+          </section><!-- /Blog Comments Section -->
+
+          <!-- Blog Comment Form Section -->
+          <section id="blog-comment-form" class="blog-comment-form section">
+
+            <div class="container" data-aos="fade-up" data-aos-delay="100">
+
+              <form method="post" role="form">
+
+                <div class="section-header">
+                  <h3>Share Your Thoughts</h3>
+                  {% comment %} <p>Your email address will not be published. Required fields are marked *</p> {% endcomment %}
+                </div>
+
+                <div class="row gy-3">
+                  {% comment %} <div class="col-md-6 form-group">
+                    <label for="name">Full Name *</label>
+                    <input type="text" name="name" class="form-control" id="name" placeholder="Enter your full name" required="">
+                  </div> {% endcomment %}
+
+                  {% comment %} <div class="col-md-6 form-group">
+                    <label for="email">Email Address *</label>
+                    <input type="email" name="email" class="form-control" id="email" placeholder="Enter your email address" required="">
+                  </div> {% endcomment %}
+
+                  {% comment %} <div class="col-12 form-group">
+                    <label for="website">Website</label>
+                    <input type="url" name="website" class="form-control" id="website" placeholder="Your website (optional)">
+                  </div> {% endcomment %}
+
+                  <div class="col-12 form-group">
+                    {% comment %} <label for="comment">Your Comment</label> {% endcomment %}
+                    <textarea class="form-control" name="comment" id="comment" rows="5" placeholder="Write your thoughts here..." required=""></textarea>
+                  </div>
+
+                  <div class="col-12 text-center">
+                    <button type="submit" class="btn-submit">Post Comment</button>
+                  </div>
+                </div>
+
+              </form>
+
+            </div>
+
+          </section><!-- /Blog Comment Form Section -->
+
+        </div>
+
+        <div class="col-lg-3 sidebar">
+
+          <div class="widgets-container" data-aos="fade-up" data-aos-delay="200">
+
+            <!-- Search Widget -->
+            {% comment %} <div class="search-widget widget-item">
+
+              <h3 class="widget-title">Search</h3>
+              <form action="">
+                <input type="text">
+                <button type="submit" title="Search"><i class="bi bi-search"></i></button>
+              </form>
+
+            </div><!--/Search Widget --> {% endcomment %}
+
+            <!-- Categories Widget -->
+            {% include "category_list.html" %}
+            <!--/Categories Widget -->
+
+            
+
+            <!-- Recent Articles Widget -->
+            {% include 'recent_articles.html'%}
+            <!--/Recent Articles Widget -->
+
+            <!-- Tags Widget -->
+            <div class="tags-widget widget-item">
+
+              <h3 class="widget-title">Tags</h3>
+              <ul>
+                <li><a href="#">App</a></li>
+                <li><a href="#">IT</a></li>
+                <li><a href="#">Business</a></li>
+                <li><a href="#">Mac</a></li>
+                <li><a href="#">Design</a></li>
+                <li><a href="#">Office</a></li>
+                <li><a href="#">Creative</a></li>
+                <li><a href="#">Studio</a></li>
+                <li><a href="#">Smart</a></li>
+                <li><a href="#">Tips</a></li>
+                <li><a href="#">Marketing</a></li>
+              </ul>
+
+            </div><!--/Tags Widget -->
+
+          </div>
+
+        </div>
+
+      </div>
+    </div>
+
+  </main>
+{% endblock%}
+
+
+
+
+{% comment %} {% block breadcrumbs %}
     <!-- ======= Breadcrumbs ======= -->
     <div class="breadcrumbs d-flex align-items-center" style="background-image: url({% static 'img/breadcrumbs-bg.jpg'%});">
         <div class="container position-relative align-items-center" data-aos="fade">  
@@ -88,7 +569,7 @@
         </div>
     {% endif %}
 
-{% endblock %}
+{% endblock %} {% endcomment %}
 
 {% block scripts %}
     <script src="{% static "js/load_comments.js" %}"></script>

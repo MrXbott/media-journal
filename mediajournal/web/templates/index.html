@@ -1,0 +1,172 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+      <main class="main">
+
+        <!-- Latest Posts Section -->
+        <section id="latest-posts" class="latest-posts section">
+    
+          <!-- Section Title -->
+          <div class="container section-title" data-aos="fade-up">
+            {% comment %} <h2>Latest Posts</h2> {% endcomment %}
+            <div><span class="description-title">Самое свежее</span></div>
+          </div> 
+          <!-- End Section Title -->
+    
+          <div class="container" data-aos="fade-up" data-aos-delay="100">
+            <div class="row gy-4">
+    
+              {% for article in articles.all|slice:'4' %}
+                <div class="col-lg-3">
+                  <article>
+      
+                    <div class="post-img">
+                      <img src="{{ article.cover_image.url }}" alt="" class="img-fluid">
+                    </div>
+      
+                    <p class="post-category">
+                      <a href="{{ article.category.get_absolute_url }}">
+                        {{ article.category.name }}
+                      </a>
+                    </p>
+      
+                    <h2 class="title">
+                      <a href="{{ article.get_absolute_url }}">{{ article.title|truncatechars:45 }}</a>
+                    </h2>
+      
+                    <div class="d-flex align-items-center">
+                      <img src="{{ article.author.photo.url }}" alt="" class="img-fluid post-author-img flex-shrink-0">
+                      <div class="post-meta">
+                        <p class="post-author">{{ article.author.username }}</p>
+                        <p class="post-date">
+                          <time datetime="">{{ article.published|date:"d M Y H:i" }}</time>
+                        </p>
+                      </div>
+                    </div>
+                  </article>
+                </div><!-- End post list item -->
+              {% endfor %}
+
+            </div>
+          </div>
+    
+        </section><!-- /Latest Posts Section -->
+        <div class="my-4">
+        </div>
+
+        <!-- Blog Hero Section -->
+        {% comment %} <section id="blog-hero" class="blog-hero section">
+          <div class="container" data-aos="fade-up" data-aos-delay="100">
+            <div class="blog-grid">
+              <!-- Regular Posts -->
+              {% for article in articles.all|slice:'5' %}
+                {% if forloop.counter == 1 %}
+                  <!-- Featured Post (Large) -->
+                  <article class="blog-item featured" data-aos="fade-up">
+                    <img src={{ article.cover_image.url}} alt="Blog Image" class="img-fluid">
+                    <div class="blog-content">
+                      <div class="post-meta">
+                        <span class="date">{{ article.published|date:"d M Y H:i"  }}</span>
+                        <span class="category">{{ article.category.name }}</span>
+                      </div>
+                      <h2 class="post-title">
+                        <a href="{{ article.get_absolute_url }}" title="{{ article.title }}">{{ article.title|truncatechars:80 }}</a>
+                      </h2>
+                    </div>
+                  </article><!-- End Featured Post -->
+                {% else %}
+                  <article class="blog-item" data-aos="fade-up" data-aos-delay="100">
+                    <img src={{ article.cover_image.url}} alt="Blog Image" class="img-fluid">
+                    <div class="blog-content">
+                      <div class="post-meta">
+                        <span class="date">{{ article.published|date:"d M Y H:i"  }}</span>
+                        <span class="category">{{ article.category.name }}</span>
+                      </div>
+                      <h3 class="post-title">
+                        <a href="{{ article.get_absolute_url }}" title="{{ article.title }}">{{ article.title|truncatechars:40 }}</a>
+                      </h3>
+                    </div>
+                  </article>
+                {% endif %}
+              {% endfor %}
+            </div>
+          </div>
+        </section> {% endcomment %}
+        <!-- /Blog Hero Section -->
+    
+    
+        <!-- Category Section Section -->
+        <section id="category-section" class="category-section section">
+          {% for category in featured_categories %}
+            {% comment %} {{ category.name }} {{ category.all_children_articles.count }} {% endcomment %}
+            <div class="container section-title" data-aos="fade-up">
+              <h2>Раздел</h2>
+              <div> <span class="description-title">{{ category.name }}</span></div>
+            </div>
+            <div class="container" data-aos="fade-up" data-aos-delay="100">
+              <!-- Featured Posts -->
+              <div class="row gy-4 mb-4">
+                {% for article in category.all_children_articles|slice:':3' %}
+                  <div class="col-lg-4">
+                    <article class="featured-post">
+                      <div class="post-img">
+                        <img src={% if article.cover_image %}"{{ article.cover_image.url }}" {% else %} "media/default/default_article_cover.jpg"{% endif %} alt="" class="img-fluid" loading="lazy">
+                      </div>
+                      <div class="post-content">
+                        <div class="category-meta">
+                          <span class="post-category">
+                            <a href="{{ article.category.get_absolute_url }}">{{ article.category.name }}</a>
+                          </span>
+                          <div class="author-meta">
+                            <img src= {% if article.author.photo %}"{{ article.author.photo.url }}"{% else %}"media/default/default_user_photo.jpg"{% endif %} alt="" class="author-img">
+                            <span class="author-name">{{ article.author.username|truncatechars:15 }}</span>
+                            <span class="post-date">{{ article.published|date:"d M Y" }}</span>
+                          </div>
+                        </div>
+                        <h2 class="title">
+                          <a href="{{ article.get_absolute_url }}">{{ article.title|truncatechars:70 }}</a>
+                        </h2>
+                      </div>
+                    </article>
+                  </div>
+                {% endfor %}
+              </div><!-- End Featured Posts -->
+              <!-- List Posts -->
+              <div class="row">
+                {% for article in category.all_children_articles|slice:"3:" %}
+                  <div class="col-xl-4 col-lg-6">
+                    <article class="list-post">
+                      <div class="post-img">
+                        <img src={% if article.cover_image %}"{{ article.cover_image.url }}" {% else %} "media/default/default_article_cover.jpg"{% endif %} alt="" class="img-fluid" loading="lazy">
+                      </div>
+                      <div class="post-content">
+                        <div class="category-meta">
+                          <span class="post-category">
+                            <a href="{{ article.category.get_absolute_url }}">{{ article.category.name }}</a>
+                          </span>
+                        </div>
+                        <h3 class="title">
+                          <a href="{{ article.get_absolute_url }}">{{ article.title|truncatechars:60 }}</a>
+                        </h3>
+                        <div class="post-meta">
+                          {% comment %} <span class="read-time">2 mins read</span> {% endcomment %}
+                          <span class="post-date">{{ article.published|date:"d M Y"  }}</span>
+                        </div>
+                      </div>
+                    </article>
+                  </div>
+                {% endfor %}
+              </div>
+              
+            </div>
+          {% endfor %}
+        </section><!-- /Category Section Section -->
+
+      </main>
+      
+{% endblock %}
+
+{% block scripts %}
+  <script src="{% static "js/bookmarks.js" %}"></script>
+{% endblock %}

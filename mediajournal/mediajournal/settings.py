@@ -34,7 +34,10 @@ SECRET_KEY = os.environ.get('SECRET_KEY', 'django-insecure-q5o+s6^hi9qqah13c35kv
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [
+    'localhost',
+    '127.0.0.1',
+]
 
 
 AUTH_USER_MODEL = 'accounts.Staff'
@@ -153,8 +156,8 @@ FORMAT_MODULE_PATH = ['mediajournal.formats',]
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
 
-STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
-STATIC_URL = '/staticfiles/'
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles/')
+STATIC_URL = 'staticfiles/'
 STATICFILES_DIRS = []
 
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
