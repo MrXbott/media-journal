@@ -2,6 +2,7 @@ from django.db import models
 from django.contrib.auth.models import AbstractUser, AbstractBaseUser
 from django.core.validators import RegexValidator
 from django.utils import timezone
+from django.urls import reverse
 
 from articles.models import Article
 
@@ -47,5 +48,9 @@ class User(AbstractBaseUser):
         if not self.email and not self.phone:
             raise Exception('User must have an email or a phone or both')
         super(User, self).save(*args, **kwargs)
+
+    def get_absolute_url(self):
+        return reverse("profile", kwargs={"id": self.id})
+    
     
     

@@ -116,3 +116,11 @@ class UserPhotoEditForm(forms.ModelForm):
         widgets = {
             'photo': forms.FileInput(),
         }
+
+class ProfileEditForm(forms.ModelForm):
+    class Meta:
+        model = User
+        fields = ['username', 'photo', 'designation', 'bio']
+        widgets = {
+            'photo': forms.FileInput(),
+        }

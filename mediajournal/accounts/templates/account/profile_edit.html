@@ -1,39 +1,56 @@
-{% extends "common/base.html" %}
+{% extends "base.html" %}
 {% load static %}
+{% load tags %}
 
-{% block title %}Редактировать профиль{% endblock %}
-
-{% block breadcrumbs %}
-    <!-- ======= Breadcrumbs ======= -->
-    <div class="breadcrumbs d-flex align-items-center" style="background-image: url({% static 'img/breadcrumbs-bg.jpg'%});">
-        <div class="container position-relative d-flex flex-column align-items-center" data-aos="fade">  
-          <ol>
-            <li><a href="#">Аккаунт</a></li>
-            <li><a href="{% url 'profile' %}">Профайл</a></li>
-            <li class="current">Редактировать</li>
-          </ol>
-  
-        </div>
-    </div><!-- End Breadcrumbs -->
-{% endblock %}
 
 {% block content %}
-    <section id="edit-profile" class="section-bg">
-        <div class="container edit-profile">
-            <div class="row justify-content-center">
-                <div class="col-sm-12 col-md-8 col-lg-5 ">
-                    <form action="." method="post" enctype="multipart/form-data" id="profile-form" class="form">
-                        <h2>Редактировать данные</h2>
-                        {{ profile_form }}
+<main class="main">
+    <div class="page-title">
+        <div class="title-wrapper">
+            <h1>Настройка профиля</h1>
+            <p>Здесь вы можете настроить свою личную информацию</p>
+        </div>
+    </div>
+
+    <div class="container" data-aos="fade-up" data-aos-delay="100">
+        
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <div class="form-wrapper">
+
+                    <form method="post" enctype="multipart/form-data" class="login-form">
+                        {% for field in form %}
+                            <div class="row mt-3">
+                                <div class="col form-group">
+                                    <div class="input-group">
+                                        {{ field|set_attrs:"class:form-control" }}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="errorlist">
+                                {{ field.errors }} 
+                            </div>
+                        {% endfor %}
                         {% csrf_token %}
-                        <p class="btn-center"><input type="submit" class="button" value="Сохранить"></p>
+                        <p><input type="submit"  value="Сохранить"></p>
                     </form>
+
                 </div>
             </div>
         </div>
-    </section>
+    </div>
+</main>
+
+
+
+
+<div>
+    <a class="button" href="{% url "password_change" %}">
+        Сменить пароль
+    </a>
+</div>
 {% endblock %}
 
 {% block scripts %}
-    <script src="{% static 'js/masks.js' %}"></script>
+    <script src="{% static 'js/edit_username.js' %}"></script>
 {% endblock %}

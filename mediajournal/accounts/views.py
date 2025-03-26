@@ -11,12 +11,13 @@ from django.contrib.auth import logout
 from django.contrib.auth.decorators import login_required
 from django.core.exceptions import ValidationError
 from django.http import HttpRequest, HttpResponse, HttpResponseRedirect, JsonResponse
+from django.shortcuts import get_object_or_404
 
-from .forms import RegistrationForm, UserPhotoEditForm
+from .forms import RegistrationForm, UserPhotoEditForm, ProfileEditForm
 from .token import email_verification_token
 from .tasks import send_confirm_email
 from .models import User
-from articles.models import Article
+from articles.models import Article, Category
 
 
 def registration(request: HttpRequest) -> HttpResponse:
@@ -65,15 +66,26 @@ def confirm_email(request: HttpRequest, uidb64: str, token: str) -> HttpResponse
 #     logout(request)
 #     return redirect(url)
 
+
+def profile(request, id):
+    user = get_object_or_404(User, id=id)
+    categories = Category.objects.filter(parent=None).order_by('name')
+    last_articles = Article.objects.filter(status=Article.Status.PUBLISHED).order_by('-published')[:5]
+    return render(request, 'account/profile.html', {'user': user, 
+                                                    'last_articles': last_articles,
+                                                    'categories': categories,
+                                                    })
+
 @login_required
-def profile(request):
+def edit_profile(request):
     if request.method == 'POST':
-        form = UserPhotoEditForm(data=request.POST, files=request.FILES, instance=request.user)
+        form = ProfileEditForm(data=request.POST, files=request.FILES, instance=request.user)
         if form.is_valid():
             form.save()
+            return redirect('profile', request.user.id)
     else:
-        form = UserPhotoEditForm()
-    return render(request, 'account/profile.html', {'photo_form': form})
+        form = ProfileEditForm(instance=request.user)
+    return render(request, 'account/profile_edit.html', {'form': form})
 
 @login_required
 def edit_username(request):
