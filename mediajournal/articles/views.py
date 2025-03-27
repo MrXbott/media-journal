@@ -62,20 +62,29 @@ def get_article(request, category, slug):
 def write_article(request):
     if request.method == 'POST':
         article_form = ArticleForm(data=request.POST, files=request.FILES)
-        formset = ArticleImageFormSet(data=request.POST, files=request.FILES)
-        if article_form.is_valid() and formset.is_valid():
+        image_formset = ArticleImageFormSet(data=request.POST, files=request.FILES, prefix='images')
+        section_formset = ArticleSectionFormSet(data=request.POST, prefix='sections')
+        print('---- sections: ', section_formset)
+        if article_form.is_valid() and image_formset.is_valid() and section_formset.is_valid():
             article = article_form.save(commit=False)
             article.author = request.user
             article.save()
-            images = formset.save(commit=False)
+            images = image_formset.save(commit=False)
             for image in images:
                 image.article = article
                 image.save()
+            sections = section_formset.save(commit=False)
+            
+            for section in sections:
+                section.article = article
+                section.save()
             return render(request, 'article_sent.html')
+        else:
+            pass 
     else:
         article_form = ArticleForm()
-        section_formset = ArticleSectionFormSet()
-        image_formset = ArticleImageFormSet()
+        section_formset = ArticleSectionFormSet(prefix='sections')
+        image_formset = ArticleImageFormSet(prefix='images')
     return render(request, 'article_write.html', {'article_form': article_form, 
                                                   'section_formset': section_formset, 
                                                   'image_formset': image_formset, 

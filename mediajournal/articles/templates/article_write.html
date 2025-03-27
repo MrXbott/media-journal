@@ -8,7 +8,6 @@
         <div class="page-title">
             <div class="title-wrapper">
                 <h1>Написать статью</h1>
-                {% comment %} <p>Придумайте новый пароль и введите его дважды</p> {% endcomment %}
             </div>
         </div>
 
@@ -16,75 +15,72 @@
         
             <div class="row justify-content-center">
                 <div class="col-lg-8">
-                <div class="form-wrapper">
+                    <div class="form-wrapper">
 
-                    <form method="post" id="write-article" enctype="multipart/form-data" class="login-form">
-                        <div id="article_form">
-                            {% for field in article_form %}
-                                <div class="row mt-3">
-                                    <div class="col form-group">
-                                        <div class="input-group">
-                                            {{ field|set_attrs:"class:form-control" }}
-                                        </div>
-                                    </div>
-                                </div>
-                            {% endfor %}
-                            <p class="mt-5">
-                                Далее вы можете добавить в статью несколько разделов. Для каждого раздела можно указать заголовок, но это не обязательно.
-                            </p>
-                            {% for form in section_formset %}
-                                    {% for field in form %}
-                                        <div class="row mt-3">
-                                            <div class="col form-group">
-                                                <div class="input-group">
-                                                    {% comment %} <span class="input-group-text">
-                                                        <i class="bi bi-envelope"></i>
-                                                    </span> {% endcomment %}
-                                                    {% comment %} {{ field.label }} {% endcomment %}
-                                                    {{ field|set_attrs:"class:form-control" }}
-                                                </div>
-                
-                                                <div class="errorlist">
-                                                    {{ form.email.errors }} 
-                                                </div>
+                        <form method="post" id="write-article" enctype="multipart/form-data" class="write-artice-form">
+                            <div id="article_form">
+                                {{ article_form }}
+                                {% comment %} {% for field in article_form %}
+                                    <div class="row mt-3">
+                                        <div class="col form-group">
+                                            <div class="input-group">
+                                                {{ field|set_attrs:"class:form-control" }}
+                                                {{ field }}
                                             </div>
                                         </div>
-                                    {% endfor %}
-                            {% endfor %}
-                        </div>
-                        <p><input type="button" value="Add Section" id="add_section"></p>
-                        
-                        <div id="images_formset">
-                            <div id="empty_form" class="hide">
-                                {{ image_formset.empty_form }}
-                                <div class='image-message'></div>
+                                    </div>
+                                {% endfor %} {% endcomment %}
                             </div>
-                            {% for form in image_formset %}
-                                <div id="image-{{ forloop.counter0 }}">
-                                    {{ form }}
+                            <p class="mt-5">
+                                Далее вы можете добавить в статью несколько секций. Для каждой секции можно указать заголовок, но это не обязательно.
+                            </p>
+                            <div id="sections_formset">
+                                <div id="section_empty_form" class="hide">
+                                    {{ section_formset.empty_form }}
+                                    <div class="d-flex justify-content-end"><input type="button" value="Удалить секцию" class="button"></div>
+                                </div>
+
+                                {% for form in section_formset %}
+                                    <div class="section-container">
+                                        {{ form }}
+                                        <div class="d-flex justify-content-end"><input type="button" value="Удалить секцию" class="button"></div>
+                                        {% comment %} <div class='section-message'></div> {% endcomment %}
+                                    </div>
+                                {% endfor %}
+                            </div>
+
+                            <div id="section_management_form">
+                                {{ section_formset.management_form }}
+                            </div>
+
+                            <p><input type="button" value="Добавить еще секцию" id="add_section" class="button"></p>
+                            
+                            <div id="images_formset">
+                                <div id="empty_form" class="hide">
+                                    {{ image_formset.empty_form }}
                                     <div class='image-message'></div>
                                 </div>
-                            {% endfor %}
-                        </div>
+                                {% for form in image_formset %}
+                                    <div id="image-{{ forloop.counter0 }}">
+                                        {{ form }}
+                                        <div class='image-message'></div>
+                                    </div>
+                                {% endfor %}
+                            </div>
 
-                        {% comment %} <div id="images_formset">
-                            {% for form in formset %}
-                                <div>{{ form.as_p }}</div>
-                            {% endfor %}
-                        </div> {% endcomment %}
-                        <div id="management_form">
-                            {{ image_formset.management_form }}
-                        </div>
-            
-                        <p>
-                            <input type="button" value="Add Image" id="add_image">
-                        </p>
-                        {% csrf_token %}
-                        <p>
-                            <input type="submit" value="Send article" id="send_article">
-                        </p>
-                    </form>
-
+                            <div id="image_management_form">
+                                {{ image_formset.management_form }}
+                            </div>
+                
+                            <p>
+                                <input type="button" value="Add Image" id="add_image">
+                            </p>
+                            {% csrf_token %}
+                            <p>
+                                <input type="submit" value="Send article" id="send_article">
+                            </p>
+                        </form>
+                    </div>
                 </div>
             </div>
         </div>
@@ -94,6 +90,6 @@
 {% endblock %}
 
 {% block scripts %}
-  <script src="{% static "js/add_image_form.js" %}"></script>
+  <script src="{% static "js/add_form.js" %}"></script>
   <script src="{% static "js/validate_image.js" %}"></script>
 {% endblock %}
