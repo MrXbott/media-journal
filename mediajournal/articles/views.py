@@ -95,6 +95,13 @@ def write_article(request):
 def comments_list(request):
     page = request.GET.get('page')
     article_id = request.GET.get('article_id')
+    try:
+        article = Article.objects.get(id=article_id)
+    except:
+        return JsonResponse({'status': 'error', 'message': 'article with such id not found'})
+    if not article.enable_comments:
+        return JsonResponse({'status': 'error', 'message': 'comments disabled '})
+    
     comments = Comment.objects.filter(is_active=True, article__id=article_id, parent=None) 
     paginator = Paginator(comments, 2) 
     try:

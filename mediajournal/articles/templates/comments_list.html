@@ -1,33 +1,32 @@
 {% for comment in comments %}
-    
-    <div class="comment">
-        <div class="row comment-header">
-            <div class="col-md-auto">
-                <img class="user_photo" src="{{ comment.author.photo.url}}">
+    <article class="comment-card {% if comment.parent %}reply{% endif %}">
+        <div class="comment-header">
+            <div class="user-info">
+                <img src="{{ comment.author.photo.url }}" alt="User avatar" loading="lazy">
+                <div class="meta">
+                    <h4 class="name">{% if comment.author %}{{ comment.author.username }}{% else %}User deleted{% endif %}</h4>
+                    <span class="date"><i class="bi bi-calendar3"></i>{{ comment.created|date:"d.m.y H:i" }}</span>
+                </div>
             </div>
-            <div class="col">
-                <div class="row">
-                    <div class="username">{% if comment.author %}{{ comment.author.username }}{% else %}User deleted{% endif %}</div> 
-                    <div class="created">{{ comment.created|date:"d.m.y H:i" }}</div> 
-                </div>                     
-            </div> 
         </div>
-        <div class="row comment-body">
-            <div class="col">
-                {{ comment.body }}
-            </div>
-        </div> 
-            <div class="col-1 answer" data-id={{ comment.id }}>
-                Ответить
-            </div>
-    </div>
-    
-    {% if comment.children %}
-        <div class="answers">
-            {% include "comments_list.html" with comments=comment.children.all %}
+        <div class="comment-content">
+            <p>{{ comment.body }}</p>
         </div>
-    {% endif %}
-    
-    
+        <div class="comment-actions">
+            {% comment %} <button class="action-btn like-btn">
+                <i class="bi bi-hand-thumbs-up"></i>
+                <span>12</span>
+            </button> {% endcomment %}
+            <button class="action-btn reply-btn">
+                <i class="bi bi-reply"></i>
+                <span class="answer" data-id={{ comment.id }}>Ответить</span>
+            </button>
+        </div>
+        {% if comment.children %}
+            <div class="reply-thread">
+                {% include "comments_list.html" with comments=comment.children.all %}
+            </div>
+        {% endif %}
+    </article>        
 
 {% endfor %}
