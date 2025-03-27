@@ -1750,8 +1750,12 @@ section,
 
 .latest-posts .post-img {
   height: 200px;
-  margin: -30px -30px 15px -30px;
+  margin: -30px -35px 16px -35px;
   overflow: hidden;
+}
+
+.latest-posts .post-img img {
+  object-fit: cover;
 }
 
 .latest-posts .post-category {
@@ -3097,6 +3101,7 @@ section,
 .author-content .content-body .featured-articles .article-card .article-img {
   height: 200px;
   overflow: hidden;
+  border-radius: 10px;
 }
 
 .author-content .content-body .featured-articles .article-card .article-img img {
