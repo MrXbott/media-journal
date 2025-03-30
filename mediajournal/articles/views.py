@@ -25,14 +25,26 @@ def get_all_categories(request):
 
 def get_category(request, slug):
     category = get_object_or_404(Category, slug=slug[-1])
-    # articles = (Article.objects.filter(category__in=category.children) | Article.objects.filter(category=category)).distinct().filter(status=Article.Status.PUBLISHED)
-    articles = category.all_children_articles
+    all_articles = category.all_children_articles
+    page = request.GET.get('page')
+    paginator = Paginator(all_articles, 3)
+
+    try:
+        articles = paginator.page(page)
+    except PageNotAnInteger:
+        articles = paginator.page(1)
+    except EmptyPage:
+        articles = paginator.page(paginator.num_pages)
+
+    categories = Category.objects.filter(parent=None).order_by('name')
     total_views = {article.id: int(r.get(f'article:{article.id}:views') if r.get(f'article:{article.id}:views') else 0) for article in articles}
     last_articles = Article.objects.filter(status=Article.Status.PUBLISHED).order_by('-published')[:5]
     return render(request, 'category.html', {'category': category, 
                                              'articles': articles, 
+                                             'page': page,
                                              'total_views': total_views,
                                              'last_articles': last_articles,
+                                             'categories': categories,
                                              })
 
 def get_last_articles(request):
@@ -41,9 +53,6 @@ def get_last_articles(request):
     return render(request, 'last_articles.html', {'articles': articles, 'default_user_photo': default_user_photo})
 
 def get_article(request, category, slug):
-    # print('body: ', request.body)
-    # print('path: ', request.path)
-    # print('resolver_match: ', request.resolver_match)
     article = get_object_or_404(Article, slug=slug)
     total_views = r.incr(f'article:{article.id}:views')    
     data = {'article': article.id, 'parent': ''}
@@ -102,8 +111,8 @@ def comments_list(request):
     if not article.enable_comments:
         return JsonResponse({'status': 'error', 'message': 'comments disabled '})
     
-    comments = Comment.objects.filter(is_active=True, article__id=article_id, parent=None) 
-    paginator = Paginator(comments, 2) 
+    all_comments = Comment.objects.filter(is_active=True, article__id=article_id, parent=None) 
+    paginator = Paginator(all_comments, 2) 
     try:
         comments = paginator.page(page)
     except PageNotAnInteger:
