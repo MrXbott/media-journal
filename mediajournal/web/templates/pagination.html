@@ -10,19 +10,19 @@
                         <a href="?page=1">&laquo;</a>
                     </li> {% endcomment %}
                     <li>
-                        <a href="?page={{page.previous_page_number}}"><i class="bi bi-chevron-left"></i></a>
+                        <a href="?{% if query %}query={{query}}&{% endif %}page={{page.previous_page_number}}"><i class="bi bi-chevron-left"></i></a>
                     </li>
                 {% endif %}
 
                 {% for i in page.paginator.page_range %}
                     <li >
-                        <a href="?page={{ i }}" {% if i == page.number %}class="active"{% endif %}>{{ i }}</a>
+                        <a href="?{% if query %}query={{query}}&{% endif %}page={{ i }}" {% if i == page.number %}class="active"{% endif %}>{{ i }}</a>
                     </li>
                 {% endfor %}
 
                 {% if page.has_next %}
                     <li>
-                        <a href="?page={{ page.next_page_number }}"><i class="bi bi-chevron-right"></i></a>
+                        <a href="?{% if query %}query={{query}}&{% endif %}page={{ page.next_page_number }}"><i class="bi bi-chevron-right"></i></a>
                     </li>
                     {% comment %} <li>
                         <a href="?page={{ page.paginator.num_pages }}">&raquo;</a>

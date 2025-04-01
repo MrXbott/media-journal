@@ -1,0 +1,71 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+
+  <main class="main">
+
+    <!-- Page Title -->
+    <div class="page-title">
+      <div class="title-wrapper">
+        <h1>Результаты поиска</h1>
+        <p>Мы нашли <strong>{% if results_count %}{{ results_count }}{% else %}0{% endif %}</strong> результата по вашему запросу <strong>{{ query }}</strong></p>
+      </div>
+    </div>
+    <!-- End Page Title -->
+
+    <!-- Search Results Posts Section -->
+    <section id="search-results-posts" class="search-results-posts section">
+
+      <div class="container" data-aos="fade-up" data-aos-delay="100">
+        <div class="row gy-4">
+
+          {% for article in results %}
+          <!-- post list item -->
+          <div class="col-lg-4">
+            <article>
+
+              <div class="post-img">
+                <img src={% if article.cover_image %}"{{ article.cover_image.url}}"{% else %}"/media/default/default_article_cover.jpg"{% endif %} alt="" class="img-fluid">
+              </div>
+
+              <p class="post-category">{{ article.category.title }}</p>
+
+              <h2 class="title">
+                <a href="{{ article.get_absolute_url }}">{{ article.title|truncatechars:40 }}</a>
+              </h2>
+
+              <div class="d-flex align-items-center">
+                <img src={% if article.author.photo %}"{{ article.author.photo.url}}"{% else %}"/media/default/default_user_photo.jpg"{% endif %} alt="" class="img-fluid post-author-img flex-shrink-0">
+                <div class="post-meta">
+                  <p class="post-author">{{ article.author.username }}</p>
+                  <p class="post-date">
+                    <time>{{ article.published|date:"d M Y" }}</time>
+                  </p>
+                </div>
+              </div>
+
+            </article>
+          </div>
+          <!-- End post list item -->
+          {% endfor %}
+
+          
+
+         
+
+          
+
+        </div>
+      </div>
+
+    </section><!-- /Search Results Posts Section -->
+
+    <!-- Pagination Section -->
+    <div class="row my-3">
+      {% include "pagination.html" with page=results query=query %}
+    </div>
+    <!-- /Pagination Section -->
+
+  </main>
+  {% endblock %}

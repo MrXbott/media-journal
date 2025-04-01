@@ -8,7 +8,7 @@ import redis
 
 from .models import Article, Category, Comment, Bookmark
 from .forms import CommentForm, ArticleForm, ArticleImageFormSet, ArticleSectionFormSet
-from web.models import Image
+# from web.models import Image
 
 
 r = redis.Redis(host=settings.REDIS_HOST, port=settings.REDIS_PORT, db=settings.REDIS_DB, decode_responses=True)
@@ -49,8 +49,7 @@ def get_category(request, slug):
 
 def get_last_articles(request):
     articles = Article.objects.all().order_by('published')
-    default_user_photo = Image.objects.get(type='default_user_photo')
-    return render(request, 'last_articles.html', {'articles': articles, 'default_user_photo': default_user_photo})
+    return render(request, 'last_articles.html', {'articles': articles, })
 
 def get_article(request, category, slug):
     article = get_object_or_404(Article, slug=slug)
@@ -73,7 +72,6 @@ def write_article(request):
         article_form = ArticleForm(data=request.POST, files=request.FILES)
         image_formset = ArticleImageFormSet(data=request.POST, files=request.FILES, prefix='images')
         section_formset = ArticleSectionFormSet(data=request.POST, prefix='sections')
-        print('---- sections: ', section_formset)
         if article_form.is_valid() and image_formset.is_valid() and section_formset.is_valid():
             article = article_form.save(commit=False)
             article.author = request.user
@@ -125,11 +123,8 @@ def comments_list(request):
 
 @login_required
 def post_comment(request):
-    print('----rm', request.method)
-    
     if request.headers.get('x-requested-with') == 'XMLHttpRequest':
         if request.method == 'POST':
-            print(request.POST)
             form = CommentForm(data=request.POST)
             if form.is_valid():
                 cd = form.cleaned_data
@@ -138,29 +133,12 @@ def post_comment(request):
                 return JsonResponse({'status': 'ok', 'username': comment.author.username, 'comment': comment.body, 'created': comment.created})
             return JsonResponse({'status': 'error', 'message': 'wrong data in the form'})
         elif request.method =='GET':
-            print(request.GET)
             parent_id = request.GET.get('parent_id')
             article_id = request.GET.get('article_id')
             data = {'parent': parent_id, 'article': article_id}
             form = CommentForm(data=data)
             return render(request, 'comment_answer_form.html', {'form': form})
         
-
-# @login_required
-# def answer_comment(request):
-#     print('----rm', request.method)
-#     if request.headers.get('x-requested-with') == 'XMLHttpRequest':
-#         if request.method == 'POST':
-#             form = CommentForm(data=request.POST)
-#             if form.is_valid():
-#                 cd = form.cleaned_data
-#                 print('----- cd ', cd)
-#                 return JsonResponse({})
-#         elif request.method =='GET':
-#             # data = {'article': article.id}
-#             form = CommentForm()
-#             return render(request, 'comment_answer_form.html', {'form': form})
-
 
 @login_required
 @require_POST
@@ -176,4 +154,5 @@ def bookmark_article(request):
         print('adding article to bookmarks')
         Bookmark.objects.create(user=request.user, article=article)
         return JsonResponse({'bookmark': 'added'})
+    
     
