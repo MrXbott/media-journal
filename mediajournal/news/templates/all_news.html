@@ -1,0 +1,111 @@
+{% extends "base.html" %}
+{% load tags %}
+{% load static %}
+
+{% block content %}
+  <main class="main">
+    <div class="container">
+      <div class="row">
+
+        <div class="col-lg-9">
+          <section id="category-postst" class="category-postst section">
+            <div class="container" data-aos="fade-up" data-aos-delay="100">
+              <div class="row gy-4">
+
+                <div class="col-lg-12">
+                  <article>
+
+                    <div class="category-img">
+                      <img src="/media/default/default_news_cover.jpg">
+                    </div>
+
+                    <h2 class="title">
+                        Новости
+                    </h2>
+                    <p>
+                        Рассказываем все важные новости и объясняем, как они влияют на жизнь
+                    </p>
+
+                    {% comment %} <div class="row align-items-center">
+                        {% for child in category.children %}
+                            <div class="col-4 subcat">
+                                <a href="{{ child.get_absolute_url }}" class="readmore"> 
+                                    <img src={% if child.image %}"{{ child.image.url }}"{% else %}"/media/default/default_category_image.jpg"{% endif %}>
+                                    {{ child.name }} 
+                                </a>
+                            </div>
+                        {% endfor %}
+                    </div> {% endcomment %}
+
+                  </article>
+                </div>
+
+                {% for n in news %}
+                  <div class="col-lg-12">
+                    <article>
+
+                      <div class="d-flex align-items-center article-header">
+                        {% comment %} <img src={% if article.author.photo %}"{{ article.author.photo.url }}"{% else %}"/media/default/default_user_photo.jpg"{% endif %} alt="" class="img-fluid post-author-img flex-shrink-0"> {% endcomment %}
+                          {% comment %} <p class="post-author"><a href="{{ article.author.get_absolute_url }}">{{ article.author.username }}</a></p> {% endcomment %}
+                          <p class="post-date">
+                            <time datetime="">{{ n.published|date:"d M Y H:i"}}</time>
+                          </p>
+                          {% comment %} <a href="{{ article.category.get_absolute_url }}">
+                            <p class="post-category">{{ article.category.name }}</p>
+                          </a> {% endcomment %}
+                      </div>
+                      
+                      <a href="{{ n.get_absolute_url }}" >
+                        <h2 class="title">
+                          {{ n.title }}
+                        </h2>
+                        <div class="post-img">
+                          <img src={% if n.cover %}"{{ n.cover.url }}"{% else %}"/media/default/default_news_cover.jpg"{% endif %}>
+                        </div>
+                      </a>
+
+                      <div class="post-meta">
+                        <span>
+                          <i class="bi bi-eye"></i>
+                          {{ total_views|item:n.id}}
+                        </span>
+                        <span>
+                          <i class="bi bi-chat-dots"></i>
+                          {% comment %} {{ article.comments.count }} {% endcomment %}
+                        </span>
+                        <span>
+                          <i class="bi {% if user in n.bookmarked_by.all %} bi-bookmark-fill {% else %} bi-bookmark {% endif %}" data-id={{ n.id }}></i>
+                          <span id="bookmarks-count">
+                            {{ n.bookmarked_by.count }}
+                          </span>
+                        </span> 
+                      </div>
+
+                    </article> 
+
+                  </div>
+                {% endfor %}
+
+              </div>
+            </div>
+          </section>
+        </div>
+
+        <div class="col-lg-3 sidebar">
+          {% include 'sidebar.html' %}
+        </div>
+
+      </div>
+      <!-- Pagination 2 Section -->
+      <div class="row my-3">
+        {% comment %} {% include "pagination.html" with page=articles %} {% endcomment %}
+      </div>
+      <!-- /Pagination 2 Section -->
+    </div>
+  </main>
+
+{% endblock %}
+
+{% block scripts %}
+    <script src="{% static "js/bookmarks.js" %}"></script>
+{% endblock %}

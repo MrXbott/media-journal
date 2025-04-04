@@ -1,0 +1,275 @@
+{% extends "base.html" %}
+{% load static %}
+{% load tags %}
+
+{% block content %}
+<main class="main">
+
+    <div class="container">
+      <div class="row">
+
+        <div class="col-lg-9">
+
+          <!-- Blog Details Section -->
+          <section id="blog-details" class="blog-details section">
+            <div class="container" data-aos="fade-up">
+
+              <article class="article" id="one_news" data-article-id="{{ one_news.id }}">
+
+                <div class="article-content" data-aos="fade-up" data-aos-delay="100">
+                    <div class="content-header">
+                        <div class="author-info">
+                            <div class="author-details">
+                                <img src={% if one_news.author.photo %}"{{ one_news.author.photo.url }}"{% else %}"/media/default/default_user_photo.jpg"{% endif%} alt="Author" class="author-img">
+                                <div class="info">
+                                <h4><a href="{{ one_news.author.get_absolute_url }}">{{ one_news.author.username }}</a></h4>
+                                {% if one_news.author.designation %}
+                                  <span class="role">{{ one_news.author.designation }}</span>
+                                {% endif %}
+                                </div>
+                            </div>
+
+                            <div class="post-meta">
+                                {% comment %} <span class="category">
+                                    <a href="{{ article.category.get_absolute_url }}">{{ article.category.name }}</a>
+                                </span> {% endcomment %}
+                                {% comment %} <span class="divider">•</span> {% endcomment %}
+                                <span class="date">
+                                    {% comment %} <i class="bi bi-calendar3"></i> {% endcomment %}
+                                    {{ one_news.published|date:"d M Y H:i"}}
+                                </span>
+                                <span class="divider">•</span>
+                                <span class="views">
+                                    <i class="bi bi-eye"></i>
+                                    {{ total_views }}
+                                </span>
+                                <span class="comments">
+                                    <i class="bi bi-chat-text"></i>
+                                    {{ one_news.comments.count}}
+                                </span>
+                                <span class="bookmarks">
+                                    <i class="bi {% if user in one_news.bookmarked_by.all %} bi-bookmark-fill {% else %} bi-bookmark {% endif %}" data-id={{ one_news.id }}></i>
+                                    <span id="bookmarks-count">
+                                    {{ one_news.bookmarked_by.count }}
+                                    </span>
+                                </span>                            
+                            </div>
+                        </div>
+                        <h1 class="title">{{ one_news.title }}</h1>
+                        
+                    </div>
+
+                    <div class="hero-img" >
+                        <img src={% if one_news.cover %}"{{ one_news.cover.url}}"{% else %}"/media/default/default_article_cover.jpg"{% endif %} alt="Featured blog image" class="img-fluid" loading="lazy">
+                      </div>
+
+                  <div class="content">
+                    <p class="lead">
+                      {{ one_news.text|linebreaks }}
+                    </p>
+
+                  </div>
+
+                  <div class="meta-bottom">
+                    <div class="tags-section">
+                      <h4>Related Topics</h4>
+                      <div class="tags">
+                        <a href="#" class="tag">Web Development</a>
+                        <a href="#" class="tag">Performance</a>
+                        <a href="#" class="tag">Best Practices</a>
+                        <a href="#" class="tag">Trends</a>
+                        <a href="#" class="tag">2025</a>
+                      </div>
+                    </div>
+
+                    <div class="share-section">
+                      <h4>Share News</h4>
+                      <div class="social-links">
+                        <a href="#" class="twitter"><i class="bi bi-twitter-x"></i></a>
+                        <a href="#" class="facebook"><i class="bi bi-facebook"></i></a>
+                        <a href="#" class="linkedin"><i class="bi bi-linkedin"></i></a>
+                        <a href="#" class="copy-link" title="Copy Link"><i class="bi bi-link-45deg"></i></a>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+              </article>
+
+            </div>
+          </section><!-- /Blog Details Section -->
+
+
+          {% if one_news.enable_comments %}
+            <!-- Blog Comments Section -->
+            <section id="blog-comments" class="blog-comments section">
+
+              <div class="container" data-aos="fade-up" data-aos-delay="100">
+
+                <div class="blog-comments-3">
+                  {% if one_news.comments %}
+                    <div class="section-header">
+                      <h3>Комментарии <span class="comment-count">{{ article.comments.count }}</span></h3>
+                    </div>
+
+                    <div id="comments-list" class="comments-wrapper">
+
+                    </div>
+
+                    <div class="col my-3 d-flex align-items-center justify-content-center more-comments"> 
+                        <span>Показать еще <i class="bi bi-arrow-right"></i></span>
+                    </div>
+                  {% else %}
+                    <div class="section-header">
+                      <h3>Комментариев пока нет</h3>
+                    </div>
+                  {% endif %}
+                </div>
+
+              </div>
+
+            </section>
+            <!-- /Blog Comments Section -->
+
+            <!-- Blog Comment Form Section -->
+            <section id="blog-comment-form" class="blog-comment-form section">
+
+              <div class="container" data-aos="fade-up" data-aos-delay="100">
+
+                <form method="post" role="form">
+
+                  <div class="section-header">
+                    <h3>Share Your Thoughts</h3>
+                    {% comment %} <p>Your email address will not be published. Required fields are marked *</p> {% endcomment %}
+                  </div>
+
+                  <div class="row gy-3">
+                    <div class="col-12 form-group">
+                      {% comment %} <label for="comment">Your Comment</label> {% endcomment %}
+                      <textarea class="form-control" name="comment" id="comment" rows="5" placeholder="Write your thoughts here..." required=""></textarea>
+                    </div>
+
+                    <div class="col-12 text-center">
+                      <button type="submit" class="btn-submit">Post Comment</button>
+                    </div>
+                  </div>
+
+                </form>
+
+              </div>
+
+            </section>
+            <!-- /Blog Comment Form Section -->
+          {% endif %}
+
+        </div>
+
+        <div class="col-lg-3 sidebar">
+          {% include "sidebar.html" %}
+        </div>
+
+      </div>
+    </div>
+
+  </main>
+{% endblock%}
+
+
+
+
+{% comment %} {% block breadcrumbs %}
+    <!-- ======= Breadcrumbs ======= -->
+    <div class="breadcrumbs d-flex align-items-center" style="background-image: url({% static 'img/breadcrumbs-bg.jpg'%});">
+        <div class="container position-relative align-items-center" data-aos="fade">  
+            <ol>
+            <li><a href="{% url 'categories' %}">Все категории</a></li>
+            {% for parent in article.category.parents %}
+                    <li><a href="{{ parent.get_absolute_url }}">{{ parent.name }}</a></li>
+            {% endfor %}
+            <li class="current">{{ article.category.name }}</li>
+          </ol>
+        </div>
+    </div><!-- End Breadcrumbs -->
+{% endblock %}
+
+{% block content %}
+    <div class="row" id="article">
+        <div class="article-item">
+            <span><img class="user_photo" src={% if article.author and article.author.photo %}{{ article.author.photo.url}}{% else %}{{ default_user_photo.image.url }}{% endif %}></span>
+            <span class="author">{% if article.author %}{{ article.author.username }}{% else %}User deleted{% endif %}</span>
+            <span class="published">{{ article.published|date:"d.m.y H:i" }}</span>
+            <span>{{ total_views }} view{{ total_views|pluralize }}</span>
+
+            {% include "bookmarks.html" with article=article user=request.user %}
+            
+            <p><h2>{{ article.title }}</h2></p>
+            <div>{{ article.body }}</div>
+
+            {% if article.images.all %}
+                <div id="article-images" >
+                    {% for image in article.images.all %}
+                        <img src={{ image.image.url }}>
+                    {% endfor %}
+                </div>
+            {% endif %}
+
+            {% for section in article.sections.all %}
+                <div class="section">
+                    {% if section.title %}
+                        <div class="title">
+                            {{ section.title }}
+                        </div>
+                    {% endif%}
+                    <div class="text">
+                        {{ section.text|linebreaks  }}
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    {% if article.enable_comments %}
+        <div class="row comment-form" id="comment-form" >
+            <h4>Add a new comment</h4>
+            <form method="post" id="comment">
+                {% for field in form %}
+                    <div>{{ field }}</div>
+                {% endfor %}
+                {% csrf_token %}
+                <div>
+                    <input type="submit" class="button" value="Add comment" id="submit-comment">
+                </div>
+                <div id="submit-message">
+                </div>
+            </form>
+        </div>
+
+        <div id="comments" class="row">
+            {% if article.comments %}
+                <div>
+                    Комментарии: {{ article.comments.count }}
+                </div>
+                <div id="comments-list">
+                </div>
+
+                <div class="more"> 
+                    Показать еще
+                </div>
+            {% else %}
+                <div>
+                    Комментариев нет
+                </div>
+            {% endif %}
+        </div>
+    {% endif %}
+
+{% endblock %} {% endcomment %}
+
+{% block scripts %}
+    <script src="{% static "js/load_comments.js" %}"></script>
+    <script src="{% static "js/send_comment.js" %}"></script>
+    <script src="{% static "js/bookmarks.js" %}"></script>
+{% endblock %}
+
+
+     

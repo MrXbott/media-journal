@@ -50,6 +50,12 @@
                     <h4 data-purecounter-start="0" data-purecounter-end="{{ user.published_articles.count }}" data-purecounter-duration="1" class="purecounter"></h4>
                     <p>Статьи</p>
                   </div>
+                  {% if user.published_news %}
+                    <div class="stat-item">
+                      <h4 data-purecounter-start="0" data-purecounter-end="{{ user.published_news.count }}" data-purecounter-duration="1" class="purecounter"></h4>
+                      <p>Новости</p>
+                    </div>
+                  {% endif %}
                   <div class="stat-item">
                     <h4 data-purecounter-start="0" data-purecounter-end="{{ user.bookmarks.count }}" data-purecounter-duration="1" class="purecounter"></h4>
                     <p>Закладки</p>

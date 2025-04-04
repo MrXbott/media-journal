@@ -61,6 +61,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'django.contrib.postgres',
     'articles.apps.ArticlesConfig',
+    'news.apps.NewsConfig',
 ]
 
 MIDDLEWARE = [

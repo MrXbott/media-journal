@@ -5,6 +5,7 @@ from django.utils import timezone
 from django.urls import reverse
 
 from articles.models import Article
+from news.models import News
 
 class Staff(AbstractUser):
     email = models.EmailField(blank=False, unique=True, null=False, verbose_name='Эл. адрес')
@@ -40,6 +41,10 @@ class User(AbstractBaseUser):
     @property
     def published_articles(self):
         return self.articles.filter(status=Article.Status.PUBLISHED)
+    
+    @property
+    def published_news(self):
+        return self.news.filter(status=News.Status.PUBLISHED)
 
     def __str__(self):
         return self.email
