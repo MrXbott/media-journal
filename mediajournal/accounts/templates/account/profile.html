@@ -11,7 +11,7 @@
             <div class="col-lg-3 mb-4 mb-lg-0">
               <div class="d-flex align-items-center">
                 <div class="author-image">
-                  <img src="{{ user.photo.url }}" alt="Author" class="img-fluid rounded">
+                  <img src={% if user.photo %}"{{ user.photo.url }}"{% else %}"/media/default/default_user_photo.jpg"{% endif %} alt="Author" class="img-fluid rounded">
                 </div>
               </div>
             </div>
@@ -72,8 +72,8 @@
 
 
           <div class="row mt-3">
-
             <div class="author-content" >
+
               <div class="content-body">
                 <div class="featured-articles">
                   <div class="row g-4">
@@ -97,8 +97,38 @@
                   </div>
                 </div>
               </div>
-            </div>
 
+              
+              <div class="content-body">
+                <h3>Ваши новости</h3>
+                {% for n in user.news.all %}
+                    <a href={{ n.get_absolute_url}}>{{ n.title }}</a>
+                    <br>
+                {% endfor %}
+              </div>
+              <br>
+
+              <div class="content-body">
+                <h3>Закладки</h3>
+                {% for bookmark in user.bookmarks.all %}
+                    <a href={{ bookmark.article.get_absolute_url}}>{{ bookmark.article.title }}</a>
+                    <br>
+                {% endfor %}
+              </div>
+              <br>
+
+              <div class="content-body">
+                <h3>Ваши комментарии</h3>
+                {% for comment in user.comments.all %}
+                  {% if comment.is_active %}
+                    <a href={{ comment.content_object.get_absolute_url}}>{{ comment.content_object.title }} - {{ comment.text|truncatechars:50 }}</a>
+                    <br>
+                    {% endif %}
+                {% endfor %}
+              </div>
+              <br>
+
+            </div>
           </div>
 
         </div>
