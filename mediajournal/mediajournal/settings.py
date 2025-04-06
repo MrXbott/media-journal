@@ -62,6 +62,7 @@ INSTALLED_APPS = [
     'django.contrib.postgres',
     'articles.apps.ArticlesConfig',
     'news.apps.NewsConfig',
+    'comments.apps.CommentsConfig',
 ]
 
 MIDDLEWARE = [

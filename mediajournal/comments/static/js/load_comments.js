@@ -1,15 +1,14 @@
 var empty_page = false; 
 var block_request = false;
 
-function get_comments(page, article_id){
+function get_comments(page, object_id, object_type){
     console.log('getting comments');
     $.ajax({
         type: 'GET',
         url: '/comments/',
-        data: {'page': page, 'article_id': article_id},
+        data: {'page': page, 'id': object_id, 'type': object_type},
         success: function(data){
             console.log('success');
-            console.log(data);
             if(data == '') {
                 empty_page = true;
                 $('.more-comments').addClass('hide');
@@ -26,17 +25,18 @@ function get_comments(page, article_id){
 }
 
 $(document).ready(function(){
-    var article_id = $('#article').attr('data-article-id');
-    console.log('article id ', article_id);
+    var object_id = $('#comments').attr('data-id');
+    var object_type = $('#comments').attr('data-type');
+    console.log('id ', object_id, object_type);
     var page = 1;
     
-    get_comments(page=page, article_id=article_id);
+    get_comments(page, object_id, object_type);
 
     $('.more-comments').on('click', function() {
         if (empty_page == false && block_request == false) {
             block_request = true;
             page += 1;
-            get_comments(page, article_id);
+            get_comments(page, object_id, object_type);
         }
     });
 });

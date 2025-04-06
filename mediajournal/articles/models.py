@@ -2,9 +2,9 @@ from django.db import models
 from django.urls import reverse
 from django.utils.safestring import mark_safe
 from django.core.exceptions import ValidationError
+from django.contrib.contenttypes.fields import GenericRelation
 from datetime import datetime
 
-# from accounts.models import User
 from .ru_slugify import slugify
 
 class SafeGetManager(models.Manager):
@@ -26,7 +26,7 @@ class Article(models.Model):
 
     title = models.CharField(max_length=300, blank=False, null=False, unique=False)
     author = models.ForeignKey('accounts.User', null=True, on_delete=models.SET_NULL, related_name='articles')
-    body = models.TextField()
+    text = models.TextField()
     status = models.CharField(max_length=20, choices=Status.choices, default=Status.MODERATION)
     created = models.DateTimeField(auto_now_add=True)
     published = models.DateTimeField(blank=True, null=True)
@@ -35,6 +35,7 @@ class Article(models.Model):
     cover_image = models.ImageField(upload_to='images/', blank=True, null=True, default='default/default_article_cover.jpg')
     bookmarked_by = models.ManyToManyField('accounts.User', through='Bookmark')
     enable_comments = models.BooleanField(default=True)
+    article_comments = GenericRelation('comments.Comment')
 
     class Meta:
         ordering = ['published']
@@ -133,23 +134,6 @@ class Category(models.Model):
             self.slug = slugify(self.name)
         super(Category, self).save(*args, **kwargs)
 
-class Comment(models.Model):
-    author = models.ForeignKey('accounts.User', related_name='comments', null=True, on_delete=models.SET_NULL)
-    article = models.ForeignKey(Article, related_name='article_comments', on_delete=models.CASCADE)
-    body = models.TextField()
-    created = models.DateTimeField(auto_now_add=True)
-    parent = models.ForeignKey('Comment', blank=True, null=True, unique=False, on_delete=models.SET_NULL, related_name='answers')
-    is_active = models.BooleanField(default=False)
-
-    class Meta:
-        ordering = ['created']
-
-    @property
-    def children(self):
-        return Comment.objects.filter(parent=self, is_active=True, article=self.article)
-
-    def __str__(self) -> str:
-        return f'Comment by {self.author.username if self.author else "User deleted"} on {self.article.title}'
     
 class ArticleImage(models.Model):
     image = models.ImageField(upload_to='images/', blank=False, null=False)

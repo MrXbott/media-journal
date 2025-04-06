@@ -6,9 +6,10 @@ from django.contrib.auth.decorators import login_required
 from django.views.decorators.http import require_POST
 import redis
 
-from .models import Article, Category, Comment, Bookmark
-from .forms import CommentForm, ArticleForm, ArticleImageFormSet, ArticleSectionFormSet
-# from web.models import Image
+from .models import Article, Category, Bookmark
+
+from .forms import ArticleForm, ArticleImageFormSet, ArticleSectionFormSet
+from comments.forms import CommentForm
 
 
 r = redis.Redis(host=settings.REDIS_HOST, port=settings.REDIS_PORT, db=settings.REDIS_DB, decode_responses=True)
@@ -97,47 +98,6 @@ def write_article(request):
                                                   'image_formset': image_formset, 
                                                   'section': 'write',
                                                   })
-    
-
-def comments_list(request):
-    page = request.GET.get('page')
-    article_id = request.GET.get('article_id')
-    try:
-        article = Article.objects.get(id=article_id)
-    except:
-        return JsonResponse({'status': 'error', 'message': 'article with such id not found'})
-    if not article.enable_comments:
-        return JsonResponse({'status': 'error', 'message': 'comments disabled '})
-    
-    all_comments = Comment.objects.filter(is_active=True, article__id=article_id, parent=None) 
-    paginator = Paginator(all_comments, 2) 
-    try:
-        comments = paginator.page(page)
-    except PageNotAnInteger:
-        comments = paginator.page(1)
-    except EmptyPage:
-        if request.headers.get('x-requested-with') == 'XMLHttpRequest':
-            return HttpResponse('')
-    if request.headers.get('x-requested-with') == 'XMLHttpRequest':
-        return render(request, 'comments_list.html', {'comments': comments})
-
-@login_required
-def post_comment(request):
-    if request.headers.get('x-requested-with') == 'XMLHttpRequest':
-        if request.method == 'POST':
-            form = CommentForm(data=request.POST)
-            if form.is_valid():
-                cd = form.cleaned_data
-                comment = Comment(body=cd['body'], author=request.user, article=cd['article'], parent=cd['parent'])
-                comment.save()
-                return JsonResponse({'status': 'ok', 'username': comment.author.username, 'comment': comment.body, 'created': comment.created})
-            return JsonResponse({'status': 'error', 'message': 'wrong data in the form'})
-        elif request.method =='GET':
-            parent_id = request.GET.get('parent_id')
-            article_id = request.GET.get('article_id')
-            data = {'parent': parent_id, 'article': article_id}
-            form = CommentForm(data=data)
-            return render(request, 'comment_answer_form.html', {'form': form})
         
 
 @login_required

@@ -1,25 +1,25 @@
 from django import forms
 from django.forms.models import inlineformset_factory
 
-from .models import Comment, Article, ArticleImage, ArticleSection
+from .models import Article, ArticleImage, ArticleSection
 
 
 # class CommentForm(forms.Form):
 #     text = forms.CharField(widget=forms.Textarea, required=True, label='comment')
 
-class CommentForm(forms.ModelForm):
-    class Meta:
-        model = Comment
-        fields = ['body', 'article', 'parent']
-        widgets = {
-            'article': forms.HiddenInput(),
-            'parent': forms.HiddenInput(),
-        }
+# class CommentForm(forms.ModelForm):
+#     class Meta:
+#         model = Comment
+#         fields = ['text', 'article', 'parent']
+#         widgets = {
+#             'article': forms.HiddenInput(),
+#             'parent': forms.HiddenInput(),
+#         }
 
 class ArticleForm(forms.ModelForm):
     class Meta:
         model = Article
-        fields = ['title', 'category', 'body', ]
+        fields = ['title', 'category', 'text', ]
 
     def __init__(self, *args, **kwargs):
         super(ArticleForm, self).__init__(*args, **kwargs)
@@ -27,8 +27,8 @@ class ArticleForm(forms.ModelForm):
         self.fields['title'].widget.attrs['class'] = 'form-control'
         self.fields['category'].empty_label = 'Выберите раздел'
         self.fields['category'].widget.attrs['class'] = 'form-control'
-        self.fields['body'].widget.attrs['placeholder'] = 'Лид текст'
-        self.fields['body'].widget.attrs['class'] = 'form-control'
+        self.fields['text'].widget.attrs['placeholder'] = 'Лид текст'
+        self.fields['text'].widget.attrs['class'] = 'form-control'
         
 
 

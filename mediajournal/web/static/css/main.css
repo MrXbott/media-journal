@@ -90,7 +90,7 @@ h6 {
 }
 
 .hide {
-  display: none;
+  display: none !important;
 }
 
 /* Forms
@@ -1791,15 +1791,18 @@ section,
   border-radius: 50%;
   margin-right: 10px;
 }
+.latest-posts p.post-author {
+  margin: 0;
+}
 
-.latest-posts .post-author {
+.latest-posts .post-author>a {
   font-weight: 600;
   /* color: color-mix(in srgb, var(--heading-color), transparent 20%); */
   color: var(--heading-color);
   margin-bottom: 0px;
 }
 
-.latest-posts .post-author:hover {
+.latest-posts .post-author:hover>a {
   cursor: pointer;
   color: var(--accent-color);
 }

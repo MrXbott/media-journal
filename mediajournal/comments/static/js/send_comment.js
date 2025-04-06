@@ -1,20 +1,40 @@
-
+function csrfSafeMethod(method) {
+    // these HTTP methods do not require CSRF protection
+    return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+}
+$.ajaxSetup({
+    beforeSend: function(xhr, settings) {
+        if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+            xhr.setRequestHeader("X-CSRFToken", csrftoken);
+        }
+    }
+});
 
 $(document).ready(function(){
-    var article_id = $('form#comment #id_article').val();
+    var object_id = $('form#comment-form').attr('data-id');
+    var content_type = $('form#comment-form').attr('data-type');
     var parent_comment_id = '';
+    console.log('id', object_id, content_type);
 
-    $(document).on('submit', 'form#comment', function(e){
+    $('form#comment-form').on('submit', function(e){
         e.preventDefault();
-        var formData = $(this).serialize();
         $.ajax({
             type: 'POST',
             url: '/comment/',
-            data: formData,
+            data: {
+                'object_id': object_id,
+                'content_type': content_type,
+                'text': $('form#comment-form textarea#comment').val(),
+                'parent': '',
+                },
             success: function(json){
                 if (json['status'] == 'ok'){
-                    $('textarea#id_body').val('');
-                    $('#submit-message').text('Your comment will be published after moderation');
+                    $('textarea#comment').val('');
+                    $('#message').text('Ваш комментарий отправлен и будет опубликован после модерации');
+                    $('#message').removeClass('hide');
+                }
+                else {
+                    console.log(json['message']);
                 }
             },
             error: function(xhr, errmsg, err){

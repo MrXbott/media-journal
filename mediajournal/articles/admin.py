@@ -3,7 +3,7 @@ from django.utils.html import format_html
 from django.urls import reverse
 from django.utils.http import urlencode
 
-from .models import Article, Category, Comment, Bookmark, ArticleImage, ArticleSection
+from .models import Article, Category, Bookmark, ArticleImage, ArticleSection
 
 
 class ArticleImageInline(admin.TabularInline):
@@ -55,21 +55,6 @@ class CategoryAdmin(admin.ModelAdmin):
     list_filter = [('parent', admin.RelatedOnlyFieldListFilter)]
     search_fields = ['name']
     ordering = ['parent', 'name']
-
-
-@admin.register(Comment)
-class CommentAdmin(admin.ModelAdmin):
-    list_display = ['short_body', 'author', 'short_title', 'created', 'is_active' ]
-    list_display_links = ['short_body', 'author', 'short_title', 'created', ]
-    readonly_fields = ['created']
-    list_filter = ['author', 'article']
-    search_fields = ['author__username', 'author__email', 'body', 'article__title']
-
-    def short_title(self, obj):
-        return obj.article.title[:15] + ('...' if len(obj.article.title) > 15 else '')
-    
-    def short_body(self, obj):
-        return obj.body[:15] + ('...' if len(obj.body) > 15 else '')
 
 
 @admin.register(Bookmark)

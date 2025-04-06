@@ -1,5 +1,6 @@
 from django.db import models
 from django.urls import reverse
+from django.contrib.contenttypes.fields import GenericRelation
 from datetime import datetime
 
 
@@ -15,9 +16,15 @@ class News(models.Model):
     published = models.DateTimeField(blank=True, null=True)
     status = models.CharField(max_length=20, choices=Status.choices, default=Status.DRAFT)
     cover = models.ImageField(upload_to='images/', blank=True, null=True, default='default/default_news_cover.jpg')
+    enable_comments = models.BooleanField(default=True)
+    news_comments = GenericRelation('comments.Comment')
 
     class Meta:
         ordering = ['-published']
+
+    @property
+    def comments(self):
+        return self.news_comments.filter(is_active=True)
 
     def __str__(self) -> str:
         return self.title
