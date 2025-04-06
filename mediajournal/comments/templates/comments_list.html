@@ -4,7 +4,9 @@
             <div class="user-info">
                 <img src={% if comment.author.photo %}"{{ comment.author.photo.url }}"{% else %}"/media/default/default_user_photo.jpg"{% endif %} alt="User avatar" loading="lazy">
                 <div class="meta">
-                    <h4 class="name">{% if comment.author %}{{ comment.author.username }}{% else %}User deleted{% endif %}</h4>
+                    <a href="{{ comment.author.get_absolute_url }}">
+                        <h4 class="name">{% if comment.author %}{{ comment.author.username }}{% else %}User deleted{% endif %}</h4>
+                    </a>
                     <span class="date"><i class="bi bi-calendar3"></i>{{ comment.created|date:"d.m.y H:i" }}</span>
                 </div>
             </div>
