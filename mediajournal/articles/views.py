@@ -104,15 +104,16 @@ def write_article(request):
 @require_POST
 def bookmark_article(request):
     article_id = request.POST.get('article_id')
-    # to do: add safe get
-    article = Article.objects.get(id=article_id)
+    try:
+        article = Article.objects.get(id=article_id)
+    except Article.DoesNotExist:
+        return JsonResponse({'status': 'error', 'message': 'article doesn\'t exist'})
+    
     if article in Article.objects.filter(bookmarked_by=request.user):
-        print('article already in bookmarks. deleting')
         Bookmark.objects.filter(user=request.user, article=article).delete()
-        return JsonResponse({'bookmark': 'removed'})
+        return JsonResponse({'status': 'ok', 'bookmark': 'removed'})
     else:
-        print('adding article to bookmarks')
         Bookmark.objects.create(user=request.user, article=article)
-        return JsonResponse({'bookmark': 'added'})
+        return JsonResponse({'status': 'ok', 'bookmark': 'added'})
     
     
