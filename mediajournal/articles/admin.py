@@ -18,11 +18,11 @@ class ArticleSectionInline(admin.StackedInline):
 
 @admin.register(Article)
 class ArticleAdmin(admin.ModelAdmin):
-    fields = ['author', 'status', 'created', 'published', 'title', 'slug', 'category', 'body', 'cover_image', 'preview', 'enable_comments']
+    fields = ['author', 'status', 'created', 'published', 'title', 'slug', 'category', 'text', 'cover_image', 'preview', 'enable_comments']
     readonly_fields = ['created', 'published', 'preview']
     list_display = ['title', 'author', 'category', 'status', 'created', 'published', 'comments', 'bookmarks']
     list_filter = ['status', 'author', 'created', 'published', 'category']
-    search_fields = ['title', 'body', 'author__username', 'category__name']
+    search_fields = ['title', 'text', 'author__username', 'category__name']
     ordering = ['status', '-published']
     save_on_top = True
     prepopulated_fields = {"slug": ["title",]}
@@ -42,9 +42,9 @@ class ArticleAdmin(admin.ModelAdmin):
     def comments(self, obj):
         count = obj.article_comments.all().count()
         url = (
-            reverse('admin:articles_comment_changelist')
+            reverse('admin:comments_comment_changelist')
             + '?'
-            + urlencode({'article__id': obj.id})
+            + urlencode({'object_id': obj.id})
         )
         return format_html(f'<a href="{url}">{count}</a>')
 
