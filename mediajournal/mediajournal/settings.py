@@ -34,6 +34,9 @@ SECRET_KEY = os.environ.get('SECRET_KEY', 'django-insecure-q5o+s6^hi9qqah13c35kv
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
+INTERNAL_IPS = [ '127.0.0.1',
+]
+
 ALLOWED_HOSTS = [
     'localhost',
     '127.0.0.1',
@@ -63,9 +66,11 @@ INSTALLED_APPS = [
     'articles.apps.ArticlesConfig',
     'news.apps.NewsConfig',
     'comments.apps.CommentsConfig',
+    'debug_toolbar',
 ]
 
 MIDDLEWARE = [
+    'debug_toolbar.middleware.DebugToolbarMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -192,3 +197,4 @@ EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'    # uncomment 
 
 # Email subjects etc.
 CONFIRM_EMAIL_SUBJECT = 'Подтвердите ваш емейл'
+
