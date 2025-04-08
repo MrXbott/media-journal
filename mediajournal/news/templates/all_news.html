@@ -71,7 +71,7 @@
                         </span>
                         <span>
                           <i class="bi bi-chat-dots"></i>
-                          {% comment %} {{ article.comments.count }} {% endcomment %}
+                          {{ n.comments.count }}
                         </span>
                         <span>
                           <i class="bi {% if user in n.bookmarked_by.all %} bi-bookmark-fill {% else %} bi-bookmark {% endif %}" data-id={{ n.id }}></i>
