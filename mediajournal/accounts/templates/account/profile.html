@@ -27,7 +27,13 @@
                       {% if user == request.user %}
                         <button><a href="{% url 'edit_profile' %}">Редактировать</a></button>
                       {% else %}
-                        <button>Подписаться</button>
+                        <button class="follow-btn" data-id="{{ user.id }}" data-action="{% if request.user in user.followers.all %}un{% endif %}follow">
+                          {% if request.user not in user.followers.all %}
+                            Подписаться
+                          {% else %}
+                            Отписаться
+                          {% endif %}
+                        </button>
                       {% endif%}
                     {% endif %}
                   </div>
@@ -61,8 +67,8 @@
                     <p>Закладки</p>
                   </div>
                   <div class="stat-item">
-                    <h4 data-purecounter-start="0" data-purecounter-end="25" data-purecounter-duration="1" class="purecounter">K</h4>
-                    <p>Followers</p>
+                    <h4 data-purecounter-start="0" data-purecounter-end="{{ user.followers.count }}" data-purecounter-duration="1" class="purecounter" id="followers-counter"></h4>
+                    <p>Подписчики</p>
                   </div>
                 </div>
 
@@ -100,33 +106,63 @@
 
               
               <div class="content-body">
-                <h3>Ваши новости</h3>
-                {% for n in user.news.all %}
-                    <a href={{ n.get_absolute_url}}>{{ n.title }}</a>
-                    <br>
-                {% endfor %}
+                <h3>Новости</h3>
+                {% if user.news.all %}
+                  {% for n in user.news.all %}
+                      <a href={{ n.get_absolute_url}}>{{ n.title }}</a>
+                      <br>
+                  {% endfor %}
+                {% else %}
+                  Пока нет новостей
+                {% endif %}
               </div>
               <br>
 
               <div class="content-body">
                 <h3>Закладки</h3>
-                {% for bookmark in user.bookmarks.all %}
-                    <a href={{ bookmark.article.get_absolute_url}}>{{ bookmark.article.title }}</a>
-                    <br>
-                {% endfor %}
+                {% if user.bookmarks.all %}
+                  {% for bookmark in user.bookmarks.all %}
+                      <a href={{ bookmark.article.get_absolute_url}}>{{ bookmark.article.title }}</a>
+                      <br>
+                  {% endfor %}
+                {% else %}
+                  Пока нет закладок
+                {% endif %}
               </div>
               <br>
 
               <div class="content-body">
-                <h3>Ваши комментарии</h3>
-                {% for comment in user.comments.all %}
-                  {% if comment.is_active %}
-                    <a href={{ comment.content_object.get_absolute_url}}>{{ comment.content_object.title }} - {{ comment.text|truncatechars:50 }}</a>
-                    <br>
-                    {% endif %}
-                {% endfor %}
+                <h3>Комментарии</h3>
+                {% if user.comment.all %}
+                  {% for comment in user.comments.all %}
+                    {% if comment.is_active %}
+                      <a href={{ comment.content_object.get_absolute_url}}>{{ comment.content_object.title }} - {{ comment.text|truncatechars:50 }}</a>
+                      <br>
+                      {% endif %}
+                  {% endfor %}
+                {% else %}
+                  Пока нет комментариев
+                {% endif %}
               </div>
               <br>
+
+              {% if user == request.user %}
+                <div class="content-body">
+                  <h3>Ваши подписки</h3>
+                  {% for u in user.following.all %}
+                    <a href={{ u.get_absolute_url }}>{{ u.username }}</a>
+                    <br>
+                  {% endfor %}
+                  <br>
+                  <br>
+                  <h3>Ваши подписчики</h3>
+                  {% for u in user.followers.all %}
+                    <a href={{ u.get_absolute_url }}>{{ u.username }}</a>
+                    <br>
+                  {% endfor %}
+                </div>
+                <br>
+                {% endif %}
 
             </div>
           </div>
@@ -141,32 +177,8 @@
 
   </main>
 
-
-
-    <section id="profile" class="section-bg">
-        <div class="container profile">
-            <div>
-                {% comment %} <img class="user_photo" src="{{ user.photo.url}}"> {% endcomment %}
-            </div>
-            <br>
-
-            <div>
-                <h3>Ваши статьи</h3>
-                {% for article in user.articles.all %}
-                    {{ article.status }} <a href={{ article.get_absolute_url}}>{{ article.title }}</a>
-                    <br>
-                {% endfor %}
-            </div>
-
-            <div>
-                <h3>Bookmarks</h3>
-                {% for bookmark in user.bookmarks.all %}
-                    <a href={{ bookmark.article.get_absolute_url}}>{{ bookmark.article.title }}</a>
-                    <br>
-                {% endfor %}
-            </div>
-        </div>
-    </section>
-
 {% endblock %}
 
+{% block scripts %}
+  <script src="{% static "js/following.js" %}"></script>
+{% endblock %}

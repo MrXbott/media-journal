@@ -21,18 +21,19 @@ class Staff(AbstractUser):
 class User(AbstractBaseUser):
     username = models.CharField(max_length=100, blank=True, null=True, unique=True, verbose_name='Имя пользователя')
     email = models.EmailField(blank=False, unique=True, null=False, verbose_name='Эл. адрес')
-    phone_validator = RegexValidator(regex=r'^[+][7][(]\d{3}[)]\d{3}-\d{2}-\d{2}$', message="Введите номер телефона в формате: '+7(999)999-99-99'. ")
-    phone = models.CharField(max_length=18, validators=[phone_validator], blank=True, unique=True, null=True, verbose_name='Моб. тел.')
+    # phone_validator = RegexValidator(regex=r'^[+][7][(]\d{3}[)]\d{3}-\d{2}-\d{2}$', message="Введите номер телефона в формате: '+7(999)999-99-99'. ")
+    # phone = models.CharField(max_length=18, validators=[phone_validator], blank=True, unique=True, null=True, verbose_name='Моб. тел.')
     password = models.CharField(max_length=128, blank=False, unique=False, null=False, verbose_name='Пароль')
     date_joined = models.DateTimeField(default=timezone.now, verbose_name='Дата регистрации')
     is_active = models.BooleanField(default=False)
     photo = models.ImageField(upload_to='photo/', blank=True, null=True, default='default/default_user_photo.jpg')
     designation = models.CharField(max_length=150, blank=True, null=True, unique=False)
     bio = models.TextField(max_length=1000, blank=True, null=True, unique=False)
+    following = models.ManyToManyField('self', through='Contact', related_name='followers', symmetrical=False)
 
     USERNAME_FIELD = 'username'
     EMAIL_FIELD = 'email'
-    REQUIRED_FIELDS = []
+    REQUIRED_FIELDS = ['email']
 
     class Meta:
         verbose_name = 'Пользователь'
@@ -58,4 +59,16 @@ class User(AbstractBaseUser):
         return reverse("profile", kwargs={"id": self.id})
     
     
-    
+class Contact(models.Model):
+    user_from = models.ForeignKey(User, related_name='rel_from_set', on_delete=models.CASCADE)
+    user_to = models.ForeignKey(User, related_name='rel_to_set', on_delete=models.CASCADE)
+    created = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ['-created']
+        indexes = [
+            models.Index(fields=['-created'])
+        ]
+
+    def __str__(self):
+        return f'{self.user_from} follows {self.user_to}'

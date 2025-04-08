@@ -9,6 +9,7 @@ from django.contrib import messages
 from django.contrib.auth.views import PasswordResetConfirmView, LoginView
 from django.contrib.auth import logout
 from django.contrib.auth.decorators import login_required
+from django.views.decorators.http import require_POST
 from django.core.exceptions import ValidationError
 from django.http import HttpRequest, HttpResponse, HttpResponseRedirect, JsonResponse
 from django.shortcuts import get_object_or_404
@@ -16,7 +17,7 @@ from django.shortcuts import get_object_or_404
 from .forms import RegistrationForm, UserPhotoEditForm, ProfileEditForm
 from .token import email_verification_token
 from .tasks import send_confirm_email
-from .models import User
+from .models import User, Contact
 from articles.models import Article, Category
 
 
@@ -66,6 +67,14 @@ def confirm_email(request: HttpRequest, uidb64: str, token: str) -> HttpResponse
 #     logout(request)
 #     return redirect(url)
 
+class CustomPasswordResetConfirmView(PasswordResetConfirmView):
+    def get_user(self, uidb64):
+        try:
+            uid = urlsafe_base64_decode(uidb64).decode()
+            user = User._default_manager.get(pk=uid)
+        except (TypeError, ValueError, OverflowError, User.DoesNotExist, ValidationError):
+            user = None
+        return user
 
 def profile(request, id):
     user = get_object_or_404(User, id=id)
@@ -102,15 +111,23 @@ def edit_username(request):
     return JsonResponse({'message': 'You already have this username'})
 
 
-
-class CustomPasswordResetConfirmView(PasswordResetConfirmView):
-    def get_user(self, uidb64):
+@require_POST
+@login_required
+def follow_user(request):
+    user_id = request.POST.get('user_id')
+    action = request.POST.get('action')
+    if user_id and action:
         try:
-            uid = urlsafe_base64_decode(uidb64).decode()
-            user = User._default_manager.get(pk=uid)
-        except (TypeError, ValueError, OverflowError, User.DoesNotExist, ValidationError):
-            user = None
-        return user
+            user = User.objects.get(id=user_id)
+            if action == 'follow':
+                Contact.objects.get_or_create(user_from=request.user, user_to=user)
+            else:
+                Contact.objects.filter(user_from=request.user, user_to=user).delete()
+            return JsonResponse({'status':'ok', 'message': f'successfully {action}ed'})
+        except User.DoesNotExist:
+            return JsonResponse({'status':'error', 'message': 'user doesn\'t exist'})
+    return JsonResponse({'status':'error', 'message': 'wrong id or action'})
+
     
 
 
