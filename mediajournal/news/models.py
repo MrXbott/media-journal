@@ -6,7 +6,7 @@ from datetime import datetime
 
 class News(models.Model):
     class Status(models.TextChoices):
-        DRAFT = 'Draft'
+        MODERATION = 'Moderation'
         PUBLISHED = 'Published'
         REJECTED = 'Rejected'
 
@@ -14,7 +14,7 @@ class News(models.Model):
     text = models.TextField()
     author = models.ForeignKey('accounts.User', null=True, on_delete=models.SET_NULL, related_name='news')
     published = models.DateTimeField(blank=True, null=True)
-    status = models.CharField(max_length=20, choices=Status.choices, default=Status.DRAFT)
+    status = models.CharField(max_length=20, choices=Status.choices, default=Status.MODERATION)
     cover = models.ImageField(upload_to='images/', blank=True, null=True, default='default/default_news_cover.jpg')
     enable_comments = models.BooleanField(default=True)
     news_comments = GenericRelation('comments.Comment')

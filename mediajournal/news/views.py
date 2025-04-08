@@ -3,6 +3,7 @@ import redis
 from django.conf import settings
 
 from .models import News
+from .forms import SuggestNewsForm
 from articles.models import Category, Article
 
 
@@ -31,3 +32,18 @@ def get_one_news(request, news_id):
                                              'last_articles': last_articles,
                                              'total_views': total_views,
                                              })
+
+
+def suggest_news(request):
+    if request.method == 'POST':
+        form = SuggestNewsForm(data=request.POST)
+        if form.is_valid():
+            news = form.save(commit=False)
+            news.author = request.user
+            news.save()
+            return render(request, 'news_sent.html')
+    else:
+        form = SuggestNewsForm()
+        return render(request, 'suggest_news.html', {'form': form, 
+                                                 'section': 'suggest_news'
+                                                 })
