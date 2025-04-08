@@ -8,8 +8,8 @@
           <div class="col">
               <div class="article-item position-relative h-100">
                 <div class="article-content d-flex flex-column">
-                  {% if article.cover_image %}
-                    <img src={{ article.cover_image.url }} class="img-fluid" alt="">
+                  {% if article.cover %}
+                    <img src={{ article.cover.url }} class="img-fluid" alt="">
                   {% else %}
                     <img src="/media/default/default_article_cover.jpg" class="img-fluid" alt="">
                   {% endif %}

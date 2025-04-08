@@ -60,7 +60,7 @@
                     </div>
 
                     <div class="hero-img" >
-                        <img src={% if article.cover_image %}"{{ article.cover_image.url}}"{% else %}"/media/default/default_article_cover.jpg"{% endif %} alt="Featured blog image" class="img-fluid" loading="lazy">
+                        <img src={% if article.cover %}"{{ article.cover.url}}"{% else %}"/media/default/default_article_cover.jpg"{% endif %} alt="Featured blog image" class="img-fluid" loading="lazy">
                       </div>
 
                   <div class="content">

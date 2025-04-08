@@ -32,7 +32,7 @@ class Article(models.Model):
     published = models.DateTimeField(blank=True, null=True)
     slug = models.SlugField(max_length=250, unique_for_date='published', blank=True, null=True, unique=True)
     category = models.ForeignKey('Category', blank=False, null=True, on_delete=models.SET_NULL, related_name='articles')
-    cover_image = models.ImageField(upload_to='images/', blank=True, null=True, default='default/default_article_cover.jpg')
+    cover = models.ImageField(upload_to='images/', blank=True, null=True, default='default/default_article_cover.jpg')
     bookmarked_by = models.ManyToManyField('accounts.User', through='Bookmark')
     enable_comments = models.BooleanField(default=True)
     article_comments = GenericRelation('comments.Comment')
@@ -50,8 +50,8 @@ class Article(models.Model):
     def get_absolute_url(self):
         return reverse('get_article', kwargs={'slug': self.slug, 'category': self.category.full_slug})
     
-    def preview(self):
-        return mark_safe(f'<img src="{self.cover_image.url}" width="100"/>')
+    def cover_preview(self):
+        return mark_safe(f'<img src="{self.cover.url}" width="100"/>')
     
     def save(self, *args, **kwargs):
         if self.status == self.Status.PUBLISHED and not self.published:

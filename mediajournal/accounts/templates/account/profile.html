@@ -87,7 +87,7 @@
                       <div class="col-md-4">
                         <article class="article-card">
                           <div class="article-img">
-                              <img src={% if article.cover_image %}"{{ article.cover_image.url}}"{% endif %} alt="Article" class="img-fluid">
+                              <img src={% if article.cover %}"{{ article.cover.url}}"{% else %}"/media/default/default_article_cover.jpg"{% endif %} alt="Article" class="img-fluid">
                           </div>
                           <div class="article-details">
                             <div class="post-category">{{ article.category.name }}</div>

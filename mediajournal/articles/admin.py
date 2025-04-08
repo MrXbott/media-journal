@@ -18,8 +18,8 @@ class ArticleSectionInline(admin.StackedInline):
 
 @admin.register(Article)
 class ArticleAdmin(admin.ModelAdmin):
-    fields = ['author', 'status', 'created', 'published', 'title', 'slug', 'category', 'text', 'cover_image', 'preview', 'enable_comments']
-    readonly_fields = ['created', 'published', 'preview']
+    fields = ['author', 'status', 'created', 'published', 'title', 'slug', 'category', 'text', 'cover', 'cover_preview', 'enable_comments']
+    readonly_fields = ['created', 'published', 'cover_preview']
     list_display = ['title', 'author', 'category', 'status', 'created', 'published', 'comments', 'bookmarks']
     list_filter = ['status', 'author', 'created', 'published', 'category']
     search_fields = ['title', 'text', 'author__username', 'category__name']

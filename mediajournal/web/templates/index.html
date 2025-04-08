@@ -22,7 +22,7 @@
               <article>
   
                 <div class="row post-img">
-                  <img src="{{ article.cover_image.url }}" alt="" class="img-fluid">
+                  <img src={% if article.cover %}"{{ article.cover.url }}"{% endif %} alt="" class="img-fluid">
                 </div>
   
                 <p class="post-category">
@@ -64,7 +64,7 @@
             {% if forloop.counter == 1 %}
               <!-- Featured Post (Large) -->
               <article class="blog-item featured" data-aos="fade-up">
-                <img src={{ article.cover_image.url}} alt="Blog Image" class="img-fluid">
+                <img src={{ article.cover.url}} alt="Blog Image" class="img-fluid">
                 <div class="blog-content">
                   <div class="post-meta">
                     <span class="date">{{ article.published|date:"d M Y H:i"  }}</span>
@@ -77,7 +77,7 @@
               </article><!-- End Featured Post -->
             {% else %}
               <article class="blog-item" data-aos="fade-up" data-aos-delay="100">
-                <img src={{ article.cover_image.url}} alt="Blog Image" class="img-fluid">
+                <img src={{ article.cover.url}} alt="Blog Image" class="img-fluid">
                 <div class="blog-content">
                   <div class="post-meta">
                     <span class="date">{{ article.published|date:"d M Y H:i"  }}</span>
@@ -111,7 +111,7 @@
               <div class="col-lg-4">
                 <article class="featured-post">
                   <div class="post-img">
-                    <img src={% if article.cover_image %}"{{ article.cover_image.url }}" {% else %} "media/default/default_article_cover.jpg"{% endif %} alt="" class="img-fluid" loading="lazy">
+                    <img src={% if article.cover %}"{{ article.cover.url }}" {% else %} "media/default/default_article_cover.jpg"{% endif %} alt="" class="img-fluid" loading="lazy">
                   </div>
                   <div class="post-content">
                     <div class="category-meta">
@@ -138,7 +138,7 @@
               <div class="col-xl-4 col-lg-6">
                 <article class="list-post">
                   <div class="post-img">
-                    <img src={% if article.cover_image %}"{{ article.cover_image.url }}" {% else %} "media/default/default_article_cover.jpg"{% endif %} alt="" class="img-fluid" loading="lazy">
+                    <img src={% if article.cover %}"{{ article.cover.url }}" {% else %} "media/default/default_article_cover.jpg"{% endif %} alt="" class="img-fluid" loading="lazy">
                   </div>
                   <div class="post-content">
                     <div class="category-meta">

@@ -57,7 +57,7 @@
                           {{ article.title }}
                         </h2>
                         <div class="post-img">
-                          <img src={% if article.cover_image %}"{{ article.cover_image.url }}"{% else %}"/media/default/default_article_cover.jpg"{% endif %}>
+                          <img src={% if article.cover %}"{{ article.cover.url }}"{% else %}"/media/default/default_article_cover.jpg"{% endif %}>
                         </div>
                       </a>
 

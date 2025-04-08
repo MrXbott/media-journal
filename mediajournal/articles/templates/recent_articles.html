@@ -3,7 +3,7 @@
     <h3 class="widget-title">Недавние статьи</h3>
       {% for article in last_articles %}
           <div class="post-item">
-              <img src="{{ article.cover_image.url }}" alt="" class="flex-shrink-0">
+              <img src={% if article.cover %}"{{ article.cover.url }}"{% else %}"/media/default/default_article_cover.jpg"{% endif %} alt="" class="flex-shrink-0">
               <div>
               <h4><a href="{{ article.get_absolute_url }}">{{ article.title|truncatechars:40 }}</a></h4>
               <time datetime="">{{ article.published }}</time>
