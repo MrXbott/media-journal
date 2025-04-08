@@ -1,6 +1,7 @@
 from django.db import models
 from django.urls import reverse
 from django.contrib.contenttypes.fields import GenericRelation
+from django.utils.safestring import mark_safe
 from datetime import datetime
 
 
@@ -36,4 +37,7 @@ class News(models.Model):
 
     def get_absolute_url(self):
         return reverse('one_news', kwargs={'news_id': self.id})
+    
+    def cover_preview(self):
+        return mark_safe(f'<img src="{self.cover.url}" width="100"/>')
     
