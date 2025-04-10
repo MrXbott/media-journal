@@ -48,9 +48,11 @@ def get_category(request, slug):
                                              'categories': categories,
                                              })
 
+
 def get_last_articles(request):
     articles = Article.objects.all().order_by('published')
     return render(request, 'last_articles.html', {'articles': articles, })
+
 
 def get_article(request, category, slug):
     article = get_object_or_404(Article, slug=slug)

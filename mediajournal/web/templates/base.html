@@ -97,9 +97,9 @@
           <ul>
             <li {% if section == 'news' %}class="active"{% endif %}><a href="{% url "all_news" %}">Новости</a></li>
             <li {% if section == 'categories' %}class="active"{% endif %}><a href="{% url "categories" %}">Разделы</a></li>
-            <li {% if section == 'write' %}class="active"{% endif %}><a href="{% url 'write_article' %}">Написать статью</a></li>
-            <li {% if section == 'suggest_news' %}class="active"{% endif %}><a href="{% url 'suggest_news' %}">Предложить новость</a></li>
             {% if request.user.is_authenticated %}
+              <li {% if section == 'write' %}class="active"{% endif %}><a href="{% url 'write_article' %}">Написать статью</a></li>
+              <li {% if section == 'suggest_news' %}class="active"{% endif %}><a href="{% url 'suggest_news' %}">Предложить новость</a></li>
               <li {% if section == 'subscriptions_feed' %}class="active"{% endif %}><a href="{% url 'subscriptions_feed' %}">Моя лента</a></li>
             {% endif %}
             {% comment %} <li class="dropdown"><a href="#"><span>Pages</span> <i class="bi bi-chevron-down toggle-dropdown"></i></a>

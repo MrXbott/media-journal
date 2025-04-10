@@ -1,6 +1,7 @@
 from django.shortcuts import render, get_object_or_404
-import redis
+from django.contrib.auth.decorators import login_required
 from django.conf import settings
+import redis
 
 from .models import News
 from .forms import SuggestNewsForm
@@ -33,7 +34,7 @@ def get_one_news(request, news_id):
                                              'total_views': total_views,
                                              })
 
-
+@login_required
 def suggest_news(request):
     if request.method == 'POST':
         form = SuggestNewsForm(data=request.POST)
