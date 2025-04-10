@@ -1,0 +1,103 @@
+
+{% extends "base.html" %}
+{% load tags %}
+{% load static %}
+
+{% block content %}
+    <main class="main">
+
+        {% if not request.user.following.all %}
+             <!-- Page Title -->
+            <div class="page-title">
+                <div class="title-wrapper">
+                <h1>Пока ничего нет</h1>
+                <p>Здесь будут отображаться статьи и новости авторов, на которых вы подпишетесь</p>
+                </div>
+            </div>
+            <!-- End Page Title -->
+        {% else %}
+            <div class="container">
+                <div class="row">
+
+                    <div class="col-lg-9">
+                        <section id="category-postst" class="category-postst section">
+                            <div class="container" data-aos="fade-up" data-aos-delay="100">
+                                <div class="row gy-4">
+                                    {% comment %} {% for article in articles %}
+                                        {{ article.title }}
+                                        {{ article.author.username }}
+                                        {{ article.category.name }}
+                                    {% endfor %} {% endcomment %}
+
+                                    {% for article in articles %}
+                                    {% comment %} {{ article }} {% endcomment %}
+                                        <div class="col-lg-12">
+                                            <article>
+
+                                            <div class="d-flex align-articles-center article-header">
+                                                <img src={% if article.author.photo %}"{{ article.author.photo.url }}"{% else %}"/media/default/default_user_photo.jpg"{% endif %} alt="" class="img-fluid post-author-img flex-shrink-0">
+                                                <p class="post-author"><a href="">{{ article.author.username }}</a></p>
+                                                <p class="post-date">
+                                                    <time datetime="">{{ article.published|date:"d M Y H:i"}}</time>
+                                                </p>
+                                                {% comment %} <a href="{{ article.category.get_absolute_url }}">
+                                                    <p class="post-category">{{ article.category.name }}</p>
+                                                </a> {% endcomment %}
+                                            </div>
+                                            
+                                            <a href="{{ article.get_absolute_url }}" >
+                                                <h2 class="title">
+                                                {{ article.title }}
+                                                </h2>
+                                                <div class="post-img">
+                                                <img src={% if article.cover %}"{{ article.cover.url }}"{% else %}"/media/default/default_article_cover.jpg"{% endif %}>
+                                                </div>
+                                            </a>
+
+                                            <div class="post-meta">
+                                                <span>
+                                                <i class="bi bi-eye"></i>
+                                                {{ total_views|item:article.id}}
+                                                </span>
+                                                <span>
+                                                <i class="bi bi-chat-dots"></i>
+                                                {{ article.comments_count }}
+                                                </span>
+                                                <span>
+                                                <i class="bi {% if user in article.bookmarked_by.all %} bi-bookmark-fill {% else %} bi-bookmark {% endif %}" data-id={{ article.id }}></i>
+                                                <span id="bookmarks-count">
+                                                    {{ article.bookmarks_count }}
+                                                </span>
+                                                </span> 
+                                            </div>
+
+                                            </article> 
+
+                                        </div>
+                                        {% endfor %}
+
+                                </div>
+                            </div>
+                        </section>
+                    </div>
+
+                    <div class="col-lg-3 sidebar">
+                        {% include 'sidebar.html' %}
+                    </div>
+
+                </div>
+
+                <!-- Pagination 2 Section -->
+                <div class="row my-3">
+                    {% include "pagination.html" with page=articles %}
+                </div>
+                <!-- /Pagination 2 Section -->
+            
+            </div>
+        {% endif %}
+    </main>
+{% endblock %}
+
+{% block scripts %}
+    <script src="{% static "js/bookmarks.js" %}"></script>
+{% endblock %}
