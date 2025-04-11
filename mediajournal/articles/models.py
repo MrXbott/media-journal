@@ -1,6 +1,7 @@
 from django.db import models
 from django.urls import reverse
 from django.utils.safestring import mark_safe
+from django.utils import timezone
 from django.core.exceptions import ValidationError
 from django.contrib.contenttypes.fields import GenericRelation
 from datetime import datetime
@@ -55,7 +56,7 @@ class Article(models.Model):
     
     def save(self, *args, **kwargs):
         if self.status == self.Status.PUBLISHED and not self.published:
-            self.published = datetime.now()
+            self.published = timezone.now()
         super(Article, self).save(*args, **kwargs)
 
     def clean(self):
