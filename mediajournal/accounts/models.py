@@ -2,6 +2,7 @@ from django.db import models
 from django.contrib.auth.models import AbstractUser, AbstractBaseUser
 from django.utils import timezone
 from django.urls import reverse
+import random
 
 from articles.models import Article
 from news.models import News
@@ -49,7 +50,7 @@ class User(AbstractBaseUser):
     
     def save(self, *args, **kwargs):
         if not self.username:
-            self.username = self.email
+            self.username = f'{self.email.split("@")[0]}{random.randint(1, 10000)}'
         super(User, self).save(*args, **kwargs)
 
     def get_absolute_url(self):
