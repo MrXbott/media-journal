@@ -22,7 +22,7 @@ class BookmarkInline(admin.TabularInline):
 
 @admin.register(User)
 class UserAdmin(admin.ModelAdmin):
-    list_display = ['email', 'username', 'id', 'articles', 'bookmarks']
+    list_display = ['email', 'username', 'id', 'is_active', 'articles', 'bookmarks']
     inlines = [ArticleInline, BookmarkInline]
     save_on_top = True
     

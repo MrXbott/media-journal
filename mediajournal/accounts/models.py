@@ -1,6 +1,5 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser, AbstractBaseUser
-from django.core.validators import RegexValidator
 from django.utils import timezone
 from django.urls import reverse
 
@@ -19,10 +18,8 @@ class Staff(AbstractUser):
 
 
 class User(AbstractBaseUser):
-    username = models.CharField(max_length=100, blank=True, null=True, unique=True, verbose_name='Имя пользователя')
+    username = models.CharField(max_length=100, blank=False, null=False, unique=True, verbose_name='Имя пользователя')
     email = models.EmailField(blank=False, unique=True, null=False, verbose_name='Эл. адрес')
-    # phone_validator = RegexValidator(regex=r'^[+][7][(]\d{3}[)]\d{3}-\d{2}-\d{2}$', message="Введите номер телефона в формате: '+7(999)999-99-99'. ")
-    # phone = models.CharField(max_length=18, validators=[phone_validator], blank=True, unique=True, null=True, verbose_name='Моб. тел.')
     password = models.CharField(max_length=128, blank=False, unique=False, null=False, verbose_name='Пароль')
     date_joined = models.DateTimeField(default=timezone.now, verbose_name='Дата регистрации')
     is_active = models.BooleanField(default=False)
@@ -51,12 +48,12 @@ class User(AbstractBaseUser):
         return self.email
     
     def save(self, *args, **kwargs):
-        if not self.email and not self.phone:
-            raise Exception('User must have an email or a phone or both')
+        if not self.username:
+            self.username = self.email
         super(User, self).save(*args, **kwargs)
 
     def get_absolute_url(self):
-        return reverse("profile", kwargs={"id": self.id})
+        return reverse('profile', kwargs={'id': self.id})
     
     
 class Contact(models.Model):
