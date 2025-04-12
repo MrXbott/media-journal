@@ -1,4 +1,5 @@
 from django.shortcuts import render, redirect
+from django.db.models import Count, Q
 from django.urls import reverse
 from django.contrib.sites.shortcuts import get_current_site
 from django.template.loader import render_to_string
@@ -11,14 +12,16 @@ from django.contrib.auth import logout
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.http import require_POST
 from django.core.exceptions import ValidationError
-from django.http import HttpRequest, HttpResponse, HttpResponseRedirect, JsonResponse
+from django.http import HttpRequest, HttpResponse, HttpResponseRedirect, JsonResponse, HttpResponseNotFound, Http404
 from django.shortcuts import get_object_or_404
 
 from .forms import RegistrationForm, UserPhotoEditForm, ProfileEditForm
 from .token import email_verification_token
 from .tasks import send_confirm_email
 from .models import User, Contact
-from articles.models import Article, Category
+from articles.models import Article, Category, Bookmark
+from news.models import News
+from comments.models import Comment
 
 
 def registration(request: HttpRequest) -> HttpResponse:
@@ -78,11 +81,32 @@ class CustomPasswordResetConfirmView(PasswordResetConfirmView):
 
 def profile(request, id):
     user = get_object_or_404(User, id=id)
+    user_articles = Article.objects.filter(author=user, status=Article.Status.PUBLISHED)\
+                                    .order_by('-published')\
+                                    .select_related('category')\
+                                    .annotate(
+                                        comments_count=Count('article_comments', filter=Q(article_comments__is_active=True)),
+                                        )
+    user_news = News.objects.filter(author=user, status=News.Status.PUBLISHED).order_by('-published').annotate(comments_count=Count('news_comments', filter=Q(news_comments__is_active=True)))
+    user_bookmarks = Bookmark.objects.filter(user=user).select_related('article', 'article__category')
+    user_comments = Comment.objects.filter(author=user, is_active=True).prefetch_related('content_object')
+    counts = {
+                'articles_count': len(user_articles),
+                'news_count': len(user_news),
+                'bookmarks_count': len(user_bookmarks),
+                'followers_count': user.followers.count(),
+                'comments_count': len(user_comments)
+                }
     categories = Category.objects.filter(parent=None).order_by('name')
     last_articles = Article.objects.filter(status=Article.Status.PUBLISHED).order_by('-published')[:5]
     return render(request, 'account/profile.html', {'user': user, 
+                                                    'user_articles': user_articles,
+                                                    'user_news': user_news,
+                                                    'user_bookmarks': user_bookmarks,
+                                                    'user_comments': user_comments,
+                                                    'counts': counts,
                                                     'last_articles': last_articles,
-                                                    'categories': categories,
+                                                    'categories': categories
                                                     })
 
 @login_required
@@ -95,6 +119,7 @@ def edit_profile(request):
     else:
         form = ProfileEditForm(instance=request.user)
     return render(request, 'account/profile_edit.html', {'form': form})
+
 
 @login_required
 def edit_username(request):

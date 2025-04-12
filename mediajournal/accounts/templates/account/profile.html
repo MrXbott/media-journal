@@ -53,21 +53,21 @@
 
                 <div class="author-stats d-flex justify-content-between text-center">
                   <div class="stat-item">
-                    <h4 data-purecounter-start="0" data-purecounter-end="{{ user.published_articles.count }}" data-purecounter-duration="1" class="purecounter"></h4>
+                    <h4 data-purecounter-start="0" data-purecounter-end="{{ counts.articles_count }}" data-purecounter-duration="1" class="purecounter"></h4>
                     <p>Статьи</p>
                   </div>
-                  {% if user.published_news %}
+                  {% if user_news %}
                     <div class="stat-item">
-                      <h4 data-purecounter-start="0" data-purecounter-end="{{ user.published_news.count }}" data-purecounter-duration="1" class="purecounter"></h4>
+                      <h4 data-purecounter-start="0" data-purecounter-end="{{ counts.news_count }}" data-purecounter-duration="1" class="purecounter"></h4>
                       <p>Новости</p>
                     </div>
                   {% endif %}
                   <div class="stat-item">
-                    <h4 data-purecounter-start="0" data-purecounter-end="{{ user.bookmarks.count }}" data-purecounter-duration="1" class="purecounter"></h4>
+                    <h4 data-purecounter-start="0" data-purecounter-end="{{ counts.bookmarks_count }}" data-purecounter-duration="1" class="purecounter"></h4>
                     <p>Закладки</p>
                   </div>
                   <div class="stat-item">
-                    <h4 data-purecounter-start="0" data-purecounter-end="{{ user.followers.count }}" data-purecounter-duration="1" class="purecounter" id="followers-counter"></h4>
+                    <h4 data-purecounter-start="0" data-purecounter-end="{{ counts.followers_count }}" data-purecounter-duration="1" class="purecounter" id="followers-counter"></h4>
                     <p>Подписчики</p>
                   </div>
                 </div>
@@ -83,7 +83,7 @@
               <div class="content-body">
                 <div class="featured-articles">
                   <div class="row g-4">
-                    {% for article in user.published_articles %}
+                    {% for article in user_articles %}
                       <div class="col-md-4">
                         <article class="article-card">
                           <div class="article-img">
@@ -94,7 +94,7 @@
                             <h5><a href="{{ article.get_absolute_url }}">{{ article.title|truncatechars:60 }}</a></h5>
                             <div class="post-meta">
                               <span><i class="bi bi-clock"></i>{{ article.published|date:"d M Y H:i"}}</span>
-                              <span><i class="bi bi-chat-dots"></i>{{ article.comments.count }}</span>
+                              <span><i class="bi bi-chat-dots"></i>{{ article.comments_count }}</span>
                             </div>
                           </div>
                         </article>
@@ -107,8 +107,8 @@
               
               <div class="content-body">
                 <h3>Новости</h3>
-                {% if user.news.all %}
-                  {% for n in user.news.all %}
+                {% if user_news %}
+                  {% for n in user_news %}
                       <a href={{ n.get_absolute_url}}>{{ n.title }}</a>
                       <br>
                   {% endfor %}
@@ -120,8 +120,8 @@
 
               <div class="content-body">
                 <h3>Закладки</h3>
-                {% if user.bookmarks.all %}
-                  {% for bookmark in user.bookmarks.all %}
+                {% if user_bookmarks %}
+                  {% for bookmark in user_bookmarks %}
                       <a href={{ bookmark.article.get_absolute_url}}>{{ bookmark.article.title }}</a>
                       <br>
                   {% endfor %}
@@ -133,8 +133,8 @@
 
               <div class="content-body">
                 <h3>Комментарии</h3>
-                {% if user.comment.all %}
-                  {% for comment in user.comments.all %}
+                {% if user_comments %}
+                  {% for comment in user_comments %}
                     {% if comment.is_active %}
                       <a href={{ comment.content_object.get_absolute_url}}>{{ comment.content_object.title }} - {{ comment.text|truncatechars:50 }}</a>
                       <br>
