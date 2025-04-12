@@ -21,33 +21,35 @@
         <div class="row gy-4">
 
           {% for article in results %}
-          <!-- post list item -->
-          <div class="col-lg-4">
-            <article>
+            <!-- post list item -->
+            <div class="col-lg-4">
+              <article>
 
-              <div class="post-img">
-                <img src={% if article.cover_image %}"{{ article.cover_image.url}}"{% else %}"/media/default/default_article_cover.jpg"{% endif %} alt="" class="img-fluid">
-              </div>
-
-              <p class="post-category">{{ article.category.title }}</p>
-
-              <h2 class="title">
-                <a href="{{ article.get_absolute_url }}">{{ article.title|truncatechars:40 }}</a>
-              </h2>
-
-              <div class="d-flex align-items-center">
-                <img src={% if article.author.photo %}"{{ article.author.photo.url}}"{% else %}"/media/default/default_user_photo.jpg"{% endif %} alt="" class="img-fluid post-author-img flex-shrink-0">
-                <div class="post-meta">
-                  <p class="post-author">{{ article.author.username }}</p>
-                  <p class="post-date">
-                    <time>{{ article.published|date:"d M Y" }}</time>
-                  </p>
+                <div class="post-img">
+                  <img src={% if article.cover %}"{{ article.cover.url}}"{% else %}"/media/default/default_article_cover.jpg"{% endif %} alt="" class="img-fluid">
                 </div>
-              </div>
 
-            </article>
-          </div>
-          <!-- End post list item -->
+                <p class="post-category"><a href= "{{ article.category.get_absolute_url }}">{{ article.category.name }}</a></p>
+
+                <h2 class="title">
+                  <a href="{{ article.get_absolute_url }}">{{ article.title|truncatechars:40 }}</a>
+                </h2>
+
+                <div class="d-flex align-items-center">
+                  <img src={% if article.author.photo %}"{{ article.author.photo.url}}"{% else %}"/media/default/default_user_photo.jpg"{% endif %} alt="" class="img-fluid post-author-img flex-shrink-0">
+                  <div class="post-meta">
+                    
+                    <p class="post-author"><a href="{{ article.author.get_absolute_url }}">{{ article.author.username }}</a></p>
+                    
+                    <p class="post-date">
+                      <time>{{ article.published|date:"d M Y" }}</time>
+                    </p>
+                  </div>
+                </div>
+
+              </article>
+            </div>
+            <!-- End post list item -->
           {% endfor %}
 
           

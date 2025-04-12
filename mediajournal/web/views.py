@@ -58,12 +58,12 @@ def search(request):
         if form.is_valid():
             query = form.cleaned_data['query']
             article_search_vector = SearchVector('title', 'text', 'author__username', config='russian')
-            article_results = Article.objects.filter(status=Article.Status.PUBLISHED).annotate(search=article_search_vector).filter(search=query).order_by('-published')
+            article_results = Article.objects.filter(status=Article.Status.PUBLISHED).select_related('category').annotate(search=article_search_vector).filter(search=query).order_by('-published')
             section_search_vector = SearchVector('title', 'text', 'quote', config='russian')
             article_ids_from_sections = ArticleSection.objects.filter(article__status=Article.Status.PUBLISHED).annotate(search=section_search_vector).filter(search=query).values_list('article__id', flat=True)
-            section_results = Article.objects.filter(id__in=set(article_ids_from_sections)).annotate(search=article_search_vector)
+            section_results = Article.objects.filter(id__in=set(article_ids_from_sections)).select_related('category').annotate(search=article_search_vector)
             all_results = article_results.union(section_results)
-
+            
             page = request.GET.get('page')
             paginator = Paginator(all_results.order_by('-published'), 3)
             try:
@@ -73,7 +73,7 @@ def search(request):
             except EmptyPage:
                 results = paginator.page(paginator.num_pages)
             return render(request, 'search_results.html', {'query': query, 
-                                                        'results': results,
-                                                        'results_count': len(all_results)})
+                                                          'results': results,
+                                                          'results_count': len(all_results)})
 
     return render(request, 'search_results.html', {})
