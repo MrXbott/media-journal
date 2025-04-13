@@ -15,15 +15,15 @@ TEMP_MEDIA_ROOT = tempfile.mkdtemp()
 class UserModelTest(TestCase):
 
     @classmethod
-    def setUpTestData(self):
-        self.user = User.objects.create(
+    def setUpTestData(cls):
+        cls.user = User.objects.create(
             username='testuser',
             email='test@example.com',
             password='password123'
         )
         
-        Article.objects.create(title='Moderation Article', author=self.user, status=Article.Status.MODERATION)
-        Article.objects.create(title='Published Article', author=self.user, status=Article.Status.PUBLISHED)
+        Article.objects.create(title='Moderation Article', author=cls.user, status=Article.Status.MODERATION)
+        Article.objects.create(title='Published Article', author=cls.user, status=Article.Status.PUBLISHED)
 
     @classmethod
     def tearDownClass(cls):

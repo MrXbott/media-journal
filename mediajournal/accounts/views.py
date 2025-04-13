@@ -1,6 +1,5 @@
 from django.shortcuts import render, redirect
 from django.db.models import Count, Q
-from django.urls import reverse
 from django.contrib.sites.shortcuts import get_current_site
 from django.template.loader import render_to_string
 from django.utils.encoding import force_bytes, force_str
@@ -15,7 +14,7 @@ from django.core.exceptions import ValidationError
 from django.http import HttpRequest, HttpResponse, HttpResponseRedirect, JsonResponse, HttpResponseNotFound, Http404
 from django.shortcuts import get_object_or_404
 
-from .forms import RegistrationForm, UserPhotoEditForm, ProfileEditForm
+from .forms import RegistrationForm, ProfileEditForm
 from .token import email_verification_token
 from .tasks import send_confirm_email
 from .models import User, Contact
