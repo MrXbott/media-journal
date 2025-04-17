@@ -4,7 +4,6 @@ from django.utils.safestring import mark_safe
 from django.utils import timezone
 from django.core.exceptions import ValidationError
 from django.contrib.contenttypes.fields import GenericRelation
-from datetime import datetime
 
 from .ru_slugify import slugify
 
@@ -76,14 +75,16 @@ class Bookmark(models.Model):
     ]
 
 class Category(models.Model):
-    name = models.CharField(max_length=50, blank=False, null=False, unique=True)
+    name = models.CharField(max_length=50, blank=False, null=False, unique=True, db_collation='ru-RU-x-icu')
     parent = models.ForeignKey('Category', blank=True, null=True, unique=False, related_name='subcategories', on_delete=models.SET_NULL)
     slug = models.SlugField(max_length=250, blank=True, null=False, unique=True)
-    image = models.ImageField(upload_to='category-images/', blank=True, null=True, unique=False)
+    image = models.ImageField(upload_to='category-images/', blank=True, null=True, unique=False, default='default/default_category_image.jpg')
     is_featured = models.BooleanField(default=False)
 
     class Meta:
         ordering = ['name']
+        verbose_name = 'Категория' 
+        verbose_name_plural = 'Категории'
 
     @property
     def full_slug(self):
