@@ -48,13 +48,24 @@ class ArticleAdmin(admin.ModelAdmin):
         )
         return format_html(f'<a href="{url}">{count}</a>')
 
+@admin.display(description='Установить избранные категории')
+def set_featured_categories(modeladmin, request, queryset):
+    queryset.update(is_featured=True)
+
+@admin.display(description='Снять избранные категории')
+def remove_featured_categories(modeladmin, request, queryset):
+    queryset.update(is_featured=False)
+
 @admin.register(Category)
 class CategoryAdmin(admin.ModelAdmin):
-    list_display = ['name', 'parent', 'slug', 'full_slug',  ]
+    list_display = ['name', 'parent', 'slug', 'full_slug',  'is_featured']
     readonly_fields = ['full_slug']
     list_filter = [('parent', admin.RelatedOnlyFieldListFilter)]
     search_fields = ['name']
     ordering = ['parent', 'name']
+    actions = [set_featured_categories, remove_featured_categories]
+
+
 
 
 @admin.register(Bookmark)
