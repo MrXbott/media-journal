@@ -52,7 +52,7 @@ class CustomPasswordResetForm(forms.Form):
         try:
             user = User.objects.get(email=email, is_active=True)
         except User.DoesNotExist:
-            pass
+            user = None
         return user
     
     def save(
