@@ -66,6 +66,7 @@ INSTALLED_APPS = [
     'articles.apps.ArticlesConfig',
     'news.apps.NewsConfig',
     'comments.apps.CommentsConfig',
+    'subscriptions.apps.SubscriptionsConfig',
     'debug_toolbar',
 ]
 
