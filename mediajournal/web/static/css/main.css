@@ -1869,6 +1869,18 @@ section,
   transition: all 0.3s ease;
 }
 
+.call-to-action .btn {
+  height: 50px;
+  border-radius: 25px;
+  background-color: var(--accent-color);
+  border-color: var(--accent-color);
+  color: var(--contrast-color);
+  padding: 0 30px 0 30px;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  margin-bottom: 40px;
+}
+
 .call-to-action .cta-form .btn:hover {
   background-color: color-mix(in srgb, var(--accent-color), black 10%);
   border-color: color-mix(in srgb, var(--accent-color), black 10%);

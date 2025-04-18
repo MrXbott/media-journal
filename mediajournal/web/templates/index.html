@@ -163,6 +163,7 @@
       {% endfor %}
     </section><!-- /Category Section Section -->
 
+      {% if not request.user.subscription.is_subscribed %}
         <!-- Subscription Section -->
         <section id="call-to-action" class="call-to-action section">
           <div class="container" data-aos="fade-up" data-aos-delay="100">
@@ -172,12 +173,12 @@
                   <h2>Подпишитесь на нашу рассылку</h2>
                   <p>Раз в неделю вы будете получать письмо с новыми статьями и новостями</p>
                   {% if request.user.is_authenticated %}
-                    <form action="{% url 'subscribe_user' %}" method="post" class="subscription-email-form cta-form">
+                    <form action="{% url 'subscribe' %}" method="post" class="subscription-email-form ">
                       <button class="btn btn-primary" type="submit" id="button-subscribe">Подписаться</button>
                       {% csrf_token %}
                     </form>
                   {% else %}
-                  <form action="{% url 'subscribe_guest' %}" method="post" class="subscription-email-form cta-form" >
+                  <form action="{% url 'subscribe' %}" method="post" class="subscription-email-form cta-form" >
                     <div class="input-group mb-3">
                       <input type="email" class="form-control" placeholder="Введите ваш Email" aria-label="Email address" aria-describedby="button-subscribe">
                       <button class="btn btn-primary" type="submit" id="button-subscribe">Подписаться</button>
@@ -195,6 +196,7 @@
             </div>
           </div>
         </section><!-- /Subscription Section -->
+        {% endif %}
 
   </main>
       

@@ -9,8 +9,15 @@ from .models import Subscriber
 
 
 @require_POST
-def subscribe_guest(request):
-    form = EmailSubscriptionForm(request.POST)
+def subscribe(request):
+    if request.user.is_authenticated:
+        subscriber, created = Subscriber.objects.get_or_create(email=request.user.email)
+        subscriber.is_subscribed = True
+        subscriber.user = request.user
+        subscriber.save()
+        return JsonResponse({'status': 'ok'})
+    else:
+        form = EmailSubscriptionForm(request.POST)
     if form.is_valid():
         email = form.cleaned_data['email']
         subscriber, created = Subscriber.objects.get_or_create(email=email)
@@ -22,20 +29,9 @@ def subscribe_guest(request):
 
 @login_required
 @require_POST
-def subscribe_user(request):
-    subscriber, created = Subscriber.objects.get_or_create(user=request.user, defaults={'email': request.user.email})
-    subscriber.is_subscribed = True
-    subscriber.save()
-    return JsonResponse({'status': 'ok'})
-
-
-@login_required
 def unsubscribe(request):
-    try:
-        subscriber = Subscriber.objects.get(user=request.user)
-        subscriber.is_subscribed = False
-        subscriber.save()
-    except Subscriber.DoesNotExist:
-        pass
-    return redirect('profile')
+    subscriber = request.user.subscription
+    subscriber.is_subscribed = False
+    subscriber.save()
+    return JsonResponse({'status': 'ok', 'message': 'Вы успешно отписались'})
 

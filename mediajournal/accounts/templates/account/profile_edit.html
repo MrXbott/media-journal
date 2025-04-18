@@ -49,8 +49,18 @@
         Сменить пароль
     </a>
 </div>
+<button id="subscribe-btn">
+    {% if request.user.subscription.is_subscribed %}
+        Отписаться от рассылки
+    {% else %}
+        Подписаться на рассылку
+    {% endif %}
+</button>
+<input type="hidden" id="is-subscribed" value="{% if request.user.subscription.is_subscribed %}1{% else %}0{% endif %}">
+
 {% endblock %}
 
 {% block scripts %}
     <script src="{% static 'js/edit_username.js' %}"></script>
+    <script src="{% static 'js/subscribe_in_profile.js' %}"></script>
 {% endblock %}
