@@ -8,6 +8,9 @@ from articles.models import Article
 from news.models import News
 
 class Staff(AbstractUser):
+    """
+    Модель администратора/сотрудника, расширяющая стандартную модель AbstractUser.
+    """
     email = models.EmailField(blank=False, unique=True, null=False, verbose_name='Эл. адрес')
 
     class Meta:
@@ -19,6 +22,9 @@ class Staff(AbstractUser):
 
 
 class User(AbstractBaseUser):
+    """
+    Кастомная модель пользователя, используемая для регистрации и взаимодействия внутри платформы.
+    """
     username = models.CharField(max_length=100, blank=False, null=False, unique=True, verbose_name='Имя пользователя')
     email = models.EmailField(blank=False, unique=True, null=False, verbose_name='Эл. адрес')
     password = models.CharField(max_length=128, blank=False, unique=False, null=False, verbose_name='Пароль')
@@ -58,6 +64,10 @@ class User(AbstractBaseUser):
     
     
 class Contact(models.Model):
+    """
+    Модель связи между пользователями, реализующая подписку одного пользователя на другого.
+    Используется как промежуточная модель в User.folloeing.
+    """
     user_from = models.ForeignKey(User, related_name='rel_from_set', on_delete=models.CASCADE)
     user_to = models.ForeignKey(User, related_name='rel_to_set', on_delete=models.CASCADE)
     created = models.DateTimeField(auto_now_add=True)

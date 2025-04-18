@@ -6,6 +6,9 @@ from datetime import datetime
 
 
 class News(models.Model):
+    """
+    Модель новостной записи, предназначенная для публикации коротких информационных сообщений.
+    """
     class Status(models.TextChoices):
         MODERATION = 'Moderation'
         PUBLISHED = 'Published'

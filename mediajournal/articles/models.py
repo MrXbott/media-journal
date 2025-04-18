@@ -17,6 +17,9 @@ class SafeGetManager(models.Manager):
         #     return None
 
 class Article(models.Model):
+    """
+    Модель статьи, содержащая основной контент, метаданные и связь с пользователями и категориями.
+    """
     objects = SafeGetManager()
 
     class Status(models.TextChoices):
@@ -64,6 +67,9 @@ class Article(models.Model):
     
 
 class Bookmark(models.Model):
+    """
+    Модель закладки для сохранения понравившихся пользователю статей.
+    """
     user = models.ForeignKey('accounts.User', on_delete=models.CASCADE, related_name='bookmarks')
     article = models.ForeignKey(Article, on_delete=models.CASCADE)
 
@@ -75,6 +81,10 @@ class Bookmark(models.Model):
     ]
 
 class Category(models.Model):
+    """
+    Модель категорий для статей. 
+    Поддерживает древовидную структуру с родителями и подкатегориями.
+    """
     name = models.CharField(max_length=50, blank=False, null=False, unique=True, db_collation='ru-RU-x-icu')
     parent = models.ForeignKey('Category', blank=True, null=True, unique=False, related_name='subcategories', on_delete=models.SET_NULL)
     slug = models.SlugField(max_length=250, blank=True, null=False, unique=True)
@@ -138,6 +148,9 @@ class Category(models.Model):
 
     
 class ArticleImage(models.Model):
+    """
+    Модель для приклепления различного количества дополнительных изображений к статье.
+    """
     image = models.ImageField(upload_to='images/', blank=False, null=False)
     article = models.ForeignKey(Article, related_name='images', on_delete=models.CASCADE)
 
@@ -148,6 +161,10 @@ class ArticleImage(models.Model):
         return mark_safe(f'<img src="{self.image.url}" width="100"/>')
     
 class ArticleSection(models.Model):
+    """
+    Модель раздела статьи. Используется для добавления к статье различного количества разделов(секций)
+    с дополительными данными (например, заголовком, цитатой и т.п.).
+    """
     article = models.ForeignKey(Article, related_name='sections', on_delete=models.CASCADE, blank=False, null=False)
     title = models.CharField(max_length=300, blank=True, null=True, unique=False)
     text = models.TextField()

@@ -4,6 +4,10 @@ from django.db import models
 
 
 class Comment(models.Model):
+    """
+    Модель комментария, поддерживающая древовидную структуру (ответы) и возможность привязки к любому объекту
+    через GenericForeignKey (например, к статьям или новостям).
+    """
     author = models.ForeignKey('accounts.User', related_name='comments', null=True, on_delete=models.SET_NULL)
     text = models.TextField()
     created = models.DateTimeField(auto_now_add=True)
