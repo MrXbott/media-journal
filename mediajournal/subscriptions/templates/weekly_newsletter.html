@@ -1,0 +1,14 @@
+<h2>Новые статьи за неделю</h2>
+<ul>
+  {% if articles.all %}
+    {% for article in articles %}
+      <li>
+        <a href="{{ domain }}{{ article.get_absolute_url }}">{{ article.title }}</a>
+      </li>
+    {% endfor %}
+  {% else %}
+      <li>
+        Извините, новых статей нет...
+      </li>
+  {% endif %}
+</ul>

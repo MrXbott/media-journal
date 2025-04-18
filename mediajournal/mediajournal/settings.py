@@ -68,6 +68,7 @@ INSTALLED_APPS = [
     'comments.apps.CommentsConfig',
     'subscriptions.apps.SubscriptionsConfig',
     'debug_toolbar',
+    'django_celery_beat',
 ]
 
 MIDDLEWARE = [
@@ -196,6 +197,9 @@ EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'    # uncomment 
 # EMAIL_USE_TLS = str(os.environ.get('EMAIL_USE_TLS')).lower() == 'true'
 # EMAIL_USE_SSL = str(os.environ.get('EMAIL_USE_SSL')).lower() == 'true'
 
-# Email subjects etc.
-CONFIRM_EMAIL_SUBJECT = 'Подтвердите ваш емейл'
 
+# Email subjects etc.
+CONFIRM_EMAIL_SUBJECT = os.environ.get('CONFIRM_EMAIL_SUBJECT', 'Подтвердите ваш емейл')
+WEEKLY_NEWSLETTER_SUBJECT = os.environ.get('WEEKLY_NEWSLETTER_SUBJECT', 'Новые статьи за неделю')
+DEFAULT_FROM_EMAIL = os.environ.get('DEFAULT_FROM_EMAIL', 'noreply@example.com')
+DOMAIN_URL = os.environ.get('DOMAIN_URL', 'https://example.com')
