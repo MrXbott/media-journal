@@ -1,8 +1,8 @@
 from django.db import models
 from django.urls import reverse
+from django.utils import timezone
 from django.contrib.contenttypes.fields import GenericRelation
 from django.utils.safestring import mark_safe
-from datetime import datetime
 
 
 class News(models.Model):
@@ -35,7 +35,7 @@ class News(models.Model):
     
     def save(self, *args, **kwargs):
         if self.status == self.Status.PUBLISHED and not self.published:
-            self.published = datetime.now()
+            self.published = timezone.now()
         super(News, self).save(*args, **kwargs)
 
     def get_absolute_url(self):
