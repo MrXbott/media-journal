@@ -14,7 +14,7 @@ from django.core.exceptions import ValidationError
 from django.http import HttpRequest, HttpResponse, HttpResponseRedirect, JsonResponse, HttpResponseNotFound, Http404
 from django.shortcuts import get_object_or_404
 
-from .forms import RegistrationForm, ProfileEditForm
+from .forms import RegistrationForm, ProfileEditForm, UserPhotoForm
 from .token import email_verification_token
 from .tasks import send_confirm_email
 from .models import User, Contact
@@ -118,6 +118,16 @@ def edit_profile(request):
     else:
         form = ProfileEditForm(instance=request.user)
     return render(request, 'account/profile_edit.html', {'form': form})
+
+
+@login_required
+@require_POST
+def upload_photo(request):
+    form = UserPhotoForm(request.POST, request.FILES, instance=request.user)
+    if form.is_valid():
+        form.save()
+        return JsonResponse({'status': 'ok', 'photo_url': request.user.photo.url})
+    return JsonResponse({'status': 'error', 'errors': form.errors}, status=400)
 
 
 @login_required

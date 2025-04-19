@@ -109,18 +109,30 @@ class CustomPasswordResetForm(forms.Form):
 #         self.fields['password'].widget.attrs['class'] = 'form-control'
 
 
-class UserPhotoEditForm(forms.ModelForm):
+class UserPhotoForm(forms.ModelForm):
     class Meta:
         model = User
         fields = ['photo']
-        widgets = {
-            'photo': forms.FileInput(),
-        }
+
+    def clean_photo(self):
+        photo = self.cleaned_data['photo']
+        if photo:
+            if photo.size > 1024 * 1024:  # 1MB
+                raise forms.ValidationError('Размер файла должен быть не больше 1MB.')
+            if not photo.content_type in ['image/jpeg', 'image/png', 'image/gif']:
+                raise forms.ValidationError('Допустимы только файлы JPEG или PNG.')
+        return photo
 
 class ProfileEditForm(forms.ModelForm):
     class Meta:
         model = User
-        fields = ['username', 'photo', 'designation', 'bio']
+        fields = ['username', 'email', 'designation', 'bio']
         widgets = {
             'photo': forms.FileInput(),
         }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['email'].disabled = True
+        self.fields['designation'].widget.attrs['placeholder'] = 'Ваш девиз или любимая цитата...'
+        self.fields['bio'].widget.attrs['placeholder'] = 'Напишите что-нибудь о себе...'

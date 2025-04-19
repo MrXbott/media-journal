@@ -3202,6 +3202,29 @@ section,
 }
 
 /*--------------------------------------------------------------
+# Edit Profile Section
+--------------------------------------------------------------*/
+#photo-container #photo-loader {
+  display: none;
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  background: rgba(255, 255, 255, 0.6);
+  justify-content: center;
+  align-items: center;
+  z-index: 10;
+}
+
+#photo-container .spinner {
+  width: 30px;
+  height: 30px;
+  border: 4px solid #ccc;
+  border-top-color: #333;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+/*--------------------------------------------------------------
 # About Section
 --------------------------------------------------------------*/
 .about .section-badge {

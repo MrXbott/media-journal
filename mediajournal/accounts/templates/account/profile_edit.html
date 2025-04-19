@@ -13,11 +13,22 @@
     </div>
 
     <div class="container" data-aos="fade-up" data-aos-delay="100">
-        
         <div class="row justify-content-center">
+            <div class="col-lg-2">
+                <div id="photo-container" style="position: relative; display: inline-block;">
+                    <img id="photo-preview" src="{{ user.photo.url }}" alt="photo" width="150" height="150">
+                    <div id="photo-loader">
+                        <div class="spinner"></div>
+                    </div>
+                </div>
+                
+                <br>
+                <button id="upload-photo-btn">Загрузить</button>
+                <input type="file" id="photo-input" accept="image/png, image/jpeg" style="display: none;">
+                <div id="photo-errors" style="color: red; margin-top: 10px;"></div>
+            </div>
             <div class="col-lg-8">
                 <div class="form-wrapper">
-
                     <form method="post" enctype="multipart/form-data" class="login-form">
                         {% for field in form %}
                             <div class="row mt-3">
@@ -34,9 +45,26 @@
                         {% csrf_token %}
                         <p><input type="submit"  value="Сохранить"></p>
                     </form>
+                </div>
 
+                <div>
+                    <div>
+                        <a class="button" href="{% url "password_change" %}">
+                            Сменить пароль
+                        </a>
+                    </div>
+                    <button id="subscribe-btn">
+                        {% if request.user.subscription.is_subscribed %}
+                            Отписаться от рассылки
+                        {% else %}
+                            Подписаться на рассылку
+                        {% endif %}
+                    </button>
+                    <input type="hidden" id="is-subscribed" value="{% if request.user.subscription.is_subscribed %}1{% else %}0{% endif %}">
+                    
                 </div>
             </div>
+
         </div>
     </div>
 </main>
@@ -44,23 +72,11 @@
 
 
 
-<div>
-    <a class="button" href="{% url "password_change" %}">
-        Сменить пароль
-    </a>
-</div>
-<button id="subscribe-btn">
-    {% if request.user.subscription.is_subscribed %}
-        Отписаться от рассылки
-    {% else %}
-        Подписаться на рассылку
-    {% endif %}
-</button>
-<input type="hidden" id="is-subscribed" value="{% if request.user.subscription.is_subscribed %}1{% else %}0{% endif %}">
 
 {% endblock %}
 
 {% block scripts %}
     <script src="{% static 'js/edit_username.js' %}"></script>
     <script src="{% static 'js/subscribe_in_profile.js' %}"></script>
+    <script src="{% static 'js/upload_photo.js' %}"></script>
 {% endblock %}
