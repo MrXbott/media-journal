@@ -16,11 +16,7 @@ r = redis.Redis(host=settings.REDIS_HOST, port=settings.REDIS_PORT, db=settings.
 
 def get_all_categories(request):
     categories = Category.objects.filter(parent=None)
-    last_articles = Article.objects.filter(status=Article.Status.PUBLISHED).order_by('-published')[:5]
-    if request.headers.get('x-requested-with') == 'XMLHttpRequest':
-        return JsonResponse([{'name' : category.name, 'url': category.get_absolute_url(), 'image': category.image.url} for category in categories[:10]], safe=False)
     return render(request, 'categories.html', {'categories': categories, 
-                                               'last_articles': last_articles,
                                                'section': 'categories'
                                                })
 
@@ -37,21 +33,12 @@ def get_category(request, slug):
     except EmptyPage:
         articles = paginator.page(paginator.num_pages)
 
-    categories = Category.objects.filter(parent=None).order_by('name')
     total_views = {article.id: int(r.get(f'article:{article.id}:views') if r.get(f'article:{article.id}:views') else 0) for article in articles}
-    last_articles = Article.objects.filter(status=Article.Status.PUBLISHED).order_by('-published')[:5]
     return render(request, 'category.html', {'category': category, 
                                              'articles': articles, 
                                              'page': page,
                                              'total_views': total_views,
-                                             'last_articles': last_articles,
-                                             'categories': categories,
                                              })
-
-
-def get_last_articles(request):
-    articles = Article.objects.all().order_by('published')
-    return render(request, 'last_articles.html', {'articles': articles, })
 
 
 def get_article(request, category, slug):
@@ -59,13 +46,9 @@ def get_article(request, category, slug):
     total_views = r.incr(f'article:{article.id}:views')    
     data = {'article': article.id, 'parent': ''}
     comment_form = CommentForm(data=data)
-    categories = Category.objects.filter(parent=None).order_by('name')
-    last_articles = Article.objects.filter(status=Article.Status.PUBLISHED).order_by('-published')[:5]
     return render(request, 'article.html', {'article': article, 
                                             'total_views': total_views, 
                                             'form': comment_form, 
-                                            'categories': categories,
-                                            'last_articles': last_articles,
                                             })
 
 

@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% load static %}
+{% load tags %}
 
 {% block content %}
 
@@ -40,7 +41,7 @@
         </div>
 
         <div class="col-lg-3 sidebar">
-            {% include 'sidebar.html' %}
+            {% render_sidebar %}
         </div>
 
       </div>
