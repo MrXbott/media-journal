@@ -100,7 +100,7 @@
             {% if request.user.is_authenticated %}
               <li {% if section == 'write' %}class="active"{% endif %}><a href="{% url 'write_article' %}">Написать статью</a></li>
               <li {% if section == 'suggest_news' %}class="active"{% endif %}><a href="{% url 'suggest_news' %}">Предложить новость</a></li>
-              <li {% if section == 'subscriptions_feed' %}class="active"{% endif %}><a href="{% url 'subscriptions_feed' %}">Моя лента</a></li>
+              <li {% if section == 'user_news_feed' %}class="active"{% endif %}><a href="{% url 'user_news_feed' %}">Моя лента</a></li>
             {% endif %}
             {% comment %} <li class="dropdown"><a href="#"><span>Pages</span> <i class="bi bi-chevron-down toggle-dropdown"></i></a>
               <ul>

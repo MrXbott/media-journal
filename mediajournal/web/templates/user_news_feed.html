@@ -29,44 +29,45 @@
                                         {{ article.category.name }}
                                     {% endfor %} {% endcomment %}
 
-                                    {% for article in articles %}
+                                    {% for item in items %}
                                     {% comment %} {{ article }} {% endcomment %}
                                         <div class="col-lg-12">
                                             <article>
 
                                             <div class="d-flex align-articles-center article-header">
-                                                <img src={% if article.author.photo %}"{{ article.author.photo.url }}"{% else %}"/media/default/default_user_photo.jpg"{% endif %} alt="" class="img-fluid post-author-img flex-shrink-0">
-                                                <p class="post-author"><a href="">{{ article.author.username }}</a></p>
+                                                <img src={% if item.author.photo %}"{{ item.author.photo.url }}"{% else %}"/media/default/default_user_photo.jpg"{% endif %} alt="" class="img-fluid post-author-img flex-shrink-0">
+                                                <p class="post-author"><a href="">{{ item.author.username }}</a></p>
                                                 <p class="post-date">
-                                                    <time datetime="">{{ article.published|date:"d M Y H:i"}}</time>
+                                                    <time datetime="">{{ item.published|date:"d M Y H:i"}}</time>
                                                 </p>
                                                 {% comment %} <a href="{{ article.category.get_absolute_url }}">
                                                     <p class="post-category">{{ article.category.name }}</p>
                                                 </a> {% endcomment %}
                                             </div>
                                             
-                                            <a href="{{ article.get_absolute_url }}" >
+                                            <a href="{{ item.get_absolute_url }}" >
                                                 <h2 class="title">
-                                                {{ article.title }}
+                                                {{ item.title }}
                                                 </h2>
                                                 <div class="post-img">
-                                                <img src={% if article.cover %}"{{ article.cover.url }}"{% else %}"/media/default/default_article_cover.jpg"{% endif %}>
+                                                <img src={% if item.cover %}"{{ item.cover.url }}"{% else %}"/media/default/default_article_cover.jpg"{% endif %}>
                                                 </div>
                                             </a>
 
                                             <div class="post-meta">
                                                 <span>
                                                 <i class="bi bi-eye"></i>
-                                                {{ total_views|item:article.id}}
+                                                {% comment %} {{ total_views|item:article.id}} {% endcomment %}
+                                                {{ item.views }}
                                                 </span>
                                                 <span>
                                                 <i class="bi bi-chat-dots"></i>
-                                                {{ article.comments_count }}
+                                                {{ item.comments_count }}
                                                 </span>
                                                 <span>
-                                                <i class="bi {% if user in article.bookmarked_by.all %} bi-bookmark-fill {% else %} bi-bookmark {% endif %}" data-id={{ article.id }}></i>
+                                                <i class="bi {% if user in item.bookmarked_by.all %} bi-bookmark-fill {% else %} bi-bookmark {% endif %}" data-id={{ item.id }}></i>
                                                 <span id="bookmarks-count">
-                                                    {{ article.bookmarks_count }}
+                                                    {{ item.bookmarks_count }}
                                                 </span>
                                                 </span> 
                                             </div>

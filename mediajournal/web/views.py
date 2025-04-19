@@ -4,11 +4,14 @@ from django.contrib.auth.decorators import login_required
 from django.conf import settings
 from django.contrib.postgres.search import SearchVector
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from itertools import chain
+from operator import attrgetter
 import redis
 
 from articles.models import Article, Category, ArticleSection
 from news.models import News
 from .forms import SearchForm
+
 
 r = redis.Redis(host=settings.REDIS_HOST, port=settings.REDIS_PORT, db=settings.REDIS_DB)
 
@@ -24,7 +27,7 @@ def main_page(request):
 
 
 @login_required
-def subscriptions_feed(request):
+def user_news_feed(request):
     users = request.user.following.all()
     all_articles = Article.objects.filter(author__in=users, status=Article.Status.PUBLISHED)\
                                 .select_related('author', 'category')\
@@ -33,22 +36,35 @@ def subscriptions_feed(request):
                                     bookmarks_count=Count('bookmarked_by'), 
                                     comments_count=Count('article_comments', filter=Q(article_comments__is_active=True))
                                     )
+    all_news = News.objects.filter(author__in=users, status=News.Status.PUBLISHED)\
+                                .select_related('author')\
+                                .order_by('-published')\
+                                .annotate(
+                                    # bookmarks_count=Count('bookmarked_by'), 
+                                    comments_count=Count('news_comments', filter=Q(news_comments__is_active=True))
+                                    )
     
-    page = request.GET.get('page')
-    paginator = Paginator(all_articles, 3)
-    articles = []
-    try:
-        articles = paginator.page(page)
-    except PageNotAnInteger:
-        articles = paginator.page(1)
-    except EmptyPage:
-        articles = paginator.page(paginator.num_pages)
+    for article in all_articles:
+        article.views = int(r.get(f'article:{article.id}:views')) if r.get(f'article:{article.id}:views') else 0
 
-    total_views = {article.id: int(r.get(f'article:{article.id}:views')) if r.get(f'article:{article.id}:views') else 0 for article in articles}
-    return render(request, 'subscriptions_feed.html', {'section': 'subscriptions_feed',
-                                                       'articles': articles,
-                                                       'total_views': total_views,
-                                                       })
+    for n in all_news:
+        n.views = int(r.get(f'news:{n.id}:views')) if r.get(f'news:{n.id}:views') else 0
+
+    combined = sorted(chain(all_articles, all_news), key=attrgetter('published'), reverse=True )
+
+    page = request.GET.get('page')
+    paginator = Paginator(combined, 3)
+    items = []
+    try:
+        items = paginator.page(page)
+    except PageNotAnInteger:
+        items = paginator.page(1)
+    except EmptyPage:
+        items = paginator.page(paginator.num_pages)
+    
+    return render(request, 'user_news_feed.html', {'section': 'user_news_feed',
+                                                    'items': items,
+                                                    })
 
 
 def search(request):
@@ -58,10 +74,21 @@ def search(request):
         if form.is_valid():
             query = form.cleaned_data['query']
             article_search_vector = SearchVector('title', 'text', 'author__username', config='russian')
-            article_results = Article.objects.filter(status=Article.Status.PUBLISHED).select_related('category').annotate(search=article_search_vector).filter(search=query).order_by('-published')
+            article_results = Article.objects.filter(status=Article.Status.PUBLISHED)\
+                                            .select_related('category')\
+                                            .annotate(search=article_search_vector)\
+                                            .filter(search=query).order_by('-published')
+            
             section_search_vector = SearchVector('title', 'text', 'quote', config='russian')
-            article_ids_from_sections = ArticleSection.objects.filter(article__status=Article.Status.PUBLISHED).annotate(search=section_search_vector).filter(search=query).values_list('article__id', flat=True)
-            section_results = Article.objects.filter(id__in=set(article_ids_from_sections)).select_related('category').annotate(search=article_search_vector)
+            article_ids_from_sections = ArticleSection.objects.filter(article__status=Article.Status.PUBLISHED)\
+                                                                .annotate(search=section_search_vector)\
+                                                                .filter(search=query)\
+                                                                .values_list('article__id', flat=True)
+            
+            section_results = Article.objects.filter(id__in=set(article_ids_from_sections))\
+                                            .select_related('category')\
+                                            .annotate(search=article_search_vector)
+            
             all_results = article_results.union(section_results)
             
             page = request.GET.get('page')
