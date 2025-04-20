@@ -71,9 +71,9 @@
                           {{ article.comments.count }}
                         </span>
                         <span>
-                          <i class="bi {% if user in article.bookmarked_by.all %} bi-bookmark-fill {% else %} bi-bookmark {% endif %}" data-id={{ article.id }}></i>
+                          <i class="bi {% if article.is_bookmarked %} bi-bookmark-fill {% else %} bi-bookmark {% endif %}" data-id={{ article.id }} data-type="article"></i>
                           <span id="bookmarks-count">
-                            {{ article.bookmarked_by.count }}
+                            {{ article.bookmarks.count }}
                           </span>
                         </span>
                       </div>

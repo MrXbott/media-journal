@@ -120,9 +120,9 @@
 
               <div class="content-body">
                 <h3>Закладки</h3>
-                {% if user_bookmarks %}
-                  {% for bookmark in user_bookmarks %}
-                      <a href={{ bookmark.article.get_absolute_url}}>{{ bookmark.article.title }}</a>
+                {% if user.bookmarks.all %}
+                  {% for bookmark in user.bookmarks.all %}
+                      <a href={{ bookmark.content_object.get_absolute_url}}>{{ bookmark.content_object.title }}</a>
                       <br>
                   {% endfor %}
                 {% else %}
@@ -133,8 +133,8 @@
 
               <div class="content-body">
                 <h3>Комментарии</h3>
-                {% if user_comments %}
-                  {% for comment in user_comments %}
+                {% if user.comments %}
+                  {% for comment in user.comments.all %}
                     {% if comment.is_active %}
                       <a href={{ comment.content_object.get_absolute_url}}>{{ comment.content_object.title }} - {{ comment.text|truncatechars:50 }}</a>
                       <br>

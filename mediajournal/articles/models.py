@@ -36,12 +36,12 @@ class Article(models.Model):
     slug = models.SlugField(max_length=250, unique_for_date='published', blank=True, null=True, unique=True)
     category = models.ForeignKey('Category', blank=False, null=True, on_delete=models.SET_NULL, related_name='articles')
     cover = models.ImageField(upload_to='images/', blank=True, null=True, default='default/default_article_cover.jpg')
-    bookmarked_by = models.ManyToManyField('accounts.User', through='Bookmark')
+    bookmarks = GenericRelation('bookmarks.Bookmark')
     enable_comments = models.BooleanField(default=True)
     article_comments = GenericRelation('comments.Comment')
 
     class Meta:
-        ordering = ['published']
+        ordering = ['-published']
 
     @property
     def comments(self):
@@ -65,20 +65,6 @@ class Article(models.Model):
         if self.status == self.Status.PUBLISHED and not self.slug:
             raise ValidationError({'slug': 'Enter a slug because you want to publish the article'})
     
-
-class Bookmark(models.Model):
-    """
-    Модель закладки для сохранения понравившихся пользователю статей.
-    """
-    user = models.ForeignKey('accounts.User', on_delete=models.CASCADE, related_name='bookmarks')
-    article = models.ForeignKey(Article, on_delete=models.CASCADE)
-
-    class Meta:
-        constraints = [
-        models.UniqueConstraint(
-            fields=['user_id', 'article_id'], 
-            name='unique bookmark')
-    ]
 
 class Category(models.Model):
     """

@@ -12,6 +12,8 @@ r = redis.Redis(host=settings.REDIS_HOST, port=settings.REDIS_PORT, db=settings.
 
 def get_all_news(request):
     news = News.objects.filter(status=News.Status.PUBLISHED).order_by('-published')
+    for n in news:
+        n.is_bookmarked = n.bookmarks.filter(user=request.user).exists()
     total_views = {n.id: int(r.get(f'news:{n.id}:views') if r.get(f'news:{n.id}:views') else 0) for n in news}
     return render(request, 'all_news.html', {'news': news, 
                                              'section': 'news',
@@ -21,6 +23,7 @@ def get_all_news(request):
 def get_one_news(request, news_id):
     one_news = get_object_or_404(News, id=news_id)
     total_views = r.incr(f'news:{news_id}:views')    
+    one_news.is_bookmarked = one_news.bookmarks.filter(user=request.user).exists()
     return render(request, 'one_news.html', {'one_news': one_news, 
                                              'section': 'news',
                                              'total_views': total_views,

@@ -21,6 +21,7 @@ class News(models.Model):
     status = models.CharField(max_length=20, choices=Status.choices, default=Status.MODERATION)
     cover = models.ImageField(upload_to='images/', blank=True, null=True, default='default/default_news_cover.jpg')
     enable_comments = models.BooleanField(default=True)
+    bookmarks = GenericRelation('bookmarks.Bookmark')
     news_comments = GenericRelation('comments.Comment')
 
     class Meta:

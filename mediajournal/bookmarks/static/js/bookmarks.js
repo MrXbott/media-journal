@@ -32,8 +32,9 @@ $(document).ready(function(){
             );
         }
         else{
-            let article_id = $(this).data('id');
-            console.log('article id: ', article_id);
+            let object_id = $(this).data('id');
+            let content_type = $(this).data('type');
+            console.log('object id, type: ', object_id, content_type);
             let bookmark_clicked = this;
             let count_element = $($(bookmark_clicked).parent()).find('#bookmarks-count');
             let count = parseInt($(count_element).text());
@@ -41,7 +42,8 @@ $(document).ready(function(){
                 type: 'POST',
                 url: '/bookmark/', 
                 data: {
-                    'article_id': article_id, 
+                    'object_id': object_id, 
+                    'content_type': content_type,
                 }, 
                 success: function(data){
                     if (data['bookmark'] == 'added'){

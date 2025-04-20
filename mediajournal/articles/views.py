@@ -1,12 +1,10 @@
 from django.shortcuts import render, get_object_or_404, redirect
-from django.http import JsonResponse, HttpResponse
 from django.conf import settings
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.contrib.auth.decorators import login_required
-from django.views.decorators.http import require_POST
 import redis
 
-from .models import Article, Category, Bookmark
+from .models import Article, Category
 
 from .forms import ArticleForm, ArticleImageFormSet, ArticleSectionFormSet
 from comments.forms import CommentForm
@@ -26,6 +24,7 @@ def get_category(request, slug):
     page = request.GET.get('page')
     paginator = Paginator(all_articles, 3)
 
+    articles = []
     try:
         articles = paginator.page(page)
     except PageNotAnInteger:
@@ -33,6 +32,8 @@ def get_category(request, slug):
     except EmptyPage:
         articles = paginator.page(paginator.num_pages)
 
+    for article in articles:
+        article.is_bookmarked = article.bookmarks.filter(user=request.user).exists()
     total_views = {article.id: int(r.get(f'article:{article.id}:views') if r.get(f'article:{article.id}:views') else 0) for article in articles}
     return render(request, 'category.html', {'category': category, 
                                              'articles': articles, 
@@ -46,6 +47,7 @@ def get_article(request, category, slug):
     total_views = r.incr(f'article:{article.id}:views')    
     data = {'article': article.id, 'parent': ''}
     comment_form = CommentForm(data=data)
+    article.is_bookmarked = article.bookmarks.filter(user=request.user).exists()
     return render(request, 'article.html', {'article': article, 
                                             'total_views': total_views, 
                                             'form': comment_form, 
@@ -85,20 +87,4 @@ def write_article(request):
                                                   })
         
 
-@login_required
-@require_POST
-def bookmark_article(request):
-    article_id = request.POST.get('article_id')
-    try:
-        article = Article.objects.get(id=article_id)
-    except Article.DoesNotExist:
-        return JsonResponse({'status': 'error', 'message': 'article doesn\'t exist'})
-    
-    if article in Article.objects.filter(bookmarked_by=request.user):
-        Bookmark.objects.filter(user=request.user, article=article).delete()
-        return JsonResponse({'status': 'ok', 'bookmark': 'removed'})
-    else:
-        Bookmark.objects.create(user=request.user, article=article)
-        return JsonResponse({'status': 'ok', 'bookmark': 'added'})
-    
     

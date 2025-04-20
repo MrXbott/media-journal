@@ -66,6 +66,7 @@ INSTALLED_APPS = [
     'articles.apps.ArticlesConfig',
     'news.apps.NewsConfig',
     'comments.apps.CommentsConfig',
+    'bookmarks.apps.BookmarksConfig',
     'subscriptions.apps.SubscriptionsConfig',
     'debug_toolbar',
     'django_celery_beat',

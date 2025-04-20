@@ -2,8 +2,9 @@ from django.contrib import admin
 from django.utils.html import format_html
 from django.urls import reverse
 from django.utils.http import urlencode
+from django.contrib.contenttypes.models import ContentType
 
-from .models import Article, Category, Bookmark, ArticleImage, ArticleSection
+from .models import Article, Category, ArticleImage, ArticleSection
 
 
 class ArticleImageInline(admin.TabularInline):
@@ -28,23 +29,25 @@ class ArticleAdmin(admin.ModelAdmin):
     prepopulated_fields = {"slug": ["title",]}
     inlines = [ArticleSectionInline, ArticleImageInline]
         
-    @admin.display(description='bookmarks')
+    @admin.display(description='Bookmarks')
     def bookmarks(self, obj):
-        count = obj.bookmarked_by.all().count()
+        count = obj.bookmarks.count()
+        content_type = ContentType.objects.get_for_model(obj)
         url = (
-            reverse('admin:articles_bookmark_changelist')
+            reverse('admin:bookmarks_bookmark_changelist')
             + '?'
-            + urlencode({'article__id': obj.id})
+            + urlencode({'object_id': obj.id, 'content_type_id': content_type.id})
         )
         return format_html(f'<a href="{url}">{count}</a>')
     
-    @admin.display(description='comments')
+    @admin.display(description='Comments')
     def comments(self, obj):
-        count = obj.article_comments.all().count()
+        count = obj.article_comments.count()
+        content_type = ContentType.objects.get_for_model(obj)
         url = (
             reverse('admin:comments_comment_changelist')
             + '?'
-            + urlencode({'object_id': obj.id})
+            + urlencode({'object_id': obj.id, 'content_type_id': content_type.id})
         )
         return format_html(f'<a href="{url}">{count}</a>')
 
@@ -65,10 +68,3 @@ class CategoryAdmin(admin.ModelAdmin):
     ordering = ['parent', 'name']
     actions = [set_featured_categories, remove_featured_categories]
 
-
-
-
-@admin.register(Bookmark)
-class BookmarkAdmin(admin.ModelAdmin):
-    list_display = ['user__email', 'article__title']
-    list_filter = ['user', ]
