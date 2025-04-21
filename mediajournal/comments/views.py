@@ -7,7 +7,22 @@ from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from .models import Comment
 from .forms import CommentForm
 
+
 def comments_list(request):
+    """
+    Получает и отображает список комментариев для указанного объекта (статья, новость).
+
+    Этот метод обрабатывает запросы с параметрами 'id' и 'type' для извлечения объекта
+    и отображения списка комментариев, если они разрешены для этого объекта.
+    Пагинирует комментарии, отображая по 10 комментариев на странице.
+
+    Аргументы:
+        request (HttpRequest): Объект запроса, содержащий параметры страницы и идентификатора объекта.
+
+    Возвращает:
+        JsonResponse: Если объект или комментарии не найдены, возвращается сообщение об ошибке.
+        HttpResponse: Отображение списка комментариев в виде HTML, если запрос сделан через AJAX.
+    """
     page = request.GET.get('page')
     object_id = request.GET.get('id')
     content_type_name = request.GET.get('type')
@@ -19,7 +34,7 @@ def comments_list(request):
     if not content_object.enable_comments:
         return JsonResponse({'status': 'error', 'message': 'comments disabled '})
     
-    paginator = Paginator(content_object.comments, 2) 
+    paginator = Paginator(content_object.comments, 10) 
     try:
         comments = paginator.page(page)
     except PageNotAnInteger:
@@ -30,8 +45,23 @@ def comments_list(request):
     if request.headers.get('x-requested-with') == 'XMLHttpRequest':
         return render(request, 'comments_list.html', {'comments': comments})
 
+
 @login_required
 def post_comment(request):
+    """
+    Обрабатывает добавление комментария к объекту (статья, новость).
+
+    Этот метод обрабатывает POST-запрос для добавления нового комментария или GET-запрос для 
+    отображения формы ответа на комментарий. 
+    Возвращает ответ в формате JSON с результатом операции.
+
+    Аргументы:
+        request (HttpRequest): Объект запроса, содержащий данные формы или параметры для ответа на комментарий.
+
+    Возвращает:
+        JsonResponse: Результат операции добавления комментария или ошибки.
+        HttpResponse: Форма для ответа на комментарий, если запрос сделан через GET.
+    """
     object_id = request.POST.get('object_id')
     content_type_name = request.POST.get('content_type')
     try:
@@ -62,7 +92,6 @@ def post_comment(request):
             object_id = request.GET.get('object_id')
             content_type_name = request.GET.get('content_type')
             content_type = ContentType.objects.get(model=content_type_name)
-            # print('----- ct', content_type)
             data = {'parent': parent_id, 'object_id': object_id, 'content_type': content_type}
             form = CommentForm(data=data)
             return render(request, 'comment_answer_form.html', {'form': form})
