@@ -1,14 +1,24 @@
-from django.template.defaultfilters import slugify as django_slugify
+from django.template.defaultfilters import slugify
 
 
+# Словарь для замены русских символов на латинские аналоги
 alphabet = {'а': 'a', 'б': 'b', 'в': 'v', 'г': 'g', 'д': 'd', 'е': 'e', 'ё': 'yo', 'ж': 'zh', 'з': 'z', 'и': 'i',
             'й': 'j', 'к': 'k', 'л': 'l', 'м': 'm', 'н': 'n', 'о': 'o', 'п': 'p', 'р': 'r', 'с': 's', 'т': 't',
             'у': 'u', 'ф': 'f', 'х': 'kh', 'ц': 'ts', 'ч': 'ch', 'ш': 'sh', 'щ': 'shch', 'ы': 'i', 'э': 'e', 'ю': 'yu',
             'я': 'ya'}
 
 
-def slugify(s):
-    '''
-    Overriding django slugify that allows to use russian words as well.
-    '''
-    return django_slugify(''.join(alphabet.get(w, w) for w in s.lower()))
+def cyrillic_slugify(some_string: str) -> str:
+    """
+    Метод, который позволяет преобразовать строку из русских букв в строку из английских букв.
+
+    Этот метод принимает строку, заменяет кириллические символы на латинские аналоги, 
+    затем передаёт её в стандартный метод slugify Django для генерации "чистого" URL-совместимого слага.
+
+    Аргументы:
+        some_string (str): Строка, содержащая текст, для которого нужно создать слог.
+
+    Возвращает:
+        str: Слог, преобразованный в нижний регистр и подготовленный для использования в URL.
+    """
+    return slugify(''.join(alphabet.get(char, char) for char in some_string.lower()))
