@@ -9,7 +9,6 @@ urlpatterns = [
     path('confirm_email/<str:uidb64>/<str:token>/', views.confirm_email, name='confirm_email'),
     path('login/', auth_views.LoginView.as_view(redirect_authenticated_user=True), name='login'),
     path('logout/', auth_views.LogoutView.as_view(), name='logout'),
-    # path('logout/', views.log_out, name='logout'),
     path('password_change/', auth_views.PasswordChangeView.as_view(), name='password_change'), 
     path('password_change/done/', auth_views.PasswordChangeDoneView.as_view(), name='password_change_done'),
     path('password_reset/', auth_views.PasswordResetView.as_view(form_class=CustomPasswordResetForm), name='password_reset'), 

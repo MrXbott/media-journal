@@ -6,25 +6,36 @@ from django.utils.encoding import force_bytes, force_str
 from django.utils.http import urlsafe_base64_decode, urlsafe_base64_encode
 from django.conf import settings
 from django.contrib import messages
-from django.contrib.auth.views import PasswordResetConfirmView, LoginView
+from django.contrib.auth.views import PasswordResetConfirmView
 from django.contrib.auth import logout
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.http import require_POST
 from django.core.exceptions import ValidationError
-from django.http import HttpRequest, HttpResponse, HttpResponseRedirect, JsonResponse, HttpResponseNotFound, Http404
+from django.http import HttpRequest, HttpResponse, JsonResponse
 from django.shortcuts import get_object_or_404
 
 from .forms import RegistrationForm, ProfileEditForm, UserPhotoForm
 from .token import email_verification_token
 from .tasks import send_confirm_email
 from .models import User, Contact
-from articles.models import Article, Category
+from articles.models import Article
 from news.models import News
-from comments.models import Comment
-from bookmarks.models import Bookmark
 
 
 def registration(request: HttpRequest) -> HttpResponse:
+    """
+    Обрабатывает регистрацию нового пользователя.
+
+    Если запрос POST и форма валидна, создаётся пользователь, генерируется токен подтверждения email,
+    и отправляется письмо с активационной ссылкой. 
+    В противном случае возвращается форма регистрации с ошибками.
+
+    Аргументы:
+        request (HttpRequest): HTTP-запрос от клиента.
+
+    Возвращает:
+        HttpResponse: Страница с формой регистрации или подтверждением email.
+    """
     if request.method == 'POST':
         form = RegistrationForm(request.POST)
         if form.is_valid():
@@ -51,7 +62,19 @@ def registration(request: HttpRequest) -> HttpResponse:
 
 
 def confirm_email(request: HttpRequest, uidb64: str, token: str) -> HttpResponse:
-    '''Validates the activation link from a confirmation email.'''
+    """
+    Подтверждает email пользователя по уникальной ссылке из письма.
+
+    Декодирует ID пользователя, проверяет токен и активирует аккаунт, если всё валидно.
+
+    Аргументы:
+        request (HttpRequest): HTTP-запрос от клиента.
+        uidb64 (str): base64-кодированный ID пользователя.
+        token (str): Токен подтверждения email.
+
+    Возвращает:
+        HttpResponse: Страница об успешной активации или с сообщением об ошибке.
+    """
     try:
         uid = force_str(urlsafe_base64_decode(uidb64))
         user = User.objects.get(id=uid)
@@ -64,14 +87,23 @@ def confirm_email(request: HttpRequest, uidb64: str, token: str) -> HttpResponse
         return render(request, 'registration/registration_done.html')
     return render(request, 'registration/activation_error.html')
 
-# @login_required
-# def log_out(request):
-#     url = reverse('login') if isinstance(request.user, User) else reverse('admin:index')
-#     logout(request)
-#     return redirect(url)
 
 class CustomPasswordResetConfirmView(PasswordResetConfirmView):
+    """
+    Представление для подтверждения сброса пароля.
+
+    Расширяет стандартный PasswordResetConfirmView, добавляя безопасное извлечение пользователя по uid.
+    """
     def get_user(self, uidb64):
+        """
+        Получает пользователя по закодированному идентификатору.
+
+        Аргументы:
+            uidb64 (str): base64-кодированный ID пользователя.
+
+        Возвращает:
+            User | None: Пользователь, если найден, иначе None.
+        """
         try:
             uid = urlsafe_base64_decode(uidb64).decode()
             user = User._default_manager.get(pk=uid)
@@ -79,7 +111,20 @@ class CustomPasswordResetConfirmView(PasswordResetConfirmView):
             user = None
         return user
 
+
 def profile(request, id):
+    """
+    Отображает публичный профиль пользователя.
+
+    Включает опубликованные статьи и новости, статистику активности и категории.
+
+    Аргументы:
+        request (HttpRequest): HTTP-запрос от клиента.
+        id (int): ID пользователя.
+
+    Возвращает:
+        HttpResponse: Страница профиля пользователя.
+    """
     user = get_object_or_404(User, id=id)
     user_articles = user.articles.filter(status=Article.Status.PUBLISHED)\
                                     .select_related('category')\
@@ -96,18 +141,25 @@ def profile(request, id):
                 'followers_count': user.followers.count(),
                 'comments_count': user.comments.count(),
                 }
-    categories = Category.objects.filter(parent=None).order_by('name')
-    last_articles = Article.objects.filter(status=Article.Status.PUBLISHED).order_by('-published')[:5]
     return render(request, 'account/profile.html', {'user': user, 
                                                     'user_articles': user_articles,
                                                     'user_news': user_news,
                                                     'counts': counts,
-                                                    'last_articles': last_articles,
-                                                    'categories': categories
                                                     })
 
 @login_required
 def edit_profile(request):
+    """
+    Позволяет авторизованному пользователю редактировать свой профиль.
+
+    Загружает и сохраняет форму с данными, если запрос POST, иначе отображает текущие данные.
+
+    Аргументы:
+        request (HttpRequest): HTTP-запрос от клиента.
+
+    Возвращает:
+        HttpResponse: Страница редактирования профиля.
+    """
     if request.method == 'POST':
         form = ProfileEditForm(data=request.POST, files=request.FILES, instance=request.user)
         if form.is_valid():
@@ -121,6 +173,15 @@ def edit_profile(request):
 @login_required
 @require_POST
 def upload_photo(request):
+    """
+    Загружает и сохраняет новое фото пользователя (POST-запрос).
+
+    Аргументы:
+        request (HttpRequest): HTTP-запрос с файлом изображения.
+
+    Возвращает:
+        JsonResponse: Статус выполнения запроса и URL фото или ошибки формы.
+    """
     form = UserPhotoForm(request.POST, request.FILES, instance=request.user)
     if form.is_valid():
         form.save()
@@ -130,6 +191,17 @@ def upload_photo(request):
 
 @login_required
 def edit_username(request):
+    """
+    Позволяет изменить имя пользователя, если оно свободно.
+
+    Проверяет уникальность нового имени и обновляет в базе.
+
+    Аргументы:
+        request (HttpRequest): POST-запрос с новым значением username.
+
+    Возвращает:
+        JsonResponse: Сообщение об успешном изменении или причине отказа.
+    """
     new_username = request.POST.dict()['username']
     user = User.objects.get(id=request.user.id)
     
@@ -146,6 +218,17 @@ def edit_username(request):
 @require_POST
 @login_required
 def follow_user(request):
+    """
+    Обрабатывает подписку/отписку на другого пользователя.
+
+    Принимает ID пользователя и действие ('follow' или 'unfollow') через POST-запрос.
+
+    Аргументы:
+        request (HttpRequest): HTTP-запрос с параметрами действия.
+
+    Возвращает:
+        JsonResponse: Результат действия и сообщение о статусе.
+    """
     user_id = request.POST.get('user_id')
     action = request.POST.get('action')
     if user_id and action:
@@ -159,10 +242,4 @@ def follow_user(request):
         except User.DoesNotExist:
             return JsonResponse({'status':'error', 'message': 'user doesn\'t exist'})
     return JsonResponse({'status':'error', 'message': 'wrong id or action'})
-
-    
-
-
-
-
 
